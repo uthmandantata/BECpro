@@ -1,31 +1,62 @@
-# BECpro: Polo Membership App
+# BECpro Polo Membership App
 
-Welcome to the BECpro repository! BECpro is a comprehensive Polo Membership app designed to streamline the management of polo club memberships, user payments, scheduling, and administrative tasks. With BECpro, polo clubs and their members can enjoy a seamless experience in managing membership details, riding schedules, horse and equipment management, and field availability status.
+Welcome to the official GitHub repository for BECpro, a comprehensive Polo Membership app designed exclusively for managing polo-related activities. This app aims to streamline polo membership management, game scheduling, payment tracking, and communication for both members and administrators.
 
-## Features
+## User Features
 
-### Membership Management
+### 1. Authentication and Account Management
 
-BECpro simplifies membership management by providing an intuitive interface for users to view their membership details, payment history, and upcoming payments. Club administrators have the ability to suspend or activate memberships as needed.
+- **Login**: Securely access your account with your credentials.
+- **Signup**: Easily create a new account with required information.
+- **Logout**: Log out from your account to ensure security.
+- **Activate Password**: Reset or activate your password whenever needed.
 
-### Riding Schedule
+### 2. Schedule Polo Days
 
-Users can conveniently select their preferred riding days for each week, choosing up to three days to ride. This feature ensures efficient allocation of riding slots and helps optimize the use of club resources.
+- **Select Playing Days**: Choose three preferred days for playing polo.
+- **Game Scheduling**: Schedule your polo games on the selected days.
 
-### Administrative Powers
+### 3. Payment Management
 
-Club administrators have access to a range of powerful tools to manage the club effectively:
+- **Pay and Renew**: Conveniently make membership payments and renewals.
+- **Payment History**: Keep track of your payment history for future reference.
 
-- **User Suspension**: Admins can suspend users if needed, ensuring the club's rules and policies are maintained.
+### 4. Communication
 
-- **Horse Management**: Admins can easily add, update, or remove horses from the system, ensuring accurate horse records and availability.
+- **Send Complaints**: Raise complaints or concerns through the app for prompt resolution.
 
-- **Equipment Management**: Keep track of club equipment by adding, editing, or removing items from the inventory.
+## Admin Features
 
-- **Services Management**: Admins can manage services offered by the club, ensuring members have access to the necessary amenities.
+### 1. User Management
 
-- **Field Availability**: Admins can indicate whether the polo field is open or closed, providing clear communication to members regarding field usage.
+- **Suspend Users**: Admins have the ability to suspend user accounts when required.
 
-## Contact Me
+### 2. Inventory Management
 
-If you have any questions, suggestions, or feedback, feel free to reach out to us at `uthmandantat8@gmail.com`.
+- **Add Horses**: Admins can manage the list of available horses efficiently.
+- **Manage Equipment**: Add and manage essential polo equipment effortlessly.
+- **Services Management**: Handle services related to polo activities seamlessly.
+
+### 3. Field Status
+
+- **Field Availability**: Admins can update and communicate the availability status of the polo field.
+
+### 4. Ticketing System
+
+- **Ticket Management**: Admins can effectively address user inquiries and issues through the integrated ticketing system.
+
+## Usage and Distribution
+
+Please note that BECpro Polo Membership App is provided under the following terms:
+
+- You are granted the right to access and use the app for personal and non-commercial purposes.
+- You may not distribute, sublicense, or use the app for any commercial purposes.
+- Unauthorized copying, modification, or use of the app's code or assets is not permitted.
+
+## License
+
+BECpro Polo Membership App is released under the [MIT License](link-to-license.md), with the exception that it cannot be used for commercial purposes.
+
+## Contact
+
+For inquiries, feel free to contact us at uthmandantata8@gmail.com.
