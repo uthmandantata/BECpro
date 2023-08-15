@@ -1,0 +1,55 @@
+{% extends 'admin2/base.html' %}{% block content %}
+<div class="container-fluid">
+  <!-- Page Heading -->
+  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Add</h1>
+  </div>
+  <div class="row">
+    <div class="col-xl-9">
+      <!-- DataTales Example -->
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary"></h6>
+        </div>
+        <div class="card-body">
+          <form class="row g-3">
+            <div class="col-md-6 pb-3">
+              <label for="inputName" class="form-label">Name</label>
+              <input type="text" class="form-control" id="inputName" />
+            </div>
+            <div class="col-6">
+              <label for="inputAge" class="form-label">Age</label>
+              <input type="number" class="form-control" id="inputAge" placeholder="10" />
+            </div>
+            <div class="col-12 pb-3">
+              <label for="inputBought" class="form-label">Bought</label>
+              <input type="date" class="form-control" id="inputBought" placeholder="1234 Main St" />
+            </div>
+            <div class="col-6 pb-3">
+              <label for="inputWeight" class="form-label">Weight(kg)</label>
+              <input type="number" class="form-control" id="inputWeight" placeholder="10" />
+            </div>
+            <div class="col-6">
+              <label for="inputHeight" class="form-label">Height(m)</label>
+              <input type="number" class="form-control" id="inputHeight" placeholder="10" />
+            </div>
+
+            <div class="col-4 pb-3">
+              <label for="inputPolo" class="form-label">Polo</label>
+              <select id="inputPolo" class="form-select">
+                <option selected>Choose...</option>
+                <option>Yes</option>
+                <option>No</option>
+              </select>
+            </div>
+
+            <div class="col-12">
+              <button type="submit" class="btn btn-primary">Add</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}

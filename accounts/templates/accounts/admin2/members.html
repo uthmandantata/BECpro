@@ -1,0 +1,89 @@
+{% extends 'admin2/base.html' %}{% block content %}
+<div class="container-fluid">
+  <!-- Page Heading -->
+  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Members</h1>
+  </div>
+
+  <div class="row">
+    <!-- Area Chart -->
+    <div class="col-xl-12">
+      <!-- DataTales Example -->
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary"></h6>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+              <thead>
+                <tr>
+                  <th>S/N</th>
+                  <th>Name</th>
+                  <th>Age</th>
+                  <th>Weight</th>
+                  <th>Height</th>
+                  <th>Email</th>
+                  <th>Day 1</th>
+                  <th>Day 2</th>
+                  <th>Day 3</th>
+                  <th>Is Suspended</th>
+                  <th>Membership Plan</th>
+                  <th>Date Joined</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tfoot>
+                <tr>
+                  <th>S/N</th>
+                  <th>Name</th>
+                  <th>Age</th>
+                  <th>Weight</th>
+                  <th>Height</th>
+                  <th>Email</th>
+                  <th>Day 1</th>
+                  <th>Day 2</th>
+                  <th>Day 3</th>
+                  <th>Is Suspended</th>
+                  <th>Membership Plan</th>
+                  <th>Date Joined</th>
+                  <th>Actions</th>
+                </tr>
+              </tfoot>
+              <tbody>
+                {% for member in form %}
+                <tr>
+                  <td>{{member}}</td>
+                  <td>{{member.guardian_name}}</td>
+                  <td>{{member.guardian_age}}</td>
+                  <td>{{member.guardian_weight}}</td>
+                  <td>{{member.guardian_height}}</td>
+                  <td>{{member.email}}</td>
+                  <td>{{member.day1}}</td>
+                  <td>{{member.day2}}</td>
+                  <td>{{member.day3}}</td>
+                  <td>{{member.suspend}}</td>
+                  <td>{{member.membership}}</td>
+                  <td>{{member.date_paid}}</td>
+                  <td>
+                    {% if member.suspend %}
+                    <a href="{% url 'resumeMembers' member.id %}" class="btn btn-info btn-icon-split">
+                      <span class="text">Resume</span>
+                    </a>
+                    {% else %}
+                    <a href="{% url 'suspendMembers' member.id %}" class="btn btn-danger btn-icon-split">
+                      <span class="text">Suspend</span>
+                    </a>
+                    {% endif %}
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}

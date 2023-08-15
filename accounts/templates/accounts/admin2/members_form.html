@@ -1,0 +1,42 @@
+{% extends 'admin2/base.html' %}{% block content %} {% load crispy_forms_tags %}
+
+<div class="container-fluid">
+  <!-- Page Heading -->
+  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Add</h1>
+  </div>
+  <div class="row">
+    <div class="col-xl-9">
+      <!-- DataTales Example -->
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary"></h6>
+        </div>
+        {% if messages %}
+        <ul class="messages">
+          {% for message in messages %}
+          <li>{{ message }}</li>
+          {% endfor %}
+          {% endif %}
+        <div class="card-body">
+          <form class="row g-3" method="POST" action="">
+            {% csrf_token %}
+            
+            <div class="col-md-6 pb-3">{{form.username|as_crispy_field}}</div>
+            <div class="col-6">{{form.age|as_crispy_field}}</div>
+            <div class="col-6 pb-3">{{form.email|as_crispy_field}}</div>
+            <div class="col-4 pb-3">{{form.membership|as_crispy_field}}</div>
+            <div class="col-4 pb-3">{{form.slots|as_crispy_field}}</div>
+
+            <div class="col-12">
+              <button type="submit" class="btn btn-primary">Add</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+</div>
+
+{% endblock content %}

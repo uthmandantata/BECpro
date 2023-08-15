@@ -1,0 +1,66 @@
+{% extends 'admin2/base.html' %}{% block content %}
+<div class="container-fluid">
+  <!-- Page Heading -->
+  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Equipment</h1>
+    <a href="{% url 'addEquipment' %}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">Add Equipment</a>
+  </div>
+
+  <div class="row">
+    <!-- Area Chart -->
+    <div class="col-xl-12">
+      <!-- DataTales Example -->
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary"></h6>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+              <thead>
+                <tr>
+                  <th>S/N</th>
+                  <th>Name</th>
+                  <th>Amount</th>
+                  <th>Price Bought</th>
+                  <th>Needs Repair</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tfoot>
+                <tr>
+                  <th>S/N</th>
+                  <th>Name</th>
+                  <th>Amount</th>
+                  <th>Price Bought</th>
+                  <th>Needs Repair</th>
+                  <th>Actions</th>
+                </tr>
+              </tfoot>
+              <tbody>
+                {% for equipment in forms %}
+                <tr>
+                  <td>1</td>
+                  <td>{{equipment.name}}</td>
+                  <td>{{equipment.amount}}</td>
+                  <td>{{equipment.price_bought}}</td>
+                  <td>{{equipment.needs_repair}}</td>
+                  <td>
+                    <a href="{% url 'updateEquipment' equipment.pk %}" class="btn btn-success btn-icon-split">
+                      <span class="text">Edit</span>
+                    </a>
+                    <a href="{% url 'removeEquipment' equipment.pk %}" class="btn btn-danger btn-icon-split">
+                      <span class="text">Delete</span>
+                    </a>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}

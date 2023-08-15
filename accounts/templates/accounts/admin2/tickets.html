@@ -1,0 +1,82 @@
+{% extends 'admin2/base.html' %}{% block content %}
+<div class="container-fluid">
+  <!-- Page Heading -->
+  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Tickets</h1>
+    <a href="{% url 'addTickets' %}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">Add Tickets</a>
+  </div>
+
+  <div class="row">
+    <!-- Area Chart -->
+    <div class="col-xl-12">
+      <!-- DataTales Example -->
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary"></h6>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+              <thead>
+                <tr>
+                  <th>Ticket Number</th>
+                  <th>Attendant</th>
+                  <th>Customer Fullname</th>
+                  <th>Customer Email</th>
+                  <th>Customer Number</th>
+                  <th>Service</th>
+                  <th>Price per 1</th>
+                  <th>Quantity</th>
+                  <th>Total Price</th>
+                  <th>Date</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tfoot>
+                <tr>
+                  <th>Ticket Number</th>
+                  <th>Attendant</th>
+                  <th>Customer Fullname</th>
+                  <th>Customer Email</th>
+                  <th>Customer Number</th>
+                  <th>Service</th>
+                  <th>Price per 1</th>
+                  <th>Quantity</th>
+                  <th>Total Price</th>
+                  <th>Date</th>
+                  <th>Actions</th>
+                </tr>
+              </tfoot>
+              <tbody>
+                {% for tickets in form %}
+                <tr>
+                  <td>{{tickets.ticket_number}}</td>
+                  <!-- <td>{{tickets.attendant}}</td> -->
+                  <td>{{tickets.customer_fullname}}</td>
+                  <td>{{tickets.customer_email}}</td>
+                  <td>{{tickets.customer_number}}</td>
+                  <td>{{tickets.service}}</td>
+                  <td>{{tickets.service.price}}</td>
+                  <td>{{tickets.quantity}}</td>
+                  <td>{{tickets.total_price}}</td>
+                  <td>{{tickets.date}}</td>
+
+                  <td>
+                    <a href="{% url 'updateTickets' tickets.pk %}" class="btn btn-success btn-icon-split">
+                      <span class="text">Edit</span>
+                    </a>
+                    <a href="{% url 'removeTickets' tickets.pk %}" class="btn btn-danger btn-icon-split">
+                      <span class="text">Delete</span>
+                    </a>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}

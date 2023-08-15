@@ -1,0 +1,30 @@
+{% extends 'admin2/base.html' %}{% block content %} {% load crispy_forms_tags %}
+<div class="container-fluid">
+  <!-- Page Heading -->
+  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Add Equipment</h1>
+  </div>
+  <div class="row">
+    <div class="col-xl-9">
+      <!-- DataTales Example -->
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary"></h6>
+        </div>
+        <div class="card-body">
+          <form class="row g-3" method="POST">
+            {% csrf_token %}
+            <div class="col-md-12 pb-3">{{form.name|as_crispy_field}}</div>
+            <div class="col-6 pb-3">{{form.amount|as_crispy_field}}</div>
+            <div class="col-6 pb-3">{{form.price_bought|as_crispy_field}}</div>
+            <div class="col-md-6 pb-3">{{form.needs_repair|as_crispy_field}}</div>
+            <div class="col-12">
+              <div class="col-12"><button type="submit" class="btn btn-primary mr-2">Submit</button><a href="{{request.META.HTTP_REFERER}}" class="btn btn-secondary">Back</a></div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}

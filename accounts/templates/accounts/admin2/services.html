@@ -1,0 +1,67 @@
+{% extends 'admin2/base.html' %}{% block content %}
+<div class="container-fluid">
+  <!-- Page Heading -->
+  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Services</h1>
+    <a href="{% url 'addServices' %}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">Add Services</a>
+  </div>
+
+  <div class="row">
+    <!-- Area Chart -->
+    <div class="col-xl-12">
+      <!-- DataTales Example -->
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary"></h6>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Duration</th>
+                  <th>More Explanation</th>
+                  <th>Price</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tfoot>
+                <tr>
+                  <th>Name</th>
+                  <th>Duration</th>
+                  <th>More Explanation</th>
+                  <th>Price</th>
+                  <th>Actions</th>
+                </tr>
+              </tfoot>
+              <tbody>
+                {% for services in form %}
+                <tr>
+                  <td>{{services.name}}</td>
+                  <td>{{services.duration}}</td>
+                  <td>{{services.explanation}}</td>
+                  <td>{{services.price}}</td>
+
+                  <td>
+                    <a href="{% url 'updateServices' services.pk %}" class="btn btn-success btn-icon-split">
+                      <span class="text">Edit</span>
+                    </a>
+                    <a href="{% url 'removeServices' services.pk %}" class="btn btn-danger btn-icon-split">
+                      <span class="text">Delete</span>
+                    </a>
+                    <a href="{% url 'updateServices' services.pk %}" class="btn btn-info btn-icon-split">
+                      <span class="text">Create a Ticket</span>
+                    </a>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}

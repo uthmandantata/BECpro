@@ -1,0 +1,18 @@
+
+{% autoescape off %}
+Hello {{ user.username }}
+
+You're receiving this e-mail because you created an account on Focalleap.
+Click the link below to reset your password.
+
+{{protocol}}://{{domain}}{% url 'activate' uidb64=uid token=token %}
+
+
+Your username is: {{ user.username }}
+
+Sincerely, 
+
+Uthman Bashir Dantata
+
+
+{% endautoescape %}
