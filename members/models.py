@@ -1,5 +1,6 @@
 from django.db import models
 from authenticate import models as md
+from accounts import models as amd
 
 
 class ForgetPassword(models.Model):
@@ -46,6 +47,9 @@ class Day2(models.Model):
 class Day3(models.Model):
     DAYS = (
         ('Saturday','Saturday'),
+        ('Sunday','Sunday'),
+        ('Wednesday','Wednesday'),
+        ('Friday','Friday'),
     )
     TIME_SLOT = (
         ('8-10 am', '8-10 am'),
@@ -58,7 +62,29 @@ class Day3(models.Model):
     
     def __str__(self):
         return str(self.name)
+ 
+class PayHistory(models.Model):
+    user = models.ForeignKey(md.CustomUser, on_delete=models.CASCADE, default=None)
+    paystack_charge_id = models.CharField(max_length=100, blank=True)
+    paystack_access_code = models.CharField(max_length=100, blank=True)
+    payment_for = models.ForeignKey('Membership', on_delete=models.SET_NULL, null=True)
+    amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    activity = models.CharField(max_length=100, blank=True)
+    is_verified = models.BooleanField(null=True, default=False)
+    date_paid = models.DateTimeField(null=True)
+    expiry_date = models.DateTimeField(null=True)
+
+    def __str__(self):
+        return str(self.user)
+
+class Notification(models.Model):
+    is_read = models.BooleanField(default=False)
+    message = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(md.CustomUser, on_delete=models.CASCADE)
+
     
+
 class Membership(models.Model):
     MEMBERSHIP = (
         ('Family Riding Monthly', 'Family Riding Monthly'),
@@ -92,26 +118,6 @@ class Membership(models.Model):
     def __str__(self):
         return self.membership_type
 
-class PayHistory(models.Model):
-    user = models.ForeignKey(md.CustomUser, on_delete=models.CASCADE, default=None)
-    paystack_charge_id = models.CharField(max_length=100, blank=True)
-    paystack_access_code = models.CharField(max_length=100, blank=True)
-    payment_for = models.ForeignKey('Membership', on_delete=models.SET_NULL, null=True)
-    amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
-    activity = models.CharField(max_length=100, blank=True)
-    is_verified = models.BooleanField(null=True, default=False)
-    date_paid = models.DateTimeField(null=True)
-    expiry_date = models.DateTimeField(null=True)
-
-    def __str__(self):
-        return str(self.user)
-
-class Notification(models.Model):
-    is_read = models.BooleanField(default=False)
-    message = models.TextField()
-    timestamp = models.DateTimeField(auto_now_add=True)
-    user = models.ForeignKey(md.CustomUser, on_delete=models.CASCADE)
-    
 
 class Member(models.Model):
     user = models.OneToOneField(md.CustomUser, on_delete=models.CASCADE,null=True, blank=True)

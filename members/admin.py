@@ -13,7 +13,9 @@ admin.site.register(models.Notification,NotificationAdmin)
 
 admin.site.register(models.Member)
 
-admin.site.register(models.Membership)
+class MembershipAdmin(admin.ModelAdmin):
+    list_display = ('membership_type','price','activity','duration')
+admin.site.register(models.Membership,MembershipAdmin)
 
 
 admin.site.register(models.ForgetPassword)

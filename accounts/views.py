@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from .forms import EquipmentForm,HorsesForm, CustomUserForm, SlotsForm, ServicesForm, TicketsForm
 from django.contrib.auth.decorators import login_required
-from .models import Horses, Equipment, Slots,Membership, Services, Tickets
+from .models import Horses, Equipment, Slots, Services, Tickets
 from members import models
 
 from authenticate.models import CustomUser
@@ -19,7 +19,7 @@ def home(request):
         if request.user.is_admin==False:
             return redirect('member_dashboard')
         no_members = models.Member.objects.all().count()
-        membership = Membership.objects.all()
+        membership = models.Membership.objects.all()
         try:
             polo_payment_sum = models.PayHistory.objects.filter(activity="Polo").aggregate(Sum('amount'))['amount__sum']
             riding_payment_sum = models.PayHistory.objects.filter(activity="Riding").aggregate(Sum('amount'))['amount__sum']

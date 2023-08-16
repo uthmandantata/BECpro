@@ -68,6 +68,12 @@ def Registration(request):
                 registered_user.set_password(password)
                 registered_user.is_avtive = False
                 registered_user.save()
+                Profile.objects.create(
+                    user=registered_user,
+                    email=registered_user.email,
+                    username=registered_user.username,
+                )
+                print(f'registered_user.username: {registered_user.username}')
                
             # path_to_view
             # - getting the domain we are on
@@ -106,12 +112,9 @@ class VerificationView(View):
             if user.is_active:
                 return redirect('login')
             user.is_active = True
+            
             user.save()
-            Profile.objects.create(
-            user=user,
-            email=user.email,
-            username=user.username,
-            )
+            
             messages.success(request, 'Account activated successfully')
             return redirect('login')
 
@@ -151,6 +154,9 @@ def profile(request):
     first_name = user.first_name
     form = Profile.objects.get(user=user)
     print(f"first_name: {first_name}")
+    notifications = None
+    notification_count = 0
+    
 
     if Member.objects.filter(guardian_name=user.first_name).exists():
         member = Member.objects.get(guardian_name=user.first_name)
@@ -163,25 +169,37 @@ def profile(request):
 
 @login_required(login_url='login')
 def updateProfile(request):
-    user = request.user
-    member = Member.objects.get(guardian_name=user.first_name)
+    user = CustomUser.objects.get(username = request.user)
+    notifications = None
+    notification_count  =None
     profile = Profile.objects.get(user=user)
     form = ProfileForm(instance=profile)
     if request.method == "POST":
         form = ProfileForm(request.POST, instance=profile)
         if form.is_valid():
             profile = form.save(commit=False)
-            CustomUser.objects.update(
-                first_name= profile.first_name
-            )
+            # CustomUser.objects.update(
+            #     first_name= profile.first_name,
+            #     last_name= profile.last_name,
+            #     email= profile.email,
+            # )
+            user.first_name = profile.first_name
+            user.save()
             profile.save()
-            if member.paid:
-                member.email=profile.email,
-                member.guardian_name=profile.first_name,
+            if Member.objects.filter(guardian_name=user.first_name).exists():
+                member = Member.objects.get(guardian_name=user.first_name)
+                if member.paid:
+                    member.email=profile.email,
+                    member.guardian_name=profile.first_name,
+                    member.phone = profile.phone,
+                    member.address = profile.address
+                    member.save()
             return redirect('profile')
-    if member.paid:
-        notifications = Notification.objects.all()
-        notification_count = Notification.objects.filter(is_read=False).count()
+    if Member.objects.filter(guardian_name=user.first_name).exists():
+        member = Member.objects.get(guardian_name=user.first_name)
+        if member.paid:
+            notifications = Notification.objects.all()
+            notification_count = Notification.objects.filter(is_read=False).count()
     context = {"form":form,"notifications":notifications,"notification_count":notification_count}
     return render(request, 'members/profile_form.html', context)
 

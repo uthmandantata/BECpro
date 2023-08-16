@@ -50,44 +50,7 @@ class Slots(models.Model):
     
     def __str__(self):
         return str(self.name)
-    
 
-class Membership(models.Model):
-    MEMBERSHIP = (
-        ('Family Riding Monthly', 'Family Riding Monthly'),
-        ('Family Riding Yearly', 'Family Riding Yearly'),
-        ('Family Polo Monthly', 'Family Polo Monthly'),
-        ('Family Polo Yearly', 'Family Polo Yearly'),
-        ('Single Riding Monthly', 'Single Riding Monthly'),
-        ('Single Riding Yearly', 'Single Riding Yearly'),
-        ('Single Polo Monthly', 'Single Polo Monthly'),
-        ('Single Polo Yearly', 'Single Polo Yearly'),
-        
-    )
-    ACTIVITY = (
-        ('Riding', 'Riding'),
-        ('Polo', 'Polo'),
-    )
-    DURATION = (
-        (' Monthly', ' Monthly'),
-        (' Yearly', ' Yearly'),
-        
-    )
-   
- 
-    membership_type = models.CharField(max_length=150, choices=MEMBERSHIP)
-    price = models.IntegerField(null=True)
-    activity  =models.CharField(max_length=150, null=True, choices=ACTIVITY)
-    duration =models.CharField(max_length=150, null=True, choices=DURATION)
-    duration_in_months =models.CharField(max_length=150, null=True)
-   
-
-    def __str__(self):
-        return self.membership_type
-
-
-
-    
 
 
 

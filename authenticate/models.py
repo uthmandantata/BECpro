@@ -25,4 +25,4 @@ class Profile(models.Model):
     # room = models.ForeignKey(Room, on_delete=models.CASCADE)
 
     def __str__(self):
-        return 'f{self.email} Profile'
+        return f'{self.email} Profile'

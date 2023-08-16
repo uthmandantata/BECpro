@@ -6,7 +6,7 @@ from .forms import MemberRegistrationForm,MemberForm
 
 
 from django.contrib.auth.decorators import login_required
-from .models import Notification,Membership, PayHistory, Member
+from .models import Notification, PayHistory, Member, Membership
 from accounts.models import Field
 from authenticate.models import CustomUser
 
@@ -142,105 +142,112 @@ def notifications(request):
 
 # --------------   End of Payments      ------------------
 def subscription(request):
-    form = Membership.objects.all()
-    context = {"form":form}
-    return render(request, 'members/subscription.html', context)
+    try:
+        form = Membership.objects.all()
+        print(f"form: {form}")
+        context = {"form":form}
+        return render(request, 'members/subscription.html', context)
+    except Exception as e:
+        print(e)
 
 def subscribe(request):
-    username = request.user
-    user = CustomUser.objects.get(email=username.email)
-    plan = request.GET.get('membership_plan')
-    fetch_memberhip = Membership.objects.filter(membership_type=plan).exists()
-    if fetch_memberhip == False:
-        return redirect(subscribe)
-    membership = Membership.objects.get(membership_type=plan)
-    price = float(membership.price*100)
-    price = int(price)
-    activity = membership.activity
-    def init_payment(request):
-        url = 'https://api.paystack.co/transaction/initialize'
-        headers = {
-            'Authorization':'Bearer '+'sk_test_088df86667579a1e72eeee77795861d7aae6e17f',
-            'Content-Type':'application/json',
-            'Accept':'application/json',
-        }
-        datum = {
-            'email':request.user.email,
-            'full_name': request.user.email,
-            'amount': price
-        }
-        x = requests.post(url, data=json.dumps(datum), headers=headers)
-        print(datum)
-        # print(headers)
-        if x.status_code != 200:
-            return str(x.status_code)
+    try:
+        username = request.user
+        user = CustomUser.objects.get(email=username.email)
+        plan = request.GET.get('membership_plan')
+        fetch_memberhip = Membership.objects.filter(membership_type=plan).exists()
+        if fetch_memberhip == False:
+            return redirect(subscribe)
+        membership = Membership.objects.get(membership_type=plan)
+        price = float(membership.price*100)
+        price = int(price)
+        activity = membership.activity
+        def init_payment(request):
+            url = 'https://api.paystack.co/transaction/initialize'
+            headers = {
+                'Authorization':'Bearer '+'sk_test_088df86667579a1e72eeee77795861d7aae6e17f',
+                'Content-Type':'application/json',
+                'Accept':'application/json',
+            }
+            datum = {
+                'email':request.user.email,
+                'full_name': request.user.email,
+                'amount': price
+            }
+            x = requests.post(url, data=json.dumps(datum), headers=headers)
+            print(datum)
+            # print(headers)
+            if x.status_code != 200:
+                return str(x.status_code)
+            
+            results = x.json()
+            return results
         
-        results = x.json()
-        return results
-    
-    
-    initialized = init_payment(request)
-    print(initialized['data']['authorization_url'])
-    amount = price/100
-    # context = {'form':form}
+        
+        initialized = init_payment(request)
+        print(initialized['data']['authorization_url'])
+        amount = price/100
+        # context = {'form':form}
 
-    # member = Member.objects.get(guardian_name=username)
-     
-    # dtn = member.membership
-    membership_duration = Membership.objects.get(membership_type=plan)
-    duration = membership_duration.duration_in_months
-    current_date = date.today()
-    months  = 0
-    expiry_date = current_date + relativedelta(months=int(duration))
-    print(f'duration:{duration},months:{months}')
-    
+        # member = Member.objects.get(guardian_name=username)
+        
+        # dtn = member.membership
+        membership_duration = Membership.objects.get(membership_type=plan)
+        duration = membership_duration.duration_in_months
+        current_date = date.today()
+        months  = 0
+        expiry_date = current_date + relativedelta(months=int(duration))
+        print(f'duration:{duration},months:{months}')
+        
 
-    print(user.is_member)
-  
-    if user.is_member == False:
-        Member.objects.create(
-            user=username,
-            membership=membership,  
-            guardian_name=request.user, 
-            email=request.user.email, 
+        print(user.is_member)
+    
+        if user.is_member == False:
+            Member.objects.create(
+                user=username,
+                membership=membership,  
+                guardian_name=request.user.first_name, 
+                email=request.user.email, 
+                activity=activity,
+                date_paid=current_date,
+                paid_until=expiry_date
+            )
+
+            CustomUser.objects.update(
+                is_member = True
+            )
+
+        Member.objects.update(
+            membership=membership, 
             activity=activity,
+            paid=True,
             date_paid=current_date,
             paid_until=expiry_date
-        )
+            )
 
+
+
+        PayHistory.objects.create(
+            amount=amount, 
+            payment_for=membership, 
+            user=request.user, 
+            paystack_charge_id=initialized['data']['reference'], 
+            paystack_access_code=initialized['data']['access_code'],
+            activity=activity,
+            expiry_date = expiry_date,
+            is_verified=True,
+            date_paid=current_date,
+            )
         CustomUser.objects.update(
             is_member = True
-        )
-
-    Member.objects.update(
-        membership=membership, 
-        activity=activity,
-        paid=True,
-        date_paid=current_date,
-        paid_until=expiry_date
-        )
-
-
-
-    PayHistory.objects.create(
-        amount=amount, 
-        payment_for=membership, 
-        user=request.user, 
-        paystack_charge_id=initialized['data']['reference'], 
-        paystack_access_code=initialized['data']['access_code'],
-        activity=activity,
-        expiry_date = expiry_date,
-        is_verified=True,
-        date_paid=current_date,
-        )
-    CustomUser.objects.update(
-        is_member = True
-        )
-    
-    
-    link = initialized['data']['authorization_url']
-    print(user.is_member)
-    return HttpResponseRedirect(link)
+            )
+        
+        
+        link = initialized['data']['authorization_url']
+        print(user.is_member)
+        return HttpResponseRedirect(link)
+    except Exception as e:
+        print(e)
     return render(request, 'members/subscribe.html')
 
 def call_back_url(request):

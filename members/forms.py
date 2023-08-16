@@ -33,3 +33,9 @@ class ForgetPasswordForm(forms.ModelForm):
     class Meta:
         model = models.ForgetPassword
         fields = '__all__'
+
+
+class MembershipForm(forms.ModelForm):
+    class Meta:
+        model = models.Membership
+        fields = '__all__'

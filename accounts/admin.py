@@ -3,9 +3,7 @@ from . import models
 # Register your models here.
 
 
-class MembershipAdmin(admin.ModelAdmin):
-    list_display = ('membership_type','price','activity','duration')
-admin.site.register(models.Membership,MembershipAdmin)
+
 
 
 
