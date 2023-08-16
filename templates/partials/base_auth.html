@@ -1,0 +1,32 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="auto">
+  <head>
+    <script src="/docs/5.3/assets/js/color-modes.js"></script>
+
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Truly Expenses {% block title %}{% endblock title %}</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3" />
+
+    <link href="{% static 'new_folder/css/bootstrap.min.css' %}" rel="stylesheet" crossorigin="anonymous" />
+    <link href="{% static 'new_folder/css/main.css' %}" rel="stylesheet" />
+
+    <link href="{% static 'new_folder/css/dashboard.css' %}" rel="stylesheet" />
+  </head>
+  <body>
+    <main role="main">
+      {% block content %} {% endblock content %}</div>
+    </main>
+    <script src="/docs/5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/chart.js@4.2.1/dist/chart.umd.min.js"
+      integrity="sha384-gdQErvCNWvHQZj6XZM0dNsAoY4v+j5P1XDpNkcM3HJG1Yx04ecqIHk7+4VBOCHOG"
+      crossorigin="anonymous"
+    ></script>
+    <script src="{% static 'main.js' %}"></script>
+  </body>
+</html>

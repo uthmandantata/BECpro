@@ -9,7 +9,7 @@ admin.site.register(models.Membership,MembershipAdmin)
 
 
 
-admin.site.register(models.CustomUser)
+
 
 
 class PayHistoryAdmin(admin.ModelAdmin):

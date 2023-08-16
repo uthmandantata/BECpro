@@ -1,21 +1,12 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser
+from authenticate import models as md
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils import timezone
 
 
-
-
-class CustomUser(AbstractUser):
-    is_super_admin = models.BooleanField(null=True, default=False)
-    is_admin = models.BooleanField(null=True, default=False)
-    is_member = models.BooleanField(null=True, default=False)
-    is_allowed = models.BooleanField(null=True, default=False)
-
-
 class Profile(models.Model):
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE,null=True, blank=True)
+    user = models.OneToOneField(md.CustomUser, on_delete=models.CASCADE,null=True, blank=True)
     first_name = models.CharField(max_length=150, null=True)
     last_name = models.CharField(max_length=150, null=True)
     email =models.CharField(max_length=150, unique=True)
@@ -34,7 +25,7 @@ class Profile(models.Model):
 
 
 class ForgetPassword(models.Model):
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, null=True, blank=True)
+    user = models.OneToOneField(md.CustomUser, on_delete=models.CASCADE, null=True, blank=True)
     forget_password_token = models.CharField(max_length=150, null=True)
     created_at = models.DateTimeField(null=True, auto_now_add=True)
 
@@ -172,7 +163,7 @@ class Membership(models.Model):
 
 
 class PayHistory(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, default=None)
+    user = models.ForeignKey(md.CustomUser, on_delete=models.CASCADE, default=None)
     paystack_charge_id = models.CharField(max_length=100, blank=True)
     paystack_access_code = models.CharField(max_length=100, blank=True)
     payment_for = models.ForeignKey('Membership', on_delete=models.SET_NULL, null=True)
@@ -189,11 +180,11 @@ class Notification(models.Model):
     is_read = models.BooleanField(default=False)
     message = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    user = models.ForeignKey(md.CustomUser, on_delete=models.CASCADE)
     
 
 class Member(models.Model):
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE,null=True, blank=True)
+    user = models.OneToOneField(md.CustomUser, on_delete=models.CASCADE,null=True, blank=True)
     membership = models.ForeignKey(Membership, on_delete=models.CASCADE,null=True, blank=True)
     activity  =models.CharField(max_length=150, null=True)
     paid = models.BooleanField(default=False)
@@ -272,7 +263,7 @@ class Equipment(models.Model):
 
 
 class Admin(models.Model):
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, null=True, blank=True)
+    user = models.OneToOneField(md.CustomUser, on_delete=models.CASCADE, null=True, blank=True)
     # Add your admin fields here
 
 

@@ -1,0 +1,36 @@
+{% extends 'partials/base_auth.html' %}{% load static %}{% block content %} {% load static %}
+<div class="row">
+  <div class="col-md-4"></div>
+  <div class="col-md-4">
+    <div class="card mt-5">
+      <div class="card-body">
+        <div class="card-title pt-3 pb-3">
+          <h4>Login</h4>
+        </div>
+        <form action="" method="post">
+          {% csrf_token %} {% include 'partials/messages.html' %}
+          <div class="mb-3">
+            <label for="usernameField" class="form-label">Username</label>
+            <input type="text" name="username" class="form-control" value="{{fieldValues.username}}" class="username" id="usernameField" aria-describedby="usernameHelp" />
+          </div>
+          <div class="mb-3">
+            <label for="passwordField" class="form-label">Password</label>
+            <input type="password" name="password" class="form-control" id="passwordField" />
+          </div>
+          <div class="mb-3 form-check">
+            <small class="float-end showPasswordToggle">SHOW</small>
+          </div>
+          <div class="mb-3 form-check">
+            <input type="checkbox" class="form-check-input" id="exampleCheck1" />
+            <label class="form-check-label" for="exampleCheck1">Check me out</label>
+          </div>
+          <input type="submit" value="Login" class="submit-btn btn btn-primary" />
+        </form>
+      </div>
+      Don't Have an Account?<a href="">Click Here</a>
+    </div>
+  </div>
+  <div class="col-md-4"></div>
+</div>
+<script src="{% static 'js/register.js' %}"></script>
+{% endblock content %}

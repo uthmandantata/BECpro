@@ -1,5 +1,6 @@
 from django import forms
-from .models import Profile, Member, Equipment, Horses, CustomUser, ForgetPassword, Slots, Membership, Services, Tickets
+from .models import Profile, Member, Equipment, Horses, ForgetPassword, Slots, Membership, Services, Tickets
+from authenticate import models as md
 # from crispy_forms.helper import FormHelper
 # from crispy_forms.layout import Layout, Fieldset, Submit
 from django.contrib.auth.forms import UserCreationForm
@@ -10,12 +11,12 @@ from django.contrib.auth.forms import UserCreationForm
 class SignupForm(UserCreationForm):
     email = forms.EmailField(max_length=200, help_text='Required')
     class Meta:
-        model = CustomUser
+        model = md.CustomUser
         fields = ('username', 'email', 'password1', 'password2')
 
 class CustomUserForm(forms.ModelForm):
     class Meta:
-        model = CustomUser
+        model = md.CustomUser
         fields = ('username', 'is_super_admin','is_admin','is_member')
 
 

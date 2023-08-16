@@ -2,7 +2,8 @@ from django.shortcuts import render, redirect
 from .forms import MemberForm, ProfileForm, SignupForm, MemberRegistrationForm, EquipmentForm,HorsesForm, CustomUserForm, SlotsForm, MembershipForm, ServicesForm, TicketsForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
-from .models import Field,Notification, Day1,Day2,Day3, Member, Horses, Equipment, CustomUser, Slots,Membership, PayHistory, Services, Tickets, Profile
+from .models import Field,Notification, Day1,Day2,Day3, Member, Horses, Equipment, Slots,Membership, PayHistory, Services, Tickets, Profile
+from authenticate.models import CustomUser
 from django.core.exceptions import ValidationError
 from django.contrib import messages
 # import date
@@ -27,9 +28,6 @@ from datetime import date
 from dateutil.relativedelta import relativedelta
 from django.db.models import Sum
 
-
-        
-     
 
 
 def landing(request):
@@ -656,7 +654,7 @@ def registerUser(request):
             return HttpResponse('Please confirm your email address to complete the registration')
     else:
         form = SignupForm()
-    return render(request, 'accounts/members/register.html', {'form': form})
+    return render(request, 'authentication/register.html', {'form': form})
 
 # --------------    Member Dashboard       ------------------
 @login_required(login_url='login')
