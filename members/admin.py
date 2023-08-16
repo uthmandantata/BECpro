@@ -19,9 +19,7 @@ admin.site.register(models.Membership,MembershipAdmin)
 
 
 admin.site.register(models.ForgetPassword)
-admin.site.register(models.Day1)
-admin.site.register(models.Day2)
-admin.site.register(models.Day3)
+admin.site.register(models.Days)
 
 
 

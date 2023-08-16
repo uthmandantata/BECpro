@@ -11,40 +11,18 @@ class ForgetPassword(models.Model):
     def __str__(self):
         return str(self.user)
    
-class Day1(models.Model):
-    DAYS = (
-        ('Sunday','Sunday'),
+class Days(models.Model):
+    NAME = (
+        ('Saturday Morning','Saturday Morning'),
+        ('Saturday Evening','Saturday Evening'),
+        ('Sunday Morning','Sunday Morning'),
+        ('Sunday Evening','Sunday Evening'),
+        ('Wednesday Morning','Wednesday Morning'),
+        ('Wednesday Evening','Wednesday Evening'),
+        ('Friday Morning','Friday Morning'),
+        ('Friday Evening','Friday Evening'),
+      
     )
-    TIME_SLOT = (
-        ('8-10 am', '8-10 am'),
-        ('4-6 pm', '4-6 pm'),
-    )
-    name = models.CharField(max_length=200, null=True)
-    days = models.CharField(max_length=200, null=True, choices=DAYS)
-    time_slot = models.CharField(max_length=200, null=True, choices=TIME_SLOT)
-    amount = models.IntegerField(null=True)
-    
-    def __str__(self):
-        return str(self.name)
-    
-class Day2(models.Model):
-    DAYS = (
-        ('Wednesday','Wednesday'),
-
-    )
-    TIME_SLOT = (
-        ('8-10 am', '8-10 am'),
-        ('4-6 pm', '4-6 pm'),
-    )
-    name = models.CharField(max_length=200, null=True)
-    days = models.CharField(max_length=200, null=True, choices=DAYS)
-    time_slot = models.CharField(max_length=200, null=True, choices=TIME_SLOT)
-    amount = models.IntegerField(null=True)
-    
-    def __str__(self):
-        return str(self.name)
-    
-class Day3(models.Model):
     DAYS = (
         ('Saturday','Saturday'),
         ('Sunday','Sunday'),
@@ -55,13 +33,73 @@ class Day3(models.Model):
         ('8-10 am', '8-10 am'),
         ('4-6 pm', '4-6 pm'),
     )
-    name = models.CharField(max_length=200, null=True)
+    name = models.CharField(max_length=200, null=True, choices=NAME)
     days = models.CharField(max_length=200, null=True, choices=DAYS)
     time_slot = models.CharField(max_length=200, null=True, choices=TIME_SLOT)
     amount = models.IntegerField(null=True)
     
     def __str__(self):
         return str(self.name)
+    
+# class Day2(models.Model):
+#     NAME = (
+#         ('Saturday Morning','Saturday Morning'),
+#         ('Saturday Evening','Saturday Evening'),
+#         ('Sunday Morning','Sunday Morning'),
+#         ('Sunday Evening','Sunday Evening'),
+#         ('Wednesday Morning','Wednesday Morning'),
+#         ('Wednesday Evening','Wednesday Evening'),
+#         ('Friday Morning','Friday Morning'),
+#         ('Friday Evening','Friday Evening'),
+      
+#     )
+#     DAYS = (
+#         ('Saturday','Saturday'),
+#         ('Sunday','Sunday'),
+#         ('Wednesday','Wednesday'),
+#         ('Friday','Friday'),
+#     )
+#     TIME_SLOT = (
+#         ('8-10 am', '8-10 am'),
+#         ('4-6 pm', '4-6 pm'),
+#     )
+#     name = models.CharField(max_length=200, null=True, choices=NAME)
+#     days = models.CharField(max_length=200, null=True, choices=DAYS)
+#     time_slot = models.CharField(max_length=200, null=True, choices=TIME_SLOT)
+#     amount = models.IntegerField(null=True)
+
+#     def __str__(self):
+#         return str(self.name)
+    
+# class Day3(models.Model):
+#     NAME = (
+#         ('Saturday Morning','Saturday Morning'),
+#         ('Saturday Evening','Saturday Evening'),
+#         ('Sunday Morning','Sunday Morning'),
+#         ('Sunday Evening','Sunday Evening'),
+#         ('Wednesday Morning','Wednesday Morning'),
+#         ('Wednesday Evening','Wednesday Evening'),
+#         ('Friday Morning','Friday Morning'),
+#         ('Friday Evening','Friday Evening'),
+      
+#     )
+#     DAYS = (
+#         ('Saturday','Saturday'),
+#         ('Sunday','Sunday'),
+#         ('Wednesday','Wednesday'),
+#         ('Friday','Friday'),
+#     )
+#     TIME_SLOT = (
+#         ('8-10 am', '8-10 am'),
+#         ('4-6 pm', '4-6 pm'),
+#     )
+#     name = models.CharField(max_length=200, null=True, choices=NAME)
+#     days = models.CharField(max_length=200, null=True, choices=DAYS)
+#     time_slot = models.CharField(max_length=200, null=True, choices=TIME_SLOT)
+#     amount = models.IntegerField(null=True)
+    
+#     def __str__(self):
+#         return str(self.name)
  
 class PayHistory(models.Model):
     user = models.ForeignKey(md.CustomUser, on_delete=models.CASCADE, default=None)
@@ -124,9 +162,9 @@ class Member(models.Model):
     membership = models.ForeignKey(Membership, on_delete=models.CASCADE,null=True, blank=True)
     activity  =models.CharField(max_length=150, null=True)
     paid = models.BooleanField(default=False)
-    day1 = models.ForeignKey(Day1, on_delete=models.CASCADE,null=True, blank=True)
-    day2 = models.ForeignKey(Day2, on_delete=models.CASCADE,null=True, blank=True)
-    day3 = models.ForeignKey(Day3, on_delete=models.CASCADE,null=True, blank=True)
+    days = models.ManyToManyField(Days)
+    # day2 = models.ForeignKey(Day2, on_delete=models.CASCADE,null=True, blank=True)
+    # day3 = models.ForeignKey(Day3, on_delete=models.CASCADE,null=True, blank=True)
     suspend = models.BooleanField(default=False)
     # day3 = models.ForeignKey(Slots, on_delete=models.CASCADE,null=True, blank=True)
     email = models.CharField(max_length=150, null=True)

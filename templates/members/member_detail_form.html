@@ -1,6 +1,7 @@
-{% extends 'members/base.html' %}{% block content %}{% load crispy_forms_tags %}
+{% extends 'members/base.html' %}{% block content %}{% load crispy_forms_tags %} {% load static %}
+
 <section style="background-color: #eee">
-  <form action="" method="POST">
+  <form action="" name="form1" method="POST">
     {% csrf_token %} {% if stat == "Single" %}
     <div class="container py-5">
       <div class="row">
@@ -66,30 +67,15 @@
               <hr />
               <div class="row">
                 <div class="col-sm-3">
-                  <p class="mb-0">Day 1</p>
+                  <p class="mb-0">Day</p>
                 </div>
                 <div class="col-sm-9">
-                  <p class="text-muted mb-0">{{form.day1}}</p>
-                </div>
-              </div>
-              <hr />
-
-              <div class="row">
-                <div class="col-sm-3">
-                  <p class="mb-0">Day 2</p>
-                </div>
-                <div class="col-sm-9">
-                  <p class="text-muted mb-0">{{form.day2}}</p>
-                </div>
-              </div>
-              <hr />
-
-              <div class="row">
-                <div class="col-sm-3">
-                  <p class="mb-0">Day 3</p>
-                </div>
-                <div class="col-sm-9">
-                  <p class="text-muted mb-0">{{form.day3}}</p>
+                  {% for day in days %}
+                  <div class="form-check">
+                    <input type="checkbox" name="day" class="form-check-input Present 1" id="1" value="{{day.name}}" />
+                    <label class="form-check-label" for="flexCheckDefault"> {{day.name}} </label>
+                  </div>
+                  {% endfor %}
                 </div>
               </div>
               <hr />
@@ -327,5 +313,12 @@
     {% endif %}
   </form>
 </section>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 
+<script type="text/javascript">
+  $("input:checkbox").click(function () {
+    var bol = $("input:checkbox:checked").length >= 3;
+    $("input:checkbox").not(":checked").attr("disabled", bol);
+  });
+</script>
 {% endblock %}

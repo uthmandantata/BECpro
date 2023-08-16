@@ -22,7 +22,7 @@ class MemberRegistrationForm(forms.ModelForm):
 class MemberForm(forms.ModelForm):
     class Meta:
         model = models.Member
-        fields = ('guardian_name', 'guardian_age', 'guardian_weight', 'guardian_height', 'email','day1','day2','day3')
+        fields = ('guardian_name', 'guardian_age', 'guardian_weight', 'guardian_height', 'email','days')
 
         def __init__(self, *args, **kwargs):
             super(MemberForm, self).__init__(*args, **kwargs)

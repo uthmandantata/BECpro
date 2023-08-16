@@ -6,7 +6,7 @@ from .forms import MemberRegistrationForm,MemberForm
 
 
 from django.contrib.auth.decorators import login_required
-from .models import Notification, PayHistory, Member, Membership
+from .models import Notification, PayHistory, Member, Membership, Days
 from accounts.models import Field
 from authenticate.models import CustomUser
 
@@ -323,7 +323,7 @@ def members_details(request):
 @login_required(login_url='login')
 def updateMembersDetails(request,pk):
     user = request.user
-    username = request.user.username
+    days = Days.objects.all()
     form = Member.objects.get(guardian_name=user.first_name)
     member = Member.objects.get(guardian_name=user.first_name)
     members = Member.objects.get(id=pk)
@@ -343,14 +343,26 @@ def updateMembersDetails(request,pk):
         stat = "Single"
         form = MemberForm(instance=members)
         if request.method == "POST":
+            member_selected = [x.name for x in Days.objects.all()]
+            member_ids = []
+            for x in member_selected:
+                member_ids.append(int(request.POST.get(x))) if request.POST.get(x) else print("hello")
+                print(member_ids)
+            
+            
+
             form = MemberForm(request.POST, instance=members)
             if form.is_valid():
-                form.save()
+                update_member = form.save(commit=False)
+                
+                
+                update_member.save()
+
                 return redirect('profile')
     if member.paid:
         notifications = Notification.objects.all()
         notification_count = Notification.objects.filter(is_read=False).count()
-    context ={"notifications":notifications,"notification_count":notification_count,"form":form,"stat":stat}
+    context ={"notifications":notifications,"notification_count":notification_count,"form":form,"stat":stat,"days":days}
     return render(request, 'members/member_detail_form.html', context)
     
 # --------------   End of Members      ------------------
