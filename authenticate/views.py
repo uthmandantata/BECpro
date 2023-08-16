@@ -25,9 +25,8 @@ class UsernameValidationView(View):
         username = data['username']
         if not str(username).isalnum():
             return JsonResponse({'username_error':'Username should ONLY contain alphanumeric characters'},status=400)
-        if models.User.objects.filter(username=username).exists():
+        if models.CustomUser.objects.filter(username=username).exists():
             return JsonResponse({'username_error':'Username already in use, Choose another one!'},status=409)
-        
         return JsonResponse({'username_valid': True})
     
 class EmailValidationView(View):
@@ -36,7 +35,7 @@ class EmailValidationView(View):
         email = data['email']
         if not validate_email(email):
             return JsonResponse({'email_error':'Email is invalid'},status=400)
-        if models.User.objects.filter(email=email).exists():
+        if models.CustomUser.objects.filter(email=email).exists():
             return JsonResponse({'email_error':'Email already in use, Choose another one!'},status=409)
         
         return JsonResponse({'username_valid': True})
@@ -57,12 +56,12 @@ class RegistrationView(View):
         context={
             'fieldValues':request.POST
         }
-        if not models.User.objects.filter(username=username).exists():
-            if not models.User.objects.filter(email=email).exists():
+        if not models.CustomUser.objects.filter(username=username).exists():
+            if not models.CustomUser.objects.filter(email=email).exists():
                 if len(password) < 6:
                     messages.error(request,'Password too short')
                     return render(request, 'authentication/register.html', context)
-                user = models.User.objects.create_user(username=username, email=email)
+                user = models.CustomUser.objects.create_user(username=username, email=email)
                 user.set_password(password)
                 user.is_avtive = False
                 user.save()
@@ -97,7 +96,7 @@ class VerificationView(View):
     def get(self, request, uidb64, token):
         try:
             id=force_str(urlsafe_base64_decode(uidb64))
-            user=models.User.objects.get(id=id)
+            user=models.CustomUser.objects.get(id=id)
             if not token_generator.check_token(user,token):
                 return redirect('login'+'?message='+'User already activated')
             if user.is_active:

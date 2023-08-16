@@ -1,5 +1,3 @@
-console.log('register is working')
-const usernameField = document.querySelector('#usernameField')
 const emailField = document.querySelector('#emailField')
 const feedBackArea = document.querySelector('.invalid_feedback')
 const emailfeedBackArea = document.querySelector('.invalid_email')
@@ -10,49 +8,58 @@ const passwordField = document.querySelector('#passwordField')
 const submitBtn = document.querySelector('.submit-btn')
 
 
-
-
-
+const handleToggleInput=(e)=>{
+    if(showPasswordToggle.textContent==='SHOW'){
+        showPasswordToggle.textContent = 'HIDE';
+        passwordField.setAttribute("type", "text")
+    }
+    else{
+        showPasswordToggle.textContent = "SHOW"
+        passwordField.setAttribute("type", "password")
+    }
+}
 
 
 usernameField.addEventListener('keyup',(e) => {
     const usernameVal = e.target.value;
     usernameField.classList.remove('is-invalid');
     feedBackArea.style.display = 'none'
-    userameSuccessOutput.textContent=`${usernameVal} valid`;
+    userameSuccessOutput.textContent=`Checking ${usernameVal}`;
     userameSuccessOutput.style.display = 'block'
+    
     if(usernameVal.length > 0){
-        fetch('/authenticate/validate-username/',{
-            body:JSON.stringify({username:usernameVal}),
+        fetch('/authenticate/validate-username', {
+            body:JSON.stringify({username:usernameVal}), 
             method:"POST",
-        })
-        .then(res=>res.json())
-        .then((data) => {
-            console.log("data", data);
+        }).then((res)=>res.json()).then((data)=>{
+            console.log('data',data);
+            userameSuccessOutput.style.display = 'none'
             if(data.username_error){
                 submitBtn.disabled = true;
                 usernameField.classList.add('is-invalid');
                 feedBackArea.style.display = 'block'
                 feedBackArea.innerHTML=`<p>${data.username_error}</p>`
-                
             }
             else{
                 submitBtn.removeAttribute("disabled");
             }
         });
     }
-});
+})
+
 
 emailField.addEventListener('keyup',(e) => {
     const emailVal = e.target.value;
     emailField.classList.remove('is-invalid');
     emailfeedBackArea.style.display = 'none'
-    emailSuccessOutput.textContent=`${emailVal} valid`;
+    emailSuccessOutput.textContent=`Checking ${emailVal}`;
     emailSuccessOutput.style.display = 'block'
     
     
+    
+    
     if(emailVal.length > 0){
-        fetch('/authenticate/validate-email', {
+        fetch('/authentication/validate-email', {
             body:JSON.stringify({email:emailVal}), 
             method:"POST",
         }).then((res)=>res.json()).then((data)=>{
@@ -69,3 +76,6 @@ emailField.addEventListener('keyup',(e) => {
         });
     }
 })
+
+
+showPasswordToggle.addEventListener('click', handleToggleInput)
