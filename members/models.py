@@ -1,23 +1,6 @@
 from django.db import models
 from authenticate import models as md
 
-class Profile(models.Model):
-    user = models.OneToOneField(md.CustomUser, on_delete=models.CASCADE,null=True, blank=True)
-    first_name = models.CharField(max_length=150, null=True)
-    last_name = models.CharField(max_length=150, null=True)
-    email =models.CharField(max_length=150, unique=True)
-    username =models.CharField(max_length=150, unique=True, null=True)
-    phone =models.CharField(max_length=150, null=True)
-    age = models.IntegerField(default=18)
-    address = models.CharField(max_length=150, null=True)
-    city = models.CharField(max_length=150, null=True)
-    postal_code = models.CharField(max_length=150, null=True)
-    
-    
-    # room = models.ForeignKey(Room, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return 'f{self.email} Profile'
 
 class ForgetPassword(models.Model):
     user = models.OneToOneField(md.CustomUser, on_delete=models.CASCADE, null=True, blank=True)

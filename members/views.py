@@ -1,8 +1,12 @@
 from django.shortcuts import render
 from django.shortcuts import render, redirect
-from .forms import ProfileForm,MemberRegistrationForm,MemberForm
+from .forms import MemberRegistrationForm,MemberForm
+
+
+
+
 from django.contrib.auth.decorators import login_required
-from .models import Notification,Membership, PayHistory, Profile, Member
+from .models import Notification,Membership, PayHistory, Member
 from accounts.models import Field
 from authenticate.models import CustomUser
 
@@ -41,7 +45,7 @@ def password_reset_request(request):
             if user_email.exists():
                 for user in user_email:
                     subject = 'Your forget password link'
-                    email_template_name = 'accounts/password_message.txt'
+                    email_template_name = 'password_message.txt'
                     email_from = settings.EMAIL_HOST_USER
                     parameters = {
                         'email':user.email,
@@ -58,79 +62,7 @@ def password_reset_request(request):
                         return HttpResponse('invalid header')
                     return redirect('password_reset_done')    
     context = {'password_form':password_form}
-    return render(request, 'accounts/password_reset.html', context)
-
-@login_required(login_url='login')
-def profile(request):
-    user = request.user
-    first_name = user.first_name
-    print(f"first_name: {first_name}")
-    member = Member.objects.get(guardian_name=user.first_name)
-    form = Profile.objects.get(user=user)
-    if member.paid:
-        notifications = Notification.objects.all()
-        notification_count = Notification.objects.filter(is_read=False).count()
-    
-    context ={"user":user,"form":form,"notifications":notifications,"notification_count":notification_count}
-    return render(request, 'accounts/members/profile.html', context)
-
-@login_required(login_url='login')
-def updateProfile(request):
-    user = request.user
-    member = Member.objects.get(guardian_name=user.first_name)
-    profile = Profile.objects.get(user=user)
-    form = ProfileForm(instance=profile)
-    if request.method == "POST":
-        form = ProfileForm(request.POST, instance=profile)
-        if form.is_valid():
-            profile = form.save(commit=False)
-            CustomUser.objects.update(
-                first_name= profile.first_name
-            )
-            profile.save()
-            if member.paid:
-                member.email=profile.email,
-                member.guardian_name=profile.first_name,
-            return redirect('profile')
-    if member.paid:
-        notifications = Notification.objects.all()
-        notification_count = Notification.objects.filter(is_read=False).count()
-    context = {"form":form,"notifications":notifications,"notification_count":notification_count}
-    return render(request, 'accounts/members/profile_form.html', context)
-
-def activate(request, uidb64, token):
-    try:
-        uid = force_str(urlsafe_base64_decode(uidb64))
-        user = CustomUser.objects.get(pk=uid)
-    except(TypeError, ValueError, OverflowError, CustomUser.DoesNotExist):
-        user = None
-    if user is not None and account_activation_token.check_token(user, token):
-        user.is_active = True
-        user.save()
-        Profile.objects.create(
-            user=user,
-            email=user.email,
-            )
-        # login(request, user)
-        return redirect('login')
-    else:
-        return HttpResponse('Activation link is invalid!')
-
-def activateEmail(request, user, to_email):
-    mail_subject = "Activate your user account."
-    message = render_to_string("template_activate_account.html", {
-        'user': user.username,
-        'domain': get_current_site(request).domain,
-        'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-        'token': account_activation_token.make_token(user),
-        "protocol": 'https' if request.is_secure() else 'http'
-    })
-    email = EmailMessage(mail_subject, message, to=[to_email])
-    if email.send():
-        messages.success(request, f'Dear <b>{user}</b>, please go to you email <b>{to_email}</b> inbox and click on \
-                received activation link to confirm and complete the registration. <b>Note:</b> Check your spam folder.')
-    else:
-        messages.error(request, f'Problem sending email to {to_email}, check if you typed it correctly.')
+    return render(request, 'password_reset.html', context)
 
 
 # --------------    Member Dashboard       ------------------
@@ -166,7 +98,7 @@ def member_dashboard(request):
             notifications = Notification.objects.all()
             notification_count = Notification.objects.filter(is_read=False).count()
     context ={"notifications":notifications,"notification_count":notification_count,"membership_status":membership_status,"days_remaining":days_remaining,"status":status,"paid":paid,"payment_history":payment_history,"day1" : form.day1,"day2" : form.day2,"day3" : form.day3}
-    return render(request, 'accounts/members/dashboard.html', context)
+    return render(request, 'members/dashboard.html', context)
    
 # --------------   End of Member Dashboard      ------------------
 
@@ -183,8 +115,8 @@ def paymentHistory(request):
             notifications = Notification.objects.all()
             notification_count = Notification.objects.filter(is_read=False).count()
     context ={"notifications":notifications,"notification_count":notification_count,"payment_history":payment_history}
-        # return render(request, 'accounts/members/dashboard.html', context)
-    return render(request, 'accounts/members/payment_history.html', context)
+        # return render(request, 'members/dashboard.html', context)
+    return render(request, 'members/payment_history.html', context)
 
 # --------------   End of Payment History       ------------------
 
@@ -194,7 +126,7 @@ def complaints(request):
     notifications = Notification.objects.all()
     notification_count = Notification.objects.filter(is_read=False).count()
     context ={"notifications":notifications,"notification_count":notification_count}
-    return render(request, 'accounts/members/complaints.html', context)
+    return render(request, 'members/complaints.html', context)
 
 # --------------   End of User Complaints       ------------------
 
@@ -204,7 +136,7 @@ def notifications(request):
     notifications = Notification.objects.all()
     notification_count = Notification.objects.filter(is_read=False).count()
     context ={"notifications":notifications,"notification_count":notification_count}
-    return render(request, 'accounts/members/notifications.html', context)
+    return render(request, 'members/notifications.html', context)
 
 # --------------   End of Notifications       ------------------
 
@@ -212,7 +144,7 @@ def notifications(request):
 def subscription(request):
     form = Membership.objects.all()
     context = {"form":form}
-    return render(request, 'accounts/members/subscription.html', context)
+    return render(request, 'members/subscription.html', context)
 
 def subscribe(request):
     username = request.user
@@ -309,7 +241,7 @@ def subscribe(request):
     link = initialized['data']['authorization_url']
     print(user.is_member)
     return HttpResponseRedirect(link)
-    return render(request, 'accounts/members/subscribe.html')
+    return render(request, 'members/subscribe.html')
 
 def call_back_url(request):
     reference = request.GET.get('reference_code')
@@ -346,7 +278,7 @@ def call_back_url(request):
 
    
     print(f"verified:{initialized['data']['authorization_url']}")
-    return render(request, 'accounts/members/payment.html')
+    return render(request, 'members/payment.html')
 # --------------   End of payments      ------------------  
 
 @login_required(login_url='login')
@@ -379,7 +311,7 @@ def members_details(request):
         notifications = Notification.objects.all()
         notification_count = Notification.objects.filter(is_read=False).count()
     context ={"notifications":notifications,"notification_count":notification_count,"user":user,"form":form,"stat":stat,"membership":membership}
-    return render(request, 'accounts/members/membership_details.html', context)
+    return render(request, 'members/membership_details.html', context)
 
 @login_required(login_url='login')
 def updateMembersDetails(request,pk):
@@ -412,7 +344,7 @@ def updateMembersDetails(request,pk):
         notifications = Notification.objects.all()
         notification_count = Notification.objects.filter(is_read=False).count()
     context ={"notifications":notifications,"notification_count":notification_count,"form":form,"stat":stat}
-    return render(request, 'accounts/members/member_detail_form.html', context)
+    return render(request, 'members/member_detail_form.html', context)
     
 # --------------   End of Members      ------------------
 

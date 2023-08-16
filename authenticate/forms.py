@@ -7,3 +7,10 @@ class SignupForm(UserCreationForm):
     class Meta:
         model = models.CustomUser
         fields = ('username', 'email', 'password1', 'password2')
+
+
+
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = models.Profile
+        fields = ('first_name', 'last_name','email', 'phone', 'address')

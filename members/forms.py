@@ -5,16 +5,6 @@ from . import models
 # from crispy_forms.layout import Layout, Fieldset, Submit
 from django.contrib.auth.forms import UserCreationForm
 
-
-
-
-
-class ProfileForm(forms.ModelForm):
-    class Meta:
-        model = models.Profile
-        fields = ('first_name', 'last_name','email', 'phone', 'address')
-
-
 class MemberRegistrationForm(forms.ModelForm):
     class Meta:
         model = models.Member
