@@ -122,7 +122,7 @@ class Notification(models.Model):
     user = models.ForeignKey(md.CustomUser, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.user} --- {timestamp}"
+        return f"{self.user} --- {self.timestamp}"
 
     
 

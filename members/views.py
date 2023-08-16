@@ -289,9 +289,11 @@ def call_back_url(request):
 @login_required(login_url='login')
 def members_details(request):
     user = request.user
+    
     if user.is_member == False:
         return redirect("subscription")
     form = Member.objects.get(guardian_name=user.first_name)
+    days = form.days.all()
     membership = str(form.membership)
     print(f"membership:{membership}")
     fm = membership.split()
@@ -306,7 +308,7 @@ def members_details(request):
     if form.paid:
         notifications = Notification.objects.all()
         notification_count = Notification.objects.filter(is_read=False).count()
-    context ={"notifications":notifications,"notification_count":notification_count,"user":user,"form":form,"stat":stat,"membership":membership}
+    context ={"notifications":notifications,"notification_count":notification_count,"user":user,"form":form,"stat":stat,"membership":membership,"days":days}
     return render(request, 'members/membership_details.html', context)
 
 @login_required(login_url='login')

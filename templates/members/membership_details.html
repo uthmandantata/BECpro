@@ -20,9 +20,9 @@
         <div class="card mb-4">
           <div class="card-body text-center">
             <h1>Days For Riding</h1>
-            <h5 class="my-3">{{form.day1}}</h5>
-            <h5 class="my-3">{{form.day2}}</h5>
-            <h5 class="my-3">{{form.day3}}</h5>
+            {% for day in days %}
+            <h5 class="my-3">{{day.name}}</h5>
+            {% endfor %}
           </div>
         </div>
       </div>
