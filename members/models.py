@@ -121,6 +121,9 @@ class Notification(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(md.CustomUser, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return f"{self.user} --- {timestamp}"
+
     
 
 class Membership(models.Model):
@@ -196,7 +199,7 @@ class Member(models.Model):
     # room = models.ForeignKey(Room, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.guardian_name
+        return str(self.guardian_name)
 
 
 

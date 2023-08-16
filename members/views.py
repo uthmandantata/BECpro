@@ -69,6 +69,7 @@ def password_reset_request(request):
 @login_required(login_url='login')
 def member_dashboard(request):
     user = request.user
+    
     if request.user.is_admin == True:
         return redirect('home')
     status = Field.objects.all()
@@ -97,7 +98,7 @@ def member_dashboard(request):
         if member.paid:
             notifications = Notification.objects.all()
             notification_count = Notification.objects.filter(is_read=False).count()
-    context ={"notifications":notifications,"notification_count":notification_count,"membership_status":membership_status,"days_remaining":days_remaining,"status":status,"paid":paid,"payment_history":payment_history,"day1" : form.day1,"day2" : form.day2,"day3" : form.day3}
+    context ={"notifications":notifications,"notification_count":notification_count,"membership_status":membership_status,"days_remaining":days_remaining,"status":status,"paid":paid,"payment_history":payment_history, "days":member.days}
     return render(request, 'members/dashboard.html', context)
    
 # --------------   End of Member Dashboard      ------------------
@@ -281,35 +282,23 @@ def call_back_url(request):
             
             return results
     initialized = verify_payment(request)
-    
-
-   
     print(f"verified:{initialized['data']['authorization_url']}")
     return render(request, 'members/payment.html')
 # --------------   End of payments      ------------------  
 
 @login_required(login_url='login')
 def members_details(request):
-    
     user = request.user
-    # username = request.user.username
-
     if user.is_member == False:
         return redirect("subscription")
-    
     form = Member.objects.get(guardian_name=user.first_name)
     membership = str(form.membership)
-    
     print(f"membership:{membership}")
     fm = membership.split()
     first = fm[0]
-    
-
     if user.is_member == False:
         return redirect(subscription)
-    
     stat = ""
-    
     if first == "Family":
         stat = "Family"
     else:
@@ -324,46 +313,51 @@ def members_details(request):
 def updateMembersDetails(request,pk):
     user = request.user
     days = Days.objects.all()
-    form = Member.objects.get(guardian_name=user.first_name)
-    member = Member.objects.get(guardian_name=user.first_name)
-    members = Member.objects.get(id=pk)
-    membership = str(members.membership)
-    fm = membership.split()
-    first = fm[0]
-    stat = ""
-    if first == "Family":
-        stat = "Family"
-        form = MemberRegistrationForm(instance=members)
-        if request.method == "POST":
-            form = MemberRegistrationForm(request.POST, instance=members)
-            if form.is_valid():
-                form.save()
-                return redirect('profile')
-    else:
-        stat = "Single"
-        form = MemberForm(instance=members)
-        if request.method == "POST":
-            member_selected = [x.name for x in Days.objects.all()]
-            member_ids = []
-            for x in member_selected:
-                member_ids.append(int(request.POST.get(x))) if request.POST.get(x) else print("hello")
-                print(member_ids)
-            
-            
+    fetch_member = Member.objects.filter(guardian_name=user.first_name).exists()
+    if fetch_member:
+        # form = Member.objects.get(guardian_name=user.first_name)
+        member = Member.objects.get(guardian_name=user.first_name)
+        members = Member.objects.get(id=pk)
+        membership = str(members.membership)
+        fm = membership.split()
+        first = fm[0]
+        stat = ""
+        if first == "Family":
+            stat = "Family"
+            form = MemberRegistrationForm(instance=members)
+            if request.method == "POST":
+                chosen_days_ids = request.POST.getlist('days')
+                chosen_days = Days.objects.filter(id__in=chosen_days_ids)
 
-            form = MemberForm(request.POST, instance=members)
-            if form.is_valid():
-                update_member = form.save(commit=False)
-                
-                
-                update_member.save()
+                # Remove existing choices for the user
+                Member.objects.filter(user=request.user).delete()
 
-                return redirect('profile')
-    if member.paid:
-        notifications = Notification.objects.all()
-        notification_count = Notification.objects.filter(is_read=False).count()
-    context ={"notifications":notifications,"notification_count":notification_count,"form":form,"stat":stat,"days":days}
-    return render(request, 'members/member_detail_form.html', context)
+                member_choice = Member(user=request.user)
+                member_choice.save()
+                member_choice.days.add(*chosen_days)
+                form = MemberRegistrationForm(request.POST, instance=members)
+                if form.is_valid():
+                    form.save()
+                    return redirect('profile')
+        else:
+            stat = "Single"
+            form = MemberForm(instance=members)
+            if request.method == "POST":
+                form = MemberForm(request.POST, instance=members)
+                if form.is_valid():
+                    chosen_days_ids = request.POST.getlist('days')
+                    chosen_days = Days.objects.filter(id__in=chosen_days_ids)
+                    update_member = form.save(commit=False)
+                    update_member.days.clear()
+                    update_member.days.add(*chosen_days)
+                    update_member.save()
+                    return redirect('profile')
+        if member.paid:
+            notifications = Notification.objects.all()
+            notification_count = Notification.objects.filter(is_read=False).count()
+        context ={"notifications":notifications,"notification_count":notification_count,"form":form,"stat":stat,"days":days}
+        return render(request, 'members/member_detail_form.html', context)
+    return render(request, 'members/member_detail_form.html')
     
 # --------------   End of Members      ------------------
 
