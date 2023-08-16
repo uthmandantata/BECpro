@@ -1,5 +1,5 @@
 from django import forms
-from .models import Member, Equipment, Horses, Slots, Membership, Services, Tickets
+from .models import Profile, Member, Equipment, Horses, ForgetPassword, Slots, Membership, Services, Tickets
 from authenticate import models as md
 # from crispy_forms.helper import FormHelper
 # from crispy_forms.layout import Layout, Fieldset, Submit
@@ -13,6 +13,10 @@ class CustomUserForm(forms.ModelForm):
         fields = ('username', 'is_super_admin','is_admin','is_member')
 
 
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ('first_name', 'last_name','email', 'phone', 'address')
 
 
 class MembershipForm(forms.ModelForm):
@@ -54,6 +58,11 @@ class EquipmentForm(forms.ModelForm):
         fields = '__all__'
 
 
+
+class ForgetPasswordForm(forms.ModelForm):
+    class Meta:
+        model = ForgetPassword
+        fields = '__all__'
 
 class HorsesForm(forms.ModelForm):
     class Meta:

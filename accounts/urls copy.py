@@ -5,15 +5,28 @@ from django.views.decorators.csrf import csrf_exempt
 
 
 urlpatterns = [
-    
+    path('', views.landing, name='landing'),
     path('', views.home, name='home'),
+    path('login', views.loginUser, name='login'),
+    path('register', views.registerUser, name='register'),
+    path('logout', views.logoutUser, name='logout'),
+    path('paymentHistory/', views.paymentHistory, name='paymentHistory'),
+    path('complaints', views.complaints, name='complaints'),
+    path('notifications', views.notifications, name='notifications'),
     
     
+
+
+
+
+
+
+    path('subscription', views.subscription, name='subscription'),
     
+    path('payment/', views.call_back_url, name='payment'),
+    path('subscribe', views.subscribe, name='subscribe'),
 
-
-
-
+    path('activate/<uidb64>/<token>', views.activate, name='activate'),
     
     
     path('costumUser/', views.costumUser, name='costumUser'),
