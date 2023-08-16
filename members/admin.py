@@ -11,6 +11,7 @@ class NotificationAdmin(admin.ModelAdmin):
 admin.site.register(models.Notification,NotificationAdmin)
  
 
+admin.site.register(models.Member)
 admin.site.register(models.Profile)
 admin.site.register(models.Membership)
 

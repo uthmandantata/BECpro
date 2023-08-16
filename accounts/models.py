@@ -89,46 +89,6 @@ class Membership(models.Model):
 
     
 
-class Member(models.Model):
-    user = models.OneToOneField(md.CustomUser, on_delete=models.CASCADE,null=True, blank=True)
-    membership = models.ForeignKey(Membership, on_delete=models.CASCADE,null=True, blank=True)
-    activity  =models.CharField(max_length=150, null=True)
-    paid = models.BooleanField(default=False)
-    day1 = models.ForeignKey(members_models.Day1, on_delete=models.CASCADE,null=True, blank=True)
-    day2 = models.ForeignKey(members_models.Day2, on_delete=models.CASCADE,null=True, blank=True)
-    day3 = models.ForeignKey(members_models.Day3, on_delete=models.CASCADE,null=True, blank=True)
-    suspend = models.BooleanField(default=False)
-    # day3 = models.ForeignKey(Slots, on_delete=models.CASCADE,null=True, blank=True)
-    email = models.CharField(max_length=150, null=True)
-
-    guardian_name = models.CharField(max_length=150, null=True)
-    guardian_age = models.IntegerField(null=True)
-    guardian_weight = models.IntegerField(null=True)
-    guardian_height = models.IntegerField(null=True)
-
-    member1_full_name = models.CharField(max_length=150, null=True)
-    member1_age = models.IntegerField(null=True)
-    member1_email = models.CharField(max_length=150, null=True)
-    member1_weight = models.IntegerField(null=True)
-    member1_height = models.IntegerField(null=True)
-    member1_address = models.CharField(max_length=150, null=True)
-    member1_city = models.CharField(max_length=150, null=True)
-
-    member2_full_name = models.CharField(max_length=150, null=True)
-    member2_age = models.IntegerField(null=True)
-    member2_email = models.CharField(max_length=150, null=True)
-    member2_weight = models.IntegerField(null=True)
-    member2_height = models.IntegerField(null=True)
-    member2_address = models.CharField(max_length=150, null=True)
-    member2_city = models.CharField(max_length=150, null=True)
-    
-    date_paid = models.DateField(null=True)
-    paid_until = models.DateField(null=True)
-    
-    # room = models.ForeignKey(Room, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.guardian_name
 
 
 class Field(models.Model):

@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect
 from .forms import EquipmentForm,HorsesForm, CustomUserForm, SlotsForm, ServicesForm, TicketsForm
 from django.contrib.auth.decorators import login_required
-from .models import Member, Horses, Equipment, Slots,Membership, Services, Tickets
+from .models import Horses, Equipment, Slots,Membership, Services, Tickets
+from members import models
+
 from authenticate.models import CustomUser
 
 
@@ -16,17 +18,17 @@ def home(request):
     try:
         if request.user.is_admin==False:
             return redirect('member_dashboard')
-        no_members = Member.objects.all().count()
+        no_members = models.Member.objects.all().count()
         membership = Membership.objects.all()
         try:
-            polo_payment_sum = PayHistory.objects.filter(activity="Polo").aggregate(Sum('amount'))['amount__sum']
-            riding_payment_sum = PayHistory.objects.filter(activity="Riding").aggregate(Sum('amount'))['amount__sum']
-        except PayHistory.DoesNotExist:
+            polo_payment_sum = models.PayHistory.objects.filter(activity="Polo").aggregate(Sum('amount'))['amount__sum']
+            riding_payment_sum = models.PayHistory.objects.filter(activity="Riding").aggregate(Sum('amount'))['amount__sum']
+        except models.PayHistory.DoesNotExist:
             polo_payment_sum = 0
             riding_payment_sum = 0
         try:
-            polo_count = Member.objects.filter(activity="Polo").count()
-            riding_count = Member.objects.filter(activity="Riding").count()
+            polo_count = models.Member.objects.filter(activity="Polo").count()
+            riding_count = models.Member.objects.filter(activity="Riding").count()
         except Member.DoesNotExist:
             polo_payment_sum = 0
             riding_payment_sum = 0
@@ -131,7 +133,7 @@ def members(request):
             return redirect('member_dashboard')
         elif request.user.is_admin != True:
             return redirect('member_dashboard')
-        form = Member.objects.all()
+        form = models.Member.objects.all()
     except Exception as e:
         print(e)
     context = {'form':form}
@@ -177,10 +179,10 @@ def updateMembers(request,pk):
 def suspendMembers(request,pk):
     if request.user.is_member:
         return redirect('member_dashboard')
-    members = Member.objects.get(id=pk)
+    members = models.Member.objects.get(id=pk)
     # form = SuspendForm(instance=members)
     if request.method == "POST":
-        Member.objects.update(
+        models.Member.objects.update(
             suspend=True
         )
         return redirect('members')
@@ -191,10 +193,10 @@ def suspendMembers(request,pk):
 def resumeMembers(request,pk):
     if request.user.is_member:
         return redirect('member_dashboard')
-    members = Member.objects.get(id=pk)
+    members = models.Member.objects.get(id=pk)
     # form = SuspendForm(instance=members)
     if request.method == "POST":
-        Member.objects.update(
+        models.Member.objects.update(
             suspend=False
         )
         return redirect('members')

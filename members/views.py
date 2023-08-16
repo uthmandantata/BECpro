@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.shortcuts import render, redirect
 from .forms import ProfileForm,MemberRegistrationForm,MemberForm
 from django.contrib.auth.decorators import login_required
-from .models import Notification,Member,Membership, PayHistory, Profile
+from .models import Notification,Membership, PayHistory, Profile, Member
 from accounts.models import Field
 from authenticate.models import CustomUser
 
@@ -107,7 +107,7 @@ def activate(request, uidb64, token):
     if user is not None and account_activation_token.check_token(user, token):
         user.is_active = True
         user.save()
-        models.Profile.objects.create(
+        Profile.objects.create(
             user=user,
             email=user.email,
             )

@@ -19,21 +19,6 @@ urlpatterns = [
     path('costumUser/', views.costumUser, name='costumUser'),
     path('updateCostumUser/<int:pk>/', views.updateCostumUser, name='updateCostumUser'),
 
-    # ------------------------------------------------------------------------------
-    path('member_dashboard', views.member_dashboard, name='member_dashboard'),
-    path('<int:pk>', views.updateMembersDetails, name='updateMembersDetails'),
-    path('members_details', views.members_details, name='members_details'),
-    # ------------------------------------------------------------------------------
-
-
-
-    # ------------------------------------------------------------------------------
-    path('password_reset_request', views.password_reset_request, name='password_reset_request'),
-    path('password_reset_done', auth_views.PasswordResetDoneView.as_view(template_name='accounts/password_reset_done.html'), name="password_reset_done"),
-    path('password_reset_confirm/<uidb64>/<token>', auth_views.PasswordResetConfirmView.as_view(template_name='accounts/password_reset_confirm.html'), name="password_reset_confirm"),
-    path('reset_password_complete', auth_views.PasswordResetCompleteView.as_view(template_name='accounts/password_reset_complete.html'), name="password_reset_complete"),
-    # ------------------------------------------------------------------------------
-
 
     # ---------------  Members  -----------------------------
     path('members', views.members, name='members'),
@@ -82,12 +67,6 @@ urlpatterns = [
 
     path('staff/', views.staff, name='staff'),
     
-
-    path('test', views.test, name='test'),
-
-
-    path('profile', views.profile, name='profile'),
-    path('updateProfile', views.updateProfile, name='updateProfile'),
 
 
 

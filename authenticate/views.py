@@ -117,10 +117,10 @@ def Login(request):
                 if user.is_active:
                     auth.login(request, user)
                     messages.success(request, f'Welcome {user.username} you are now logged in')
-                    return redirect('expenses')
+                    return redirect('member_dashboard')
                 messages.error(request, f'Account is not active, please check your email')
                 return render(request, 'authentication/login.html')
-        messages.error(request, f'Welcome {user.username} you are now logged in')
+        
     return render(request, 'authentication/login.html')
     
 

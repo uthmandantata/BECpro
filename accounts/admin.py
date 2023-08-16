@@ -10,7 +10,7 @@ admin.site.register(models.Membership,MembershipAdmin)
 
 
 admin.site.register(models.Admin)
-admin.site.register(models.Member)
+
 admin.site.register(models.Equipment)
 
 
