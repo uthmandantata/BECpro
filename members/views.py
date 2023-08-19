@@ -65,43 +65,7 @@ def password_reset_request(request):
     return render(request, 'password_reset.html', context)
 
 
-# --------------    Member Dashboard       ------------------
-@login_required(login_url='login')
-def member_dashboard(request):
-    user = request.user
-    
-    if request.user.is_admin == True:
-        return redirect('home')
-    status = Field.objects.all()
-    user = request.user
-    # username = request.user.username
-    if user.is_member == False:
-        return redirect("subscription")
-    else:
-        form = Member.objects.get(guardian_name=user.first_name)
-        payment_history = PayHistory.objects.filter(user=user)[:3]
-        paid = "Not Payed"
-        if form.paid == True:
-            paid = "Payed"
-        membership_status = "Not Suspended"
-        if form.suspend == True:
-            membership_status = "Suspended"
-        user = request.user
-        if user.is_member:
-            member = Member.objects.get(guardian_name=user.first_name)
-            days_remaining = member.paid_until - member.date_paid
-            
-            if days_remaining == 0:
-                Member.objects.update(
-                paid=False,
-                )
-        if member.paid:
-            notifications = Notification.objects.all()
-            notification_count = Notification.objects.filter(is_read=False).count()
-    context ={"notifications":notifications,"notification_count":notification_count,"membership_status":membership_status,"days_remaining":days_remaining,"status":status,"paid":paid,"payment_history":payment_history, "days":member.days}
-    return render(request, 'members/dashboard.html', context)
-   
-# --------------   End of Member Dashboard      ------------------
+
 
 # --------------    Payment History       ------------------
 @login_required(login_url='login')
@@ -340,7 +304,7 @@ def updateMembersDetails(request,pk):
                 form = MemberRegistrationForm(request.POST, instance=members)
                 if form.is_valid():
                     form.save()
-                    return redirect('profile')
+                    return redirect('_account')
         else:
             stat = "Single"
             form = MemberForm(instance=members)
@@ -353,7 +317,7 @@ def updateMembersDetails(request,pk):
                     update_member.days.clear()
                     update_member.days.add(*chosen_days)
                     update_member.save()
-                    return redirect('profile')
+                    return redirect('_account')
         if member.paid:
             notifications = Notification.objects.all()
             notification_count = Notification.objects.filter(is_read=False).count()
@@ -362,5 +326,108 @@ def updateMembersDetails(request,pk):
     return render(request, 'members/member_detail_form.html')
     
 # --------------   End of Members      ------------------
+
+
+def renew_subscription(request):
+    context = {}
+    return render(request, 'members/billing/renew_subscription.html', context)
+
+def billing_history(request):
+    context = {}
+    return render(request, 'members/billing/billing_history.html', context)
+
+def subscription_guide(request):
+    context = {}
+    return render(request, 'members/billing/subscription_guide.html', context)
+
+def support_ticket(request):
+    context = {}
+    return render(request, 'members/billing/support_ticket.html', context)
+
+def membership_details1(request):
+    context = {}
+
+    return render(request, 'members/billing/membership_details.html', context)
+
+
+
+
+# --------------    Member Dashboard       ------------------
+@login_required(login_url='login')
+def member_dashboard(request):
+    user = request.user
+    if request.user.is_admin == True:
+        return redirect('home')
+    status = Field.objects.all()
+    if user.is_member == False:
+        return redirect("subscription")
+    else:
+        form = Member.objects.get(guardian_name=user.first_name)
+        days = form.days.all()
+        payment_history = PayHistory.objects.filter(user=user)[:3]
+        paid = "Not Payed"
+        if form.paid == True:
+            paid = "Payed"
+        membership_status = "Not Suspended"
+        if form.suspend == True:
+            membership_status = "Suspended"
+        user = request.user
+        if user.is_member:
+            member = Member.objects.get(guardian_name=user.first_name)
+            days_remaining = member.paid_until - member.date_paid
+            
+            if days_remaining == 0:
+                Member.objects.update(
+                paid=False,
+                )
+        if member.paid:
+            notifications = Notification.objects.all()
+            notification_count = Notification.objects.filter(is_read=False).count()
+    context ={"notifications":notifications,"notification_count":notification_count,
+              "membership_status":membership_status,"days_remaining":days_remaining.days,
+              "status":status,"paid":paid,"payment_history":payment_history, "days":days,
+              "form":form}
+    return render(request, 'members/dashboard.html', context)
+   
+# --------------   End of Member Dashboard      ------------------
+
+
+@login_required(login_url='login')
+def members_details(request):
+    user = request.user
+    if user.is_member == False:
+        return redirect("subscription")
+    form = Member.objects.get(guardian_name=user.first_name)
+    days = form.days.all()
+    membership = str(form.membership)
+    payment_history = PayHistory.objects.filter(user=user)[:4]
+    fm = membership.split()
+    first = fm[0]
+    membership_status = "Not Suspended"
+    if form.suspend == True:
+        membership_status = "Suspended"
+    if user.is_member == False:
+        return redirect(subscription)
+    stat = ""
+    if first == "Family":
+        stat = "Family"
+    else:
+        stat = "Single"
+    if form.paid:
+        notifications = Notification.objects.all()
+        notification_count = Notification.objects.filter(is_read=False).count()
+    context ={"notifications":notifications,"notification_count":notification_count,
+              "user":user,"form":form,"stat":stat,"membership":membership,"days":days,
+              "payment_history":payment_history,"membership_status":membership_status}
+    return render(request, 'members/billing/membership_details.html', context)
+
+
+
+
+
+
+
+
+
 
 

@@ -1,182 +1,233 @@
-{% extends 'members/base.html' %}{% block content %}
-<div class="container-fluid">
-  <!-- Page Heading -->
-  <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+{% extends 'dist/base.html' %}{% block content %} {% load static %}
+<div class="app-content-header">
+  <!--begin::Container-->
+  <div class="container-fluid">
+    <!--begin::Row-->
+    <div class="row">
+      <div class="col-sm-6">
+        <h3 class="mb-0">Dashboard</h3>
+      </div>
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-end">
+          <li class="breadcrumb-item"><a href="#">Home</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+        </ol>
+      </div>
+    </div>
+    <!--end::Row-->
   </div>
-
-  <!-- Content Row -->
-  <div class="row">
-    <!-- Payment Status -->
-    {% if membership_status == "Not Suspended" %}
-    <div class="col-xl-4 col-md-6 mb-4">
-      <div class="card border-left-primary shadow h-100 py-2">
-        <div class="card-body">
-          <div class="row no-gutters align-items-center">
-            <div class="col mr-2">
-              <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Payment Status</div>
-              <div class="h5 mb-0 font-weight-bold text-gray-800">{{paid}}</div>
-            </div>
+  <!--end::Container-->
+</div>
+<!--end::App Content Header-->
+<!--begin::App Content-->
+<div class="app-content">
+  <!--begin::Container-->
+  <div class="container-fluid">
+    <!--begin::Row-->
+    <div class="row">
+      <!--begin::Col-->
+      <div class="col-lg-4 col-6">
+        <!--begin::Small Box Widget 1-->
+        <div class="small-box text-bg-primary">
+          <div class="inner">
+            <h3>{{form.membership}}</h3>
+            <p>Membership</p>
           </div>
         </div>
+        <!--end::Small Box Widget 1-->
       </div>
-    </div>
-    {% for field in status %}
-    <!-- Polo-->
-    <div class="col-xl-4 col-md-6 mb-4">
-      <div class="card border-left-success shadow h-100 py-2">
-        <div class="card-body">
-          <div class="row no-gutters align-items-center">
-            <div class="col mr-2">
-              <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Polo Field</div>
-              <div class="h5 mb-0 font-weight-bold text-gray-800">{{field.polo_field_status}}</div>
-            </div>
+      <!--end::Col-->
+      <div class="col-lg-4 col-6">
+        <!--begin::Small Box Widget 2-->
+        <div class="small-box text-bg-success">
+          <div class="inner">
+            <h3>{{form.paid_until}}</h3>
+            <p>Expiry Date</p>
           </div>
         </div>
+        <!--end::Small Box Widget 2-->
       </div>
-    </div>
-    {% endfor %} {% for field in status %}
-
-    <!-- Riding -->
-    <div class="col-xl-4 col-md-6 mb-4">
-      <div class="card border-left-info shadow h-100 py-2">
-        <div class="card-body">
-          <div class="row no-gutters align-items-center">
-            <div class="col mr-2">
-              <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Riding Field</div>
-              <div class="row no-gutters align-items-center">
-                <div class="col-auto">
-                  <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">{{field.riding_field_status}}</div>
-                </div>
-              </div>
-            </div>
+      <!--end::Col-->
+      <div class="col-lg-4 col-6">
+        <!--begin::Small Box Widget 3-->
+        <div class="small-box text-bg-warning">
+          <div class="inner">
+            <h3>{{membership_status}}</h3>
+            <p>Member Status</p>
           </div>
         </div>
+        <!--end::Small Box Widget 3-->
       </div>
+      <!--end::Col-->
     </div>
-    {% endfor %} {% else %}
-    <div class="col-xl-3 col-md-6 mb-4">
-      <div class="card border-left-primary shadow h-100 py-2">
-        <div class="card-body">
-          <div class="row no-gutters align-items-center">
-            <div class="col mr-2">
-              <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Payment Status</div>
-              <div class="h5 mb-0 font-weight-bold text-gray-800">{{paid}}</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-xl-3 col-md-6 mb-4">
-      <div class="card border-left-danger shadow h-100 py-2">
-        <div class="card-body">
-          <div class="row no-gutters align-items-center">
-            <div class="col mr-2">
-              <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Membership Status</div>
-              <div class="h5 mb-0 font-weight-bold text-gray-800">{{membership_status}}</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    {% for field in status %}
-    <!-- Polo-->
-    <div class="col-xl-3 col-md-6 mb-4">
-      <div class="card border-left-success shadow h-100 py-2">
-        <div class="card-body">
-          <div class="row no-gutters align-items-center">
-            <div class="col mr-2">
-              <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Polo Field</div>
-              <div class="h5 mb-0 font-weight-bold text-gray-800">{{field.polo_field_status}}</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    {% endfor %} {% for field in status %}
-
-    <!-- Riding -->
-    <div class="col-xl-3 col-md-6 mb-4">
-      <div class="card border-left-info shadow h-100 py-2">
-        <div class="card-body">
-          <div class="row no-gutters align-items-center">
-            <div class="col mr-2">
-              <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Riding Field</div>
-              <div class="row no-gutters align-items-center">
-                <div class="col-auto">
-                  <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">{{field.riding_field_status}}</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    {% endfor %} {% endif %}
-    <!-- Content Row -->
+    <!--end::Row-->
 
     <div class="row">
-      <!-- Days For Riding -->
-      <div class="col-xl-4 col-lg-5">
-        <div class="card shadow mb-4">
-          <!-- Card Header - Dropdown -->
-          <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-            <h6 class="m-0 font-weight-bold text-primary">Days Selected</h6>
+      <div class="col-lg-6">
+        <div class="card mb-4">
+          <div class="card-header border-0">
+            <h3 class="card-title">Member Details</h3>
           </div>
-          <!-- Card Body -->
-          <div class="card-body">
-            <ul class="list-group list-group-flush">
-              <li class="list-group-item">{{day1}}</li>
+          <div class="card-body table-responsive p-0">
+            <div class="">
+              <div class="card mb-4">
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <p class="mb-0">Full Name</p>
+                    </div>
+                    <div class="col-sm-9">
+                      <p class="text-muted mb-0">{{request.user.first_name}} {{request.user.last_name}}</p>
+                    </div>
+                  </div>
+                  <hr />
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <p class="mb-0">Email</p>
+                    </div>
+                    <div class="col-sm-9">
+                      <p class="text-muted mb-0">{{request.user.email}}</p>
+                    </div>
+                  </div>
+                  <hr />
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <p class="mb-0">Phone</p>
+                    </div>
+                    <div class="col-sm-9">
+                      <p class="text-muted mb-0">{{request.user.phone_number}}</p>
+                    </div>
+                  </div>
+                  <hr />
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <p class="mb-0">Address</p>
+                    </div>
+                    <div class="col-sm-9">
+                      <p class="text-muted mb-0">{{request.user.address}}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /.card -->
+        <div class="card">
+          <div class="card-header border-0">
+            <h3 class="card-title">Days Selected</h3>
+            <div class="card-tools">
+              <a href="{% url 'members-details' %}" class="btn btn-tool btn-sm">
+                <i class="bi bi-list"></i>
+              </a>
+            </div>
+          </div>
+          <div class="card-body table-responsive p-0">
+            <table class="table table-striped align-middle">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Day</th>
+                  <th>Time</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for day in days %}
+                <tr>
+                  <td>{{day.name}}</td>
+                  <td>{{day.days}}</td>
+                  <td>{{day.time_slot}}</td>
+                </tr>
 
-              <li class="list-group-item">{{day2}}</li>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <!-- /.card -->
+      </div>
 
-              <li class="list-group-item">{{day3}}</li>
-              <li>edvdev {{days_remaining}}</li>
-            </ul>
+      <!-- /.col-md-6 -->
+      <div class="col-lg-6">
+        <div style="margin-top: -10px">
+          <div class="card-header border-0">
+            <h3 class="card-title">Member Perks</h3>
+          </div>
+          <div class="card-body table-responsive p-0">
+            <div class="info-box mb-3 text-bg-warning">
+              <span class="info-box-icon">
+                <i class="bi bi-tag-fill"></i>
+              </span>
+
+              <div class="info-box-content">
+                <span class="info-box-text">Inventory</span>
+                <span class="info-box-number">5,200</span>
+              </div>
+              <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+            <div class="info-box mb-3 text-bg-success">
+              <span class="info-box-icon">
+                <i class="bi bi-heart-fill"></i>
+              </span>
+
+              <div class="info-box-content">
+                <span class="info-box-text">Mentions</span>
+                <span class="info-box-number">92,050</span>
+              </div>
+              <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+            <div class="info-box mb-3 text-bg-danger">
+              <span class="info-box-icon">
+                <i class="bi bi-cloud-download"></i>
+              </span>
+
+              <div class="info-box-content">
+                <span class="info-box-text">Downloads</span>
+                <span class="info-box-number">114,381</span>
+              </div>
+              <!-- /.info-box-content -->
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header border-0">
+            <h3 class="card-title">Payment History</h3>
+            <div class="card-tools">
+              <a href="{% url 'billing_history' %}" class="btn btn-tool btn-sm">
+                <i class="bi bi-list"></i>
+              </a>
+            </div>
+          </div>
+          <div class="card-body table-responsive p-0">
+            <table class="table table-striped align-middle">
+              <thead>
+                <tr>
+                  <th>Membership</th>
+                  <th>Amount</th>
+                  <th>Date Paid</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for pay in payment_history %}
+                <tr>
+                  <td>{{pay.payment_for}}</td>
+                  <td>{{pay.amount}}</td>
+                  <td>{{pay.date_paid.date}}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
-
-      <!-- Payment History -->
-      <div class="col-xl-4 col-lg-5">
-        <div class="card shadow mb-4">
-          <!-- Card Header - Dropdown -->
-          <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-            <h6 class="m-0 font-weight-bold text-primary">Payment History</h6>
-            <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm ml-5">More Info</a>
-          </div>
-          <!-- Card Body -->
-          <div class="card-body">
-            <ul class="list-group list-group-flush">
-              {% for pay in payment_history %}
-              <li class="list-group-item">{{pay.payment_for}} ---- {{pay.date_paid}}</li>
-              {% endfor %}
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <!-- Perks -->
-      <div class="col-xl-4 col-lg-5">
-        <div class="card shadow mb-4">
-          <!-- Card Header - Dropdown -->
-          <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-            <h6 class="m-0 font-weight-bold text-primary">Mmebership Perks</h6>
-          </div>
-          <!-- Card Body -->
-          <div class="card-body">
-            <ul class="list-group list-group-flush">
-              <li class="list-group-item">An item</li>
-              <li class="list-group-item">A second item</li>
-              <li class="list-group-item">A third item</li>
-            </ul>
-          </div>
-        </div>
-      </div>
+      <!-- /.col-md-6 -->
     </div>
-
-    <!-- Content Row -->
-    <div class="row"></div>
   </div>
-  {% endblock content %}
+  <!-- /.row (main row) -->
 </div>
+<!--end::Container-->
+
+<!-- /.row (main row) -->
+{% endblock content %}

@@ -13,4 +13,30 @@ class SignupForm(UserCreationForm):
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = models.Profile
-        fields = ('first_name', 'last_name','email', 'phone', 'address')
+        fields = ('first_name', 'last_name','date_of_birth','email', 'phone', 'address')
+        widgets = {
+            'first_name': forms.DateInput(attrs={
+                'class': 'form-control',
+                }),
+            'last_name': forms.DateInput(attrs={
+                'class': 'form-control',
+                }),
+            'email': forms.DateInput(attrs={
+                'class': 'form-control',
+                'type':'email',
+                }),
+            'phone': forms.DateInput(attrs={
+                'class': 'form-control',
+                'type':'number',
+                }),
+            'address': forms.DateInput(attrs={
+                'class': 'form-control',
+                'type':'text',
+                }),
+
+            'date_of_birth': forms.DateInput(attrs={
+                'class': 'form-control',
+                'type':'date',
+                }),
+                
+                }

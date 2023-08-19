@@ -11,6 +11,16 @@ from django.views.decorators.csrf import csrf_exempt
 
 
 urlpatterns = [
+
+    path('renew_subscription', views.renew_subscription, name='renew_subscription'),
+    path('billing_history', views.billing_history, name='billing_history'),
+    path('subscription_guide', views.subscription_guide, name='subscription_guide'),
+    path('support_ticket', views.support_ticket, name='support_ticket'),
+    path('members-details', views.members_details, name='members-details'),
+    
+
+
+
     
     path('', views.member_dashboard, name='member_dashboard'),
     path('<int:pk>', views.updateMembersDetails, name='updateMembersDetails'),

@@ -165,7 +165,7 @@ def profile(request):
             notification_count = Notification.objects.filter(is_read=False).count()
         
     context ={"user":user,"form":form,"notifications":notifications,"notification_count":notification_count}
-    return render(request, 'members/profile.html', context)
+    return render(request, 'members/billing/profile.html', context)
 
 @login_required(login_url='login')
 def updateProfile(request):
@@ -184,22 +184,28 @@ def updateProfile(request):
             #     email= profile.email,
             # )
             user.first_name = profile.first_name
+            user.last_name = profile.last_name
+            print(f"first name: {profile.first_name}")
+            
+            if Member.objects.filter(user=user).exists():
+                member = Member.objects.get(user=user)
+                if member.paid:
+                    member.email=profile.email
+                    member.guardian_name=profile.first_name
+                    member.phone = profile.phone
+                    member.address = profile.address
+                    print(f"guardian name: {member.guardian_name}")
+                    member.save()
             user.save()
             profile.save()
-            if Member.objects.filter(guardian_name=user.first_name).exists():
-                member = Member.objects.get(guardian_name=user.first_name)
-                if member.paid:
-                    member.email=profile.email,
-                    member.guardian_name=profile.first_name,
-                    member.phone = profile.phone,
-                    member.address = profile.address
-                    member.save()
             return redirect('profile')
-    if Member.objects.filter(guardian_name=user.first_name).exists():
-        member = Member.objects.get(guardian_name=user.first_name)
+    if Member.objects.filter(user=user).exists():
+        member = Member.objects.get(user=user)
         if member.paid:
             notifications = Notification.objects.all()
             notification_count = Notification.objects.filter(is_read=False).count()
     context = {"form":form,"notifications":notifications,"notification_count":notification_count}
-    return render(request, 'members/profile_form.html', context)
+    return render(request, 'members/billing/profile_form.html', context)
+
+
 
