@@ -20,6 +20,8 @@ admin.site.register(models.Membership,MembershipAdmin)
 
 admin.site.register(models.ForgetPassword)
 admin.site.register(models.Days)
+admin.site.register(models.Features)
+
 
 
 

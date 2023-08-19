@@ -27,7 +27,7 @@ urlpatterns = [
     path('members_details', views.members_details, name='members_details'),
 
     
-    path('paymentHistory/', views.paymentHistory, name='paymentHistory'),
+    
     path('complaints', views.complaints, name='complaints'),
     path('notifications', views.notifications, name='notifications'),
     path('subscription', views.subscription, name='subscription'),

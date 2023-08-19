@@ -7,6 +7,7 @@ class ForgetPassword(models.Model):
     user = models.OneToOneField(md.CustomUser, on_delete=models.CASCADE, null=True, blank=True)
     forget_password_token = models.CharField(max_length=150, null=True)
     created_at = models.DateTimeField(null=True, auto_now_add=True)
+    date_created = models.DateTimeField(auto_now_add=True,null=True)
 
     def __str__(self):
         return str(self.user)
@@ -37,6 +38,7 @@ class Days(models.Model):
     days = models.CharField(max_length=200, null=True, choices=DAYS)
     time_slot = models.CharField(max_length=200, null=True, choices=TIME_SLOT)
     amount = models.IntegerField(null=True)
+    date_created = models.DateTimeField(auto_now_add=True,null=True)
     
     def __str__(self):
         return str(self.name)
@@ -111,6 +113,7 @@ class PayHistory(models.Model):
     is_verified = models.BooleanField(null=True, default=False)
     date_paid = models.DateTimeField(null=True)
     expiry_date = models.DateTimeField(null=True)
+    date_created = models.DateTimeField(auto_now_add=True,null=True)
 
     def __str__(self):
         return str(self.user)
@@ -120,11 +123,24 @@ class Notification(models.Model):
     message = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(md.CustomUser, on_delete=models.CASCADE)
+    date_created = models.DateTimeField(auto_now_add=True,null=True)
 
     def __str__(self):
         return f"{self.user} --- {self.timestamp}"
 
+
+class Features(models.Model):
+    ACTIVITY = (
+        ('POLO','POLO'),
+        ('RIDING','RIDING'),
+    )
     
+    activity = models.CharField(max_length=150,null=True, choices=ACTIVITY)
+    features = models.CharField(max_length=200, null=True)
+    date_created = models.DateTimeField(auto_now_add=True,null=True)
+    def __str__(self):
+        return self.features
+
 
 class Membership(models.Model):
     MEMBERSHIP = (
@@ -153,7 +169,10 @@ class Membership(models.Model):
     price = models.IntegerField(null=True)
     activity  =models.CharField(max_length=150, null=True, choices=ACTIVITY)
     duration =models.CharField(max_length=150, null=True, choices=DURATION)
+    description =models.TextField(null=True)
+    features = models.ManyToManyField(Features)
     duration_in_months =models.CharField(max_length=150, null=True)
+    date_created = models.DateTimeField(auto_now_add=True,null=True)
    
 
     def __str__(self):
@@ -195,6 +214,7 @@ class Member(models.Model):
     
     date_paid = models.DateField(null=True)
     paid_until = models.DateField(null=True)
+    date_created = models.DateTimeField(auto_now_add=True,null=True)
     
     # room = models.ForeignKey(Room, on_delete=models.CASCADE)
 

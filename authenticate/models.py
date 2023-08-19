@@ -9,6 +9,7 @@ class CustomUser(AbstractUser):
     is_admin = models.BooleanField(null=True, default=False)
     is_member = models.BooleanField(null=True, default=False)
     is_allowed = models.BooleanField(null=True, default=False)
+    date_created = models.DateTimeField(auto_now_add=True,null=True)
 
 
 class Profile(models.Model):
@@ -29,6 +30,7 @@ class Profile(models.Model):
     address = models.CharField(max_length=150, null=True)
     city = models.CharField(max_length=150, null=True)
     postal_code = models.CharField(max_length=150, null=True)
+    date_created = models.DateTimeField(auto_now_add=True,null=True)
     
     
     # room = models.ForeignKey(Room, on_delete=models.CASCADE)
