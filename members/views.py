@@ -14,6 +14,10 @@ from django.contrib import messages
 import json, requests 
 
 
+
+
+
+
 from django.core.mail import send_mail, EmailMessage
 from django.conf import settings
 from django.http import HttpResponse, HttpResponseRedirect
@@ -235,56 +239,7 @@ def call_back_url(request):
 # --------------   End of payments      ------------------  
 
 
-@login_required(login_url='login')
-def updateMembersDetails(request,pk):
-    user = request.user
-    days = Days.objects.all()
-    fetch_member = Member.objects.filter(guardian_name=user.first_name).exists()
-    if fetch_member:
-        # form = Member.objects.get(guardian_name=user.first_name)
-        member = Member.objects.get(guardian_name=user.first_name)
-        members = Member.objects.get(id=pk)
-        membership = str(members.membership)
-        fm = membership.split()
-        first = fm[0]
-        stat = ""
-        if first == "Family":
-            stat = "Family"
-            form = MemberRegistrationForm(instance=members)
-            if request.method == "POST":
-                chosen_days_ids = request.POST.getlist('days')
-                chosen_days = Days.objects.filter(id__in=chosen_days_ids)
 
-                # Remove existing choices for the user
-                Member.objects.filter(user=request.user).delete()
-
-                member_choice = Member(user=request.user)
-                member_choice.save()
-                member_choice.days.add(*chosen_days)
-                form = MemberRegistrationForm(request.POST, instance=members)
-                if form.is_valid():
-                    form.save()
-                    return redirect('_account')
-        else:
-            stat = "Single"
-            form = MemberForm(instance=members)
-            if request.method == "POST":
-                form = MemberForm(request.POST, instance=members)
-                if form.is_valid():
-                    chosen_days_ids = request.POST.getlist('days')
-                    chosen_days = Days.objects.filter(id__in=chosen_days_ids)
-                    update_member = form.save(commit=False)
-                    update_member.days.clear()
-                    update_member.days.add(*chosen_days)
-                    update_member.save()
-                    return redirect('_account')
-        if member.paid:
-            notifications = Notification.objects.all()
-            notification_count = Notification.objects.filter(is_read=False).count()
-        context ={"notifications":notifications,"notification_count":notification_count,"form":form,"stat":stat,"days":days}
-        return render(request, 'members/member_detail_form.html', context)
-    return render(request, 'members/member_detail_form.html')
-    
 # --------------   End of Members      ------------------
 
 
@@ -333,6 +288,7 @@ def member_dashboard(request):
     else:
         form = Member.objects.get(guardian_name=user.first_name)
         profile = Profile.objects.get(user=user)
+        activity_status = form.activity
         days = form.days.all()
         payment_history = PayHistory.objects.filter(user=user).order_by('-date_created')[:3]
         paid = "Not Payed"
@@ -353,7 +309,20 @@ def member_dashboard(request):
         if member.paid:
             notifications = Notification.objects.all()
             notification_count = Notification.objects.filter(is_read=False).count()
-        context ={"notifications":notifications,"notification_count":notification_count,
+
+        today = date.today().strftime('%A')
+        permis = ""
+        if activity_status == "Riding" and today == "Wednesday" or today == "Saturday" or today == "Sunday":
+            permis = "No Riding Today"
+        elif activity_status == "Riding" and today != "Wednesday" and today != "Saturday" and today != "Sunday":
+            permis = "Riding open Today"
+        elif activity_status == "Polo" and today == "Wednesday" or today == "Saturday" or today == "Sunday":
+            permis = "Polo open Today"
+        elif activity_status == "Polo" and today == "Monday" or today == "Tuesday" or today == "Thursday" or today == "Friday":
+            permis = "No Polo Today"
+        
+       
+        context ={"activity_status":activity_status,"permis":permis,"today":today,"notifications":notifications,"notification_count":notification_count,
                 "membership_status":membership_status,"days_remaining":days_remaining.days,
                 "status":status,"paid":paid,"payment_history":payment_history, "days":days,
                 "form":form, "profile":profile}
@@ -365,9 +334,11 @@ def member_dashboard(request):
 @login_required(login_url='login')
 def members_details(request):
     user = request.user
+    notifications = None
+    notification_count = None
     if user.is_member == False:
         return redirect("subscription")
-    form = Member.objects.get(guardian_name=user.first_name)
+    form = Member.objects.get(user=user)
     days = form.days.all()
     membership = str(form.membership)
     payment_history = PayHistory.objects.filter(user=user).order_by('-date_created')[:4]
@@ -393,6 +364,56 @@ def members_details(request):
 
 
 
+@login_required(login_url='login')
+def updateMembersDetails(request):
+    user = request.user
+    if user.is_member == False:
+        return redirect('subscribe')
+    
+    member = Member.objects.get(user=user) 
+    activity = member.activity
+    membership = str(member.membership)
+    days = Days.objects.all()
+    
+    fm = membership.split()
+    first = fm[0]
+    
+    form_one = MemberForm(instance=member)
+    form_alot = MemberRegistrationForm(instance=member)
+    days_selected = member.days.all()
+    print(days_selected)
+    if request.method == "POST":
+        if first == "Family":
+            if activity == "Riding":
+                form_alot = MemberRegistrationForm(request.POST,instance=member)
+                if form_alot.is_valid():
+                    form_alot.save()
+                    return redirect("members-details")
+        elif first == "Single":
+            if activity == "Riding":
+                form_one = MemberForm(request.POST,instance=member)
+                if form_alot.is_valid():
+                    form_alot.save()
+                    return redirect("members-details")
+            elif activity == "Polo":
+                form_one = MemberForm(request.POST,instance=member)
+                days_selected = member.days
+                if form_one.is_valid():
+                    chosen_days_ids = request.POST.getlist('days')
+                    chosen_days = Days.objects.filter(id__in=chosen_days_ids)
+                    
+                    update_member = form_alot.save(commit=False)
+                    print(f'''chosen_days_ids: {chosen_days_ids}
+chosen_days: {chosen_days}''')
+                    update_member.days.clear()
+                    update_member.days.add(*chosen_days)
+                    update_member.save()
+                    return redirect("members-details")
+            
+    context ={"activity":activity,'form_alot':form_alot,"form_one":form_one,"first":first, "days":days,"days_selected":days_selected}      
+    return render(request, 'members/billing/member_details_form.html', context)
+    
+    
 
 
 

@@ -182,7 +182,7 @@ class Membership(models.Model):
 class Member(models.Model):
     user = models.OneToOneField(md.CustomUser, on_delete=models.CASCADE,null=True, blank=True)
     membership = models.ForeignKey(Membership, on_delete=models.CASCADE,null=True, blank=True)
-    activity  =models.CharField(max_length=150, null=True)
+    activity  = models.CharField(max_length=150, null=True)
     paid = models.BooleanField(default=False)
     days = models.ManyToManyField(Days)
     # day2 = models.ForeignKey(Day2, on_delete=models.CASCADE,null=True, blank=True)
@@ -219,7 +219,7 @@ class Member(models.Model):
     # room = models.ForeignKey(Room, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.guardian_name
+        return str(self.guardian_name)
 
 
 

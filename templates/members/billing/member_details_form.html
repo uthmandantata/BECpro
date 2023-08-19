@@ -23,289 +23,358 @@
 <div class="app-content">
   <!--begin::Container-->
   <div class="container-fluid">
-    <!--begin::Row-->
     <div class="row">
-      <!--begin::Col-->
-      <div class="col-lg-4 col-6">
-        <!--begin::Small Box Widget 1-->
-        <div class="small-box text-bg-primary">
-          <div class="inner">
-            <h3>Polo Monthly</h3>
-            <p>Membership</p>
-          </div>
-          <svg class="small-box-icon" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <path
-              d="M2.25 2.25a.75.75 0 000 1.5h1.386c.17 0 .318.114.362.278l2.558 9.592a3.752 3.752 0 00-2.806 3.63c0 .414.336.75.75.75h15.75a.75.75 0 000-1.5H5.378A2.25 2.25 0 017.5 15h11.218a.75.75 0 00.674-.421 60.358 60.358 0 002.96-7.228.75.75 0 00-.525-.965A60.864 60.864 0 005.68 4.509l-.232-.867A1.875 1.875 0 003.636 2.25H2.25zM3.75 20.25a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0zM16.5 20.25a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0z"
-            ></path>
-          </svg>
-        </div>
-        <!--end::Small Box Widget 1-->
-      </div>
-      <!--end::Col-->
-      <div class="col-lg-4 col-6">
-        <!--begin::Small Box Widget 2-->
-        <div class="small-box text-bg-success">
-          <div class="inner">
-            <h3>03-02-02</h3>
+      <form action="" method="post">
+        {% csrf_token %} {% if first == "Single" %}
+        <section style="background-color: #eee">
+          <div class="container py-5">
+            <div class="row">
+              <div class="col-lg-4">
+                <div class="card mb-4">
+                  <div class="card-body text-center">
+                    <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar" class="rounded-circle img-fluid" style="width: 150px" />
+                  </div>
+                </div>
+                <!-- /.card -->
+                <div class="card mb-5">
+                  <div class="card-header border-0">
+                    <h3 class="card-title">Days Selected</h3>
+                  </div>
+                  <div class="card-body table-responsive p-0">
+                    <table class="table table-striped align-middle">
+                      <thead>
+                        <tr>
+                          <th>Name</th>
+                          <th>Day</th>
+                          <th>Time</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for day in days_selected %}
+                        <tr>
+                          <td>{{day.name}}</td>
+                          <td>{{day.days}}</td>
+                          <td>{{day.time_slot}}</td>
+                        </tr>
 
-            <p>Expiry Date</p>
-          </div>
-          <svg class="small-box-icon" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <path
-              d="M18.375 2.25c-1.035 0-1.875.84-1.875 1.875v15.75c0 1.035.84 1.875 1.875 1.875h.75c1.035 0 1.875-.84 1.875-1.875V4.125c0-1.036-.84-1.875-1.875-1.875h-.75zM9.75 8.625c0-1.036.84-1.875 1.875-1.875h.75c1.036 0 1.875.84 1.875 1.875v11.25c0 1.035-.84 1.875-1.875 1.875h-.75a1.875 1.875 0 01-1.875-1.875V8.625zM3 13.125c0-1.036.84-1.875 1.875-1.875h.75c1.036 0 1.875.84 1.875 1.875v6.75c0 1.035-.84 1.875-1.875 1.875h-.75A1.875 1.875 0 013 19.875v-6.75z"
-            ></path>
-          </svg>
-        </div>
-        <!--end::Small Box Widget 2-->
-      </div>
-      <!--end::Col-->
-      <div class="col-lg-4 col-6">
-        <!--begin::Small Box Widget 3-->
-        <div class="small-box text-bg-warning">
-          <div class="inner">
-            <h3>Suspended</h3>
-            <p>Member Status</p>
-          </div>
-          <svg class="small-box-icon" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <path
-              d="M6.25 6.375a4.125 4.125 0 118.25 0 4.125 4.125 0 01-8.25 0zM3.25 19.125a7.125 7.125 0 0114.25 0v.003l-.001.119a.75.75 0 01-.363.63 13.067 13.067 0 01-6.761 1.873c-2.472 0-4.786-.684-6.76-1.873a.75.75 0 01-.364-.63l-.001-.122zM19.75 7.5a.75.75 0 00-1.5 0v2.25H16a.75.75 0 000 1.5h2.25v2.25a.75.75 0 001.5 0v-2.25H22a.75.75 0 000-1.5h-2.25V7.5z"
-            ></path>
-          </svg>
-        </div>
-        <!--end::Small Box Widget 3-->
-      </div>
-      <!--end::Col-->
-      <div class="col-lg-4 col-6">
-        <!--begin::Small Box Widget 4-->
-        <div class="small-box text-bg-danger">
-          <div class="inner">
-            <h3>Polo</h3>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <!-- /.card -->
+              </div>
+              <div class="col-lg-8">
+                <div class="card mb-4">
+                  <div class="card-body mb-5">
+                    <div class="row">
+                      <div class="col-sm-3">
+                        <p class="mb-0">Age</p>
+                      </div>
+                      <div class="col-sm-9">
+                        <p class="text-muted mb-0">{{form_one.guardian_age}}</p>
+                      </div>
+                    </div>
+                    <hr />
+                    <div class="row">
+                      <div class="col-sm-3">
+                        <p class="mb-0">Email</p>
+                      </div>
+                      <div class="col-sm-9">
+                        <p class="text-muted mb-0">{{form_one.email}}</p>
+                      </div>
+                    </div>
+                    <hr />
+                    <div class="row">
+                      <div class="col-sm-3">
+                        <p class="mb-0">Weight</p>
+                      </div>
+                      <div class="col-sm-9">
+                        <p class="text-muted mb-0">{{form_one.guardian_weight}}</p>
+                      </div>
+                    </div>
+                    <hr />
+                    <div class="row">
+                      <div class="col-sm-3">
+                        <p class="mb-0">Height</p>
+                      </div>
+                      <div class="col-sm-9">
+                        <p class="text-muted mb-0">{{form_one.guardian_height}}</p>
+                      </div>
+                    </div>
 
-            <p>Activities</p>
-          </div>
-          <svg class="small-box-icon" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <path clip-rule="evenodd" fill-rule="evenodd" d="M2.25 13.5a8.25 8.25 0 018.25-8.25.75.75 0 01.75.75v6.75H18a.75.75 0 01.75.75 8.25 8.25 0 01-16.5 0z"></path>
-            <path clip-rule="evenodd" fill-rule="evenodd" d="M12.75 3a.75.75 0 01.75-.75 8.25 8.25 0 018.25 8.25.75.75 0 01-.75.75h-7.5a.75.75 0 01-.75-.75V3z"></path>
-          </svg>
-        </div>
-        <!--end::Small Box Widget 4-->
-      </div>
-      <!--end::Col-->
-    </div>
-    <!--end::Row-->
-    <div class="row">
-      <section style="background-color: #eee">
-        <div class="container py-5">
-          <div class="row">
-            <div class="col-lg-4">
-              <div class="card mb-4">
-                <div class="card-body text-center">
-                  <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar" class="rounded-circle img-fluid" style="width: 150px" />
+                    <hr />
+                    {% if activity == "Polo" %}
+                    <h4>Select 3 Days</h4>
+                    {% for day in days %}
 
-                  <div class="d-flex justify-content-center mb-2">
-                    <button type="button" class="btn btn-primary">Follow</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-8">
-              <div class="card mb-4">
-                <div class="card-body">
-                  <div class="row">
-                    <div class="col-sm-3">
-                      <p class="mb-0">Full Name</p>
+                    <div class="form-check">
+                      <input type="checkbox" name="days" class="form-check-input Present 1" id="1" value="{{day.id}}" />
+                      <label class="form-check-label" for="flexCheckDefault"> {{day.name}} </label>
                     </div>
-                    <div class="col-sm-9">
-                      <p class="text-muted mb-0">Johnatan Smith</p>
-                    </div>
-                  </div>
-                  <hr />
-                  <div class="row">
-                    <div class="col-sm-3">
-                      <p class="mb-0">Email</p>
-                    </div>
-                    <div class="col-sm-9">
-                      <p class="text-muted mb-0">example@example.com</p>
-                    </div>
-                  </div>
-                  <hr />
-                  <div class="row">
-                    <div class="col-sm-3">
-                      <p class="mb-0">Phone</p>
-                    </div>
-                    <div class="col-sm-9">
-                      <p class="text-muted mb-0">(097) 234-5678</p>
-                    </div>
-                  </div>
-                  <hr />
-                  <div class="row">
-                    <div class="col-sm-3">
-                      <p class="mb-0">Mobile</p>
-                    </div>
-                    <div class="col-sm-9">
-                      <p class="text-muted mb-0">(098) 765-4321</p>
-                    </div>
-                  </div>
-                  <hr />
-                  <div class="row">
-                    <div class="col-sm-3">
-                      <p class="mb-0">Address</p>
-                    </div>
-                    <div class="col-sm-9">
-                      <p class="text-muted mb-0">Bay Area, San Francisco, CA</p>
-                    </div>
+                    {% endfor %} {% else %}{% endif %}
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
-    </div>
-    <div class="row">
-      <section style="background-color: #eee">
-        <div class="container py-5">
-          <div class="row">
-            <div class="col-lg-4">
-              <div class="card mb-4">
-                <div class="card-body text-center">
-                  <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar" class="rounded-circle img-fluid" style="width: 150px" />
-                  <h5 class="my-3">John Smith</h5>
+        </section>
 
-                  <div class="d-flex justify-content-center mb-2">
-                    <button type="button" class="btn btn-primary">Follow</button>
+        {% else %}
+        <section style="background-color: #eee">
+          <div class="container py-5">
+            <div class="row">
+              <div class="col-lg-4">
+                <div class="card mb-4">
+                  <div class="card-body text-center">
+                    <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar" class="rounded-circle img-fluid" style="width: 150px" />
                   </div>
                 </div>
-              </div>
-            </div>
-            <div class="col-lg-8">
-              <div class="card mb-4">
-                <div class="card-body">
-                  <div class="row">
-                    <div class="col-sm-3">
-                      <p class="mb-0">Full Name</p>
-                    </div>
-                    <div class="col-sm-9">
-                      <p class="text-muted mb-0">Johnatan Smith</p>
-                    </div>
+                <!-- /.card -->
+                <div class="card mb-5">
+                  <div class="card-header border-0">
+                    <h3 class="card-title">Days Selected</h3>
                   </div>
-                  <hr />
-                  <div class="row">
-                    <div class="col-sm-3">
-                      <p class="mb-0">Email</p>
-                    </div>
-                    <div class="col-sm-9">
-                      <p class="text-muted mb-0">example@example.com</p>
-                    </div>
-                  </div>
-                  <hr />
-                  <div class="row">
-                    <div class="col-sm-3">
-                      <p class="mb-0">Phone</p>
-                    </div>
-                    <div class="col-sm-9">
-                      <p class="text-muted mb-0">(097) 234-5678</p>
-                    </div>
-                  </div>
-                  <hr />
-                  <div class="row">
-                    <div class="col-sm-3">
-                      <p class="mb-0">Mobile</p>
-                    </div>
-                    <div class="col-sm-9">
-                      <p class="text-muted mb-0">(098) 765-4321</p>
-                    </div>
-                  </div>
-                  <hr />
-                  <div class="row">
-                    <div class="col-sm-3">
-                      <p class="mb-0">Address</p>
-                    </div>
-                    <div class="col-sm-9">
-                      <p class="text-muted mb-0">Bay Area, San Francisco, CA</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-    </div>
-    <div class="row">
-      <section style="background-color: #eee">
-        <div class="container py-5">
-          <div class="row">
-            <div class="col-lg-4">
-              <div class="card mb-4">
-                <div class="card-body text-center">
-                  <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar" class="rounded-circle img-fluid" style="width: 150px" />
-                  <h5 class="my-3">John Smith</h5>
+                  <div class="card-body table-responsive p-0">
+                    <table class="table table-striped align-middle">
+                      <thead>
+                        <tr>
+                          <th>Name</th>
+                          <th>Day</th>
+                          <th>Time</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for day in days_selected %}
+                        <tr>
+                          <td>{{day.name}}</td>
+                          <td>{{day.days}}</td>
+                          <td>{{day.time_slot}}</td>
+                        </tr>
 
-                  <div class="d-flex justify-content-center mb-2">
-                    <button type="button" class="btn btn-primary">Follow</button>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <!-- /.card -->
+              </div>
+              <div class="col-lg-8">
+                <div class="card mb-4">
+                  <div class="card-body mb-5">
+                    <div class="row">
+                      <div class="col-sm-3">
+                        <p class="mb-0">Age</p>
+                      </div>
+                      <div class="col-sm-9">
+                        <p class="text-muted mb-0">{{form_one.guardian_age}}</p>
+                      </div>
+                    </div>
+                    <hr />
+                    <div class="row">
+                      <div class="col-sm-3">
+                        <p class="mb-0">Email</p>
+                      </div>
+                      <div class="col-sm-9">
+                        <p class="text-muted mb-0">{{form_one.email}}</p>
+                      </div>
+                    </div>
+                    <hr />
+                    <div class="row">
+                      <div class="col-sm-3">
+                        <p class="mb-0">Weight</p>
+                      </div>
+                      <div class="col-sm-9">
+                        <p class="text-muted mb-0">{{form_one.guardian_weight}}</p>
+                      </div>
+                    </div>
+                    <hr />
+                    <div class="row">
+                      <div class="col-sm-3">
+                        <p class="mb-0">Height</p>
+                      </div>
+                      <div class="col-sm-9">
+                        <p class="text-muted mb-0">{{form_one.guardian_height}}</p>
+                      </div>
+                    </div>
+                    <hr />
+
+                    {% if activity == "Polo" %}
+                    <h4>Select 3 Days</h4>
+                    {% for day in days %}
+                    <div class="form-check">
+                      <input type="checkbox" name="days" class="form-check-input Present 1" id="1" value="{{day.id}}" />
+                      <label class="form-check-label" for="flexCheckDefault"> {{day.name}} </label>
+                    </div>
+                    {% endfor %} {% else %}{% endif %}
                   </div>
                 </div>
               </div>
             </div>
-            <div class="col-lg-8">
-              <div class="card mb-4">
-                <div class="card-body">
-                  <div class="row">
-                    <div class="col-sm-3">
-                      <p class="mb-0">Full Name</p>
-                    </div>
-                    <div class="col-sm-9">
-                      <p class="text-muted mb-0">Johnatan Smith</p>
-                    </div>
+          </div>
+        </section>
+        <section style="background-color: #eee">
+          <div class="container py-5">
+            <div class="row">
+              <div class="col-lg-4">
+                <div class="card mb-4">
+                  <div class="card-body text-center">
+                    <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar" class="rounded-circle img-fluid" style="width: 150px" />
                   </div>
-                  <hr />
-                  <div class="row">
-                    <div class="col-sm-3">
-                      <p class="mb-0">Email</p>
+                </div>
+              </div>
+              <div class="col-lg-8">
+                <div class="card mb-4">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-sm-3">
+                        <p class="mb-0">Member Name</p>
+                      </div>
+                      <div class="col-sm-9">
+                        <p class="text-muted mb-0">{{form_alot.member1_full_name}}</p>
+                      </div>
                     </div>
-                    <div class="col-sm-9">
-                      <p class="text-muted mb-0">example@example.com</p>
+                    <hr />
+                    <div class="row">
+                      <div class="col-sm-3">
+                        <p class="mb-0">Age</p>
+                      </div>
+                      <div class="col-sm-9">
+                        <p class="text-muted mb-0">{{form_alot.member1_age}}</p>
+                      </div>
                     </div>
-                  </div>
-                  <hr />
-                  <div class="row">
-                    <div class="col-sm-3">
-                      <p class="mb-0">Phone</p>
+                    <hr />
+                    <div class="row">
+                      <div class="col-sm-3">
+                        <p class="mb-0">Email</p>
+                      </div>
+                      <div class="col-sm-9">
+                        <p class="text-muted mb-0">{{form_alot.member1_email}}</p>
+                      </div>
                     </div>
-                    <div class="col-sm-9">
-                      <p class="text-muted mb-0">(097) 234-5678</p>
+                    <hr />
+                    <div class="row">
+                      <div class="col-sm-3">
+                        <p class="mb-0">Weight</p>
+                      </div>
+                      <div class="col-sm-9">
+                        <p class="text-muted mb-0">{{form_alot.member1_weight}}</p>
+                      </div>
                     </div>
-                  </div>
-                  <hr />
-                  <div class="row">
-                    <div class="col-sm-3">
-                      <p class="mb-0">Mobile</p>
+                    <hr />
+                    <div class="row">
+                      <div class="col-sm-3">
+                        <p class="mb-0">Height</p>
+                      </div>
+                      <div class="col-sm-9">
+                        <p class="text-muted mb-0">{{form_alot.member1_height}}</p>
+                      </div>
                     </div>
-                    <div class="col-sm-9">
-                      <p class="text-muted mb-0">(098) 765-4321</p>
-                    </div>
-                  </div>
-                  <hr />
-                  <div class="row">
-                    <div class="col-sm-3">
-                      <p class="mb-0">Address</p>
-                    </div>
-                    <div class="col-sm-9">
-                      <p class="text-muted mb-0">Bay Area, San Francisco, CA</p>
+                    <hr />
+                    <div class="row">
+                      <div class="col-sm-3">
+                        <p class="mb-0">Address</p>
+                      </div>
+                      <div class="col-sm-9">
+                        <p class="text-muted mb-0">{{form_alot.member1_address}}</p>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
+        </section>
+        <section style="background-color: #eee">
+          <div class="container py-5">
+            <div class="row">
+              <div class="col-lg-4">
+                <div class="card mb-4">
+                  <div class="card-body text-center">
+                    <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar" class="rounded-circle img-fluid" style="width: 150px" />
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-8">
+                <div class="card mb-4">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-sm-3">
+                        <p class="mb-0">Member 2 Name</p>
+                      </div>
+                      <div class="col-sm-9">
+                        <p class="text-muted mb-0">{{form_alot.member2_full_name}}</p>
+                      </div>
+                    </div>
+                    <hr />
+                    <div class="row">
+                      <div class="col-sm-3">
+                        <p class="mb-0">Age</p>
+                      </div>
+                      <div class="col-sm-9">
+                        <p class="text-muted mb-0">{{form_alot.member2_age}}</p>
+                      </div>
+                    </div>
+                    <hr />
+                    <div class="row">
+                      <div class="col-sm-3">
+                        <p class="mb-0">Email</p>
+                      </div>
+                      <div class="col-sm-9">
+                        <p class="text-muted mb-0">{{form_alot.member2_email}}</p>
+                      </div>
+                    </div>
+                    <hr />
+                    <div class="row">
+                      <div class="col-sm-3">
+                        <p class="mb-0">Weight</p>
+                      </div>
+                      <div class="col-sm-9">
+                        <p class="text-muted mb-0">{{form_alot.member2_weight}}</p>
+                      </div>
+                    </div>
+                    <hr />
+                    <div class="row">
+                      <div class="col-sm-3">
+                        <p class="mb-0">Height</p>
+                      </div>
+                      <div class="col-sm-9">
+                        <p class="text-muted mb-0">{{form_alot.member2_height}}</p>
+                      </div>
+                    </div>
+                    <hr />
+                    <div class="row">
+                      <div class="col-sm-3">
+                        <p class="mb-0">Address</p>
+                      </div>
+                      <div class="col-sm-9">
+                        <p class="text-muted mb-0">{{form_alot.member2_address}}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {% endif %}
+
+        <div class="d-flex justify-content-center mt-4" style="margin-bottom: 30px">
+          <input type="submit" class="btn btn-primary" value="Update" />
         </div>
-      </section>
+      </form>
     </div>
   </div>
   <!-- /.row (main row) -->
 </div>
 <!--end::Container-->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 
-<!-- /.row (main row) -->
+<script type="text/javascript">
+  $("input:checkbox").click(function () {
+    var bol = $("input:checkbox:checked").length >= 3;
+    $("input:checkbox").not(":checked").attr("disabled", bol);
+  });
+</script>
 {% endblock content %}
