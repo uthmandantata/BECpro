@@ -1,4 +1,4 @@
-{% extends 'dist/base.html' %}{% block content %} {% load static %}
+{% extends 'members/base.html' %}{% block content %} {% load static %}
 <div class="app-content-header">
   <!--begin::Container-->
   <div class="container-fluid">
@@ -368,8 +368,7 @@
   <!-- /.row (main row) -->
 </div>
 <!--end::Container-->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-
+<script src="{% static 'dist_folder/jquery.js' %}"></script>
 <script type="text/javascript">
   $("input:checkbox").click(function () {
     var bol = $("input:checkbox:checked").length >= 3;

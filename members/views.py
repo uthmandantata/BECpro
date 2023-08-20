@@ -39,6 +39,35 @@ from dateutil.relativedelta import relativedelta
 
 # Create your views here.
 
+def password_reset_request(request):
+    password_form = PasswordResetForm()
+    if request.method == 'POST':
+        password_form = PasswordResetForm(request.POST) 
+        if password_form.is_valid():
+            data = password_form.cleaned_data['email']
+            user_email = CustomUser.objects.filter(Q(email=data))
+            if user_email.exists():
+                for user in user_email:
+                    subject = 'Your forget password link'
+                    email_template_name = 'password_message.txt'
+                    email_from = settings.EMAIL_HOST_USER
+                    parameters = {
+                        'email':user.email,
+                        'domain':'https://6e3d-154-120-73-228.ngrok-free.app',
+                        'site_name': 'Focalleap',
+                        'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                        'token':default_token_generator.make_token(user),
+                        'protocol': 'http',
+                        }
+                    email = render_to_string(email_template_name,parameters)
+                    try:
+                        send_mail(subject, email, email_from, [user.email], fail_silently=False)
+                    except:
+                        return HttpResponse('invalid header')
+                    return redirect('password_reset_done')    
+    context = {'password_form':password_form}
+    return render(request, 'password_reset.html', context)
+
 
 
 
@@ -60,7 +89,7 @@ def notifications(request):
     notifications = Notification.objects.all()
     notification_count = Notification.objects.filter(is_read=False).count()
     context ={"notifications":notifications,"notification_count":notification_count}
-    return render(request, 'members/notifications.html', context)
+    return render(request, 'members/rest/notifications.html', context)
 
 # --------------   End of Notifications       ------------------
 
@@ -70,7 +99,7 @@ def subscription(request):
         form = Membership.objects.all()
         print(f"form: {form}")
         context = {"form":form}
-        return render(request, 'members/subscription.html', context)
+        return render(request, 'members/rest/subscription.html', context)
     except Exception as e:
         print(e)
 
@@ -167,7 +196,7 @@ def subscribe(request):
         return HttpResponseRedirect(link)
     except Exception as e:
         print(e)
-    return render(request, 'members/subscribe.html')
+    return render(request, 'members/rest/subscribe.html')
 
 def call_back_url(request):
     reference = request.GET.get('reference_code')
@@ -209,12 +238,15 @@ def call_back_url(request):
 # --------------   End of Members      ------------------
 
 
-def renew_subscription(request):
+def change_subscription(request):
     try:
         form = Membership.objects.all()
-        print(f"form: {form}")
-        context = {"form":form}
-        return render(request, 'members/billing/renew_subscription.html', context)
+        member = Member.objects.get(user=request.user)
+        my_membership = member.membership
+        
+      
+        context = {"form":form,"member":member,"my_membership":my_membership}
+        return render(request, 'members/billing/change_subscription.html', context)
     except Exception as e:
         print(e)
 
@@ -234,15 +266,15 @@ def billing_history(request):
 
 def subscription_guide(request):
     context = {}
-    return render(request, 'members/billing/subscription_guide.html', context)
+    return render(request, 'members/rest/subscription_guide.html', context)
 
 def support_ticket(request):
     context = {}
-    return render(request, 'members/billing/support_ticket.html', context)
+    return render(request, 'members/rest/support_ticket.html', context)
 
 def errors(request):
     context = {}
-    return render(request, 'members/billing/error_page.html', context)
+    return render(request, 'error_page.html', context)
 
 
 
@@ -257,6 +289,7 @@ def member_dashboard(request):
         return redirect("subscription")
     else:
         form = Member.objects.get(guardian_name=user.first_name)
+        
         profile = Profile.objects.get(user=user)
         activity_status = form.activity
         days = form.days.all()
@@ -273,9 +306,9 @@ def member_dashboard(request):
             days_remaining = member.paid_until - member.date_paid
             
             if days_remaining == 0:
-                Member.objects.update(
-                paid=False,
-                )
+                member.paid = False
+                member.save()
+                
         if member.paid:
             notifications = Notification.objects.all()
             notification_count = Notification.objects.filter(is_read=False).count()
@@ -296,7 +329,7 @@ def member_dashboard(request):
                 "membership_status":membership_status,"days_remaining":days_remaining.days,
                 "status":status,"paid":paid,"payment_history":payment_history, "days":days,
                 "form":form, "profile":profile}
-    return render(request, 'members/dashboard.html', context)
+    return render(request, 'members/dashboard/dashboard.html', context)
    
 # --------------   End of Member Dashboard      ------------------
 
@@ -322,13 +355,13 @@ def members_details(request):
         return redirect("member_dashboar")
     # Change the 
 
-    member = Member.objects.get(guardian_name=user.first_name)
-    time_remaining = member.paid_until - member.date_paid
+    
+    time_remaining = form.paid_until - form.date_paid
     days_remaining = time_remaining.days
     print(days_remaining)
 
 
-    if int(days_remaining) <= 40:
+    if int(days_remaining) <= 0:
         return redirect("member_dashboard")
     
     if user.is_member == False:
@@ -344,7 +377,7 @@ def members_details(request):
     context ={"notifications":notifications,"notification_count":notification_count,
               "user":user,"form":form,"stat":stat,"membership":membership,"days":days,
               "payment_history":payment_history,"membership_status":membership_status,"profile":profile}
-    return render(request, 'members/billing/membership_details.html', context)
+    return render(request, 'members/membership/membership_details.html', context)
 
 
 
@@ -355,6 +388,15 @@ def updateMembersDetails(request):
         return redirect('subscribe')
     
     member = Member.objects.get(user=user) 
+
+    time_remaining = member.paid_until - member.date_paid
+    days_remaining = time_remaining.days
+    print(days_remaining)
+
+
+    if int(days_remaining) <= 0:
+        return redirect("member_dashboard")
+    
     activity = member.activity
     membership = str(member.membership)
     days = Days.objects.all()
@@ -366,6 +408,10 @@ def updateMembersDetails(request):
     form_alot = MemberRegistrationForm(instance=member)
     days_selected = member.days.all()
     print(days_selected)
+
+
+
+
     if request.method == "POST":
         if first == "Family":
             if activity == "Riding":
@@ -395,7 +441,7 @@ chosen_days: {chosen_days}''')
                     return redirect("members-details")
             
     context ={"activity":activity,'form_alot':form_alot,"form_one":form_one,"first":first, "days":days,"days_selected":days_selected}      
-    return render(request, 'members/billing/member_details_form.html', context)
+    return render(request, 'members/membership/member_details_form.html', context)
     
     
 

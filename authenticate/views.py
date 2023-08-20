@@ -165,7 +165,7 @@ def profile(request):
             notification_count = Notification.objects.filter(is_read=False).count()
         
     context ={"user":user,"form":form,"notifications":notifications,"notification_count":notification_count}
-    return render(request, 'members/billing/profile.html', context)
+    return render(request, 'members/profile/profile.html', context)
 
 @login_required(login_url='login')
 def updateProfile(request):
@@ -205,7 +205,7 @@ def updateProfile(request):
             notifications = Notification.objects.all()
             notification_count = Notification.objects.filter(is_read=False).count()
     context = {"form":form,"notifications":notifications,"notification_count":notification_count}
-    return render(request, 'members/billing/profile_form.html', context)
+    return render(request, 'members/profile/profile_form.html', context)
 
 
 
