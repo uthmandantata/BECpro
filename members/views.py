@@ -39,35 +39,6 @@ from dateutil.relativedelta import relativedelta
 
 # Create your views here.
 
-def password_reset_request(request):
-    password_form = PasswordResetForm()
-    if request.method == 'POST':
-        password_form = PasswordResetForm(request.POST) 
-        if password_form.is_valid():
-            data = password_form.cleaned_data['email']
-            user_email = CustomUser.objects.filter(Q(email=data))
-            if user_email.exists():
-                for user in user_email:
-                    subject = 'Your forget password link'
-                    email_template_name = 'password_message.txt'
-                    email_from = settings.EMAIL_HOST_USER
-                    parameters = {
-                        'email':user.email,
-                        'domain':'https://6e3d-154-120-73-228.ngrok-free.app',
-                        'site_name': 'Focalleap',
-                        'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-                        'token':default_token_generator.make_token(user),
-                        'protocol': 'http',
-                        }
-                    email = render_to_string(email_template_name,parameters)
-                    try:
-                        send_mail(subject, email, email_from, [user.email], fail_silently=False)
-                    except:
-                        return HttpResponse('invalid header')
-                    return redirect('password_reset_done')    
-    context = {'password_form':password_form}
-    return render(request, 'password_reset.html', context)
-
 
 
 
@@ -140,11 +111,6 @@ def subscribe(request):
         initialized = init_payment(request)
         print(initialized['data']['authorization_url'])
         amount = price/100
-        # context = {'form':form}
-
-        # member = Member.objects.get(guardian_name=username)
-        
-        # dtn = member.membership
         membership_duration = Membership.objects.get(membership_type=plan)
         duration = membership_duration.duration_in_months
         current_date = date.today()
@@ -274,6 +240,10 @@ def support_ticket(request):
     context = {}
     return render(request, 'members/billing/support_ticket.html', context)
 
+def errors(request):
+    context = {}
+    return render(request, 'members/billing/error_page.html', context)
+
 
 
 # --------------    Member Dashboard       ------------------
@@ -338,6 +308,7 @@ def members_details(request):
     notification_count = None
     if user.is_member == False:
         return redirect("subscription")
+    
     form = Member.objects.get(user=user)
     profile = Profile.objects.get(user=user)
     days = form.days.all()
@@ -348,8 +319,20 @@ def members_details(request):
     membership_status = "Not Suspended"
     if form.suspend == True:
         membership_status = "Suspended"
+        return redirect("member_dashboar")
+    # Change the 
+
+    member = Member.objects.get(guardian_name=user.first_name)
+    time_remaining = member.paid_until - member.date_paid
+    days_remaining = time_remaining.days
+    print(days_remaining)
+
+
+    if int(days_remaining) <= 40:
+        return redirect("member_dashboard")
+    
     if user.is_member == False:
-        return redirect(subscription)
+        return redirect("subscription")
     stat = ""
     if first == "Family":
         stat = "Family"

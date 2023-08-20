@@ -18,6 +18,7 @@ urlpatterns = [
     path('support_ticket', views.support_ticket, name='support_ticket'),
     path('members-details', views.members_details, name='members-details'),
     path('update-members', views.updateMembersDetails, name='updateMembersDetails'),
+    path('error-page', views.errors, name='error-page'),
     
     
 
