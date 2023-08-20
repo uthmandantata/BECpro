@@ -22,6 +22,23 @@ class MemberForm(forms.ModelForm):
     class Meta:
         model = models.Member
         fields = ('guardian_age', 'guardian_weight', 'guardian_height', 'email','days')
+        widgets = {
+            'guardian_age': forms.DateInput(attrs={
+                'class': 'form-control',
+                }),
+            'guardian_weight': forms.DateInput(attrs={
+                'class': 'form-control',
+                }),
+            'email': forms.DateInput(attrs={
+                'class': 'form-control',
+                'type':'email',
+                }),
+            'guardian_height': forms.DateInput(attrs={
+                'class': 'form-control',
+                'type':'number',
+                }),
+            
+                }
 
        
 

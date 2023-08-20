@@ -339,6 +339,7 @@ def members_details(request):
     if user.is_member == False:
         return redirect("subscription")
     form = Member.objects.get(user=user)
+    profile = Profile.objects.get(user=user)
     days = form.days.all()
     membership = str(form.membership)
     payment_history = PayHistory.objects.filter(user=user).order_by('-date_created')[:4]
@@ -359,7 +360,7 @@ def members_details(request):
         notification_count = Notification.objects.filter(is_read=False).count()
     context ={"notifications":notifications,"notification_count":notification_count,
               "user":user,"form":form,"stat":stat,"membership":membership,"days":days,
-              "payment_history":payment_history,"membership_status":membership_status}
+              "payment_history":payment_history,"membership_status":membership_status,"profile":profile}
     return render(request, 'members/billing/membership_details.html', context)
 
 

@@ -148,8 +148,6 @@ JAZZMIN_SETTINGS = {
     "site_title":"Belham Admin",
     "site_header":"Belham Admin",
     "site_brand": "Belham Admin",
-    # "order_with_respect_to":["auth","main.banners","main.service","main.enquiry",
-    #                          "main.gallery","main.GalleryImage","main.Page","main.SubPlan","main.SubPlanFeature"],
 }
 
 
@@ -162,10 +160,3 @@ EMAIL_HOST_USER = 'noreply@thefocalleap.com'
 EMAIL_HOST_PASSWORD = 'Qazzaq123321!@##@!'
 PASSWORD_RESET_TIMEOUT = 14400
 DEFAULT_FROM_EMAIL = 'contact@thefocalleap.com'
-
-
-# EMAIL_USE_TLS = True  
-# EMAIL_HOST = 'smtp.gmail.com'  
-# EMAIL_HOST_USER = 'youremail@gmail.com'  
-# EMAIL_HOST_PASSWORD = 'yourpassword'  
-# EMAIL_PORT =  
