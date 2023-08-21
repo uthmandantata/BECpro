@@ -1,6 +1,7 @@
-{% extends 'base.html' %}{% block content %} {% load static %}
+{% extends 'members/base.html' %}{% block content %} {% load static %}
 <!--begin::App Content Header-->
 <div class="app-content-header">
+  {% include 'messages.html' %}
   <!--begin::Container-->
   <div class="container-fluid">
     <!--begin::Row-->
@@ -9,10 +10,9 @@
         <h3 class="mb-0">Support Ticket</h3>
       </div>
       <div class="col-sm-6">
-        <ol class="breadcrumb float-sm-end">
-          <li class="breadcrumb-item"><a href="#">Home</a></li>
-          <li class="breadcrumb-item active" aria-current="page">Support Ticket</li>
-        </ol>
+        <span class="breadcrumb float-sm-end">
+          <a href="{% url 'create-ticket' %}" class="btn btn-primary btn-lg">Create a Ticket</a>
+        </span>
       </div>
     </div>
     <!--end::Row-->
@@ -24,51 +24,34 @@
 <div class="app-content">
   <!--begin::Container-->
   <div class="container-fluid">
-    <!--begin::Row-->
     <div class="row">
-      <!--begin::Col-->
-      <div class="col-md-9">
-        <!--begin::Quick Example-->
-        <div class="card card-primary card-outline">
-          <!--begin::Header-->
-          <div class="card-header">
-            <div class="card-title">Create a Ticket</div>
+      <div class="col-lg-10">
+        <div class="card mb-4">
+          <div class="card-body table-responsive p-0">
+            <table class="table table-striped align-middle">
+              <thead>
+                <tr>
+                  <th>Purpose</th>
+                  <th>Message</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for ticket in support_ticket %}
+                <tr>
+                  <td>{{ticket.purpose}}</td>
+                  <td>{{ticket.message}}</td>
+                  <td><a href="" class="btn btn-info">Edit</a><a href="" class="btn btn-danger" style="margin-left: 20px">Delete</a></td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
           </div>
-          <!--end::Header-->
-          <!--begin::Form-->
-          <form method="POST">
-            <!--begin::Body-->
-            <div class="card-body">
-              <div class="mb-3">
-                <label for="exampleInputPurpose" class="form-label">Purpose</label>
-                <input type="text" class="form-control" id="exampleInputPurpose" aria-describedby="purposeHelp" />
-              </div>
-              <div class="mb-3">
-                <label for="exampleInputMessage" class="form-label">Message</label>
-                <textarea name="" class="form-control" id="exampleInputMessage" cols="30" rows="10"></textarea>
-              </div>
-              <div class="input-group mb-3">
-                <input type="file" class="form-control" id="inputGroupFile02" />
-                <label class="input-group-text" for="inputGroupFile02">Upload</label>
-              </div>
-            </div>
-            <!--end::Body-->
-            <!--begin::Footer-->
-            <div class="card-footer">
-              <button type="submit" class="btn btn-primary">Submit</button>
-            </div>
-            <!--end::Footer-->
-          </form>
-          <!--end::Form-->
         </div>
-        <!--end::Quick Example-->
       </div>
-      <!--end::Col-->
     </div>
-    <!--end::Row-->
   </div>
-  <!--end::Container-->
+  <!-- /.row (main row) -->
 </div>
 <!--end::App Content-->
-
-{% endblock content %}
+{% endblock content %} ]]]

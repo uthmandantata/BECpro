@@ -15,11 +15,11 @@ urlpatterns = [
     path('change_subscription', views.change_subscription, name='change_subscription'),
     path('billing_history', views.billing_history, name='billing_history'),
     path('subscription_guide', views.subscription_guide, name='subscription_guide'),
-    path('support_ticket', views.support_ticket, name='support_ticket'),
+   
     path('members-details', views.members_details, name='members-details'),
     path('update-members', views.updateMembersDetails, name='updateMembersDetails'),
     path('error-page', views.errors, name='error-page'),
-    
+   
     
 
 
@@ -27,12 +27,13 @@ urlpatterns = [
     
     path('', views.member_dashboard, name='member_dashboard'),
     path('<int:pk>', views.updateMembersDetails, name='updateMembersDetails'),
-    path('members_details', views.members_details, name='members_details'),
+    
 
     
     
     path('complaints', views.complaints, name='complaints'),
     path('notifications', views.notifications, name='notifications'),
+    path('view_notifications/<str:pk>/', views.viewNotifications, name='view_notifications'),
     path('subscription', views.subscription, name='subscription'),
     path('subscribe', views.subscribe, name='subscribe'),
     path('payment/', views.call_back_url, name='payment'),

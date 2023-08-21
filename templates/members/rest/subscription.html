@@ -1,0 +1,51 @@
+{% extends 'members/base.html' %}{% block content %} {% load static %}
+<div class="app-content-header">
+  <!--begin::Container-->
+  <div class="container-fluid">
+    <!--begin::Row-->
+    <div class="row">
+      <div class="col-sm-6">
+        <h3 class="mb-0">Subscriptions</h3>
+      </div>
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-end">
+          <li class="breadcrumb-item"><a href="#">Home</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Subscription</li>
+        </ol>
+      </div>
+    </div>
+    <!--end::Row-->
+  </div>
+  <!--end::Container-->
+</div>
+<!--end::App Content Header-->
+<!--begin::App Content-->
+<div class="app-content">
+  <!--begin::Container-->
+  <div class="container-fluid">
+    <div class="row m-3">
+      {% for memberships in form %} {% if memberships != my_membership %}
+
+      <div class="card m-3" style="width: 18rem">
+        <h4><strong>{{memberships.membership_type}}</strong></h4>
+
+        <div class="card-body">
+          <strong>Description</strong>
+          <p class="card-text">{{memberships.description|slice:":30" }}{% if memberships.description|length > 100 %}...{% endif %}</p>
+          <strong>Features</strong>
+          <ul>
+            {% for features in memberships.features.all %}
+            <li>{{features}}</li>
+            {% endfor %}
+          </ul>
+          <strong>Price</strong>
+          <p>₦{{memberships.price}}</p>
+          <a href="{% url 'subscribe' %}?membership_plan={{memberships.membership_type}}" class="btn btn-primary btn-lg">Subscribe</a>
+        </div>
+      </div>
+      {% endif %} {% endfor %}
+    </div>
+  </div>
+  <!-- /.row (main row) -->
+</div>
+{% endblock content %}

@@ -222,4 +222,3 @@ class Member(models.Model):
         return str(self.guardian_name)
 
 
-

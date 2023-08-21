@@ -1,0 +1,75 @@
+{% extends 'members/base.html' %}{% block content %} {% load static %}
+<!--begin::App Content Header-->
+<div class="app-content-header">
+  <!--begin::Container-->
+  <div class="container-fluid">
+    <!--begin::Row-->
+    <div class="row">
+      <div class="col-sm-6">
+        <h3 class="mb-0">Create Ticket</h3>
+      </div>
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-end">
+          <li class="breadcrumb-item"><a href="#">Home</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Support Ticket</li>
+        </ol>
+      </div>
+    </div>
+    <!--end::Row-->
+  </div>
+  <!--end::Container-->
+</div>
+<!--end::App Content Header-->
+<!--begin::App Content-->
+<div class="app-content">
+  <!--begin::Container-->
+  <div class="container-fluid">
+    <!--begin::Row-->
+    <div class="row">
+      <!--begin::Col-->
+      <div class="col-md-9">
+        <!--begin::Quick Example-->
+        <div class="card card-primary card-outline">
+          <!--begin::Header-->
+          <div class="card-header">
+            <div class="card-title">Create a Ticket</div>
+          </div>
+          <!--end::Header-->
+          <!--begin::Form-->
+          <form method="POST">
+            {% csrf_token %}
+            <!--begin::Body-->
+            <div class="card-body">
+              <div class="mb-3">
+                <label for="exampleInputPurpose" class="form-label">Purpose</label>
+                <input type="text" class="form-control" id="exampleInputPurpose" aria-describedby="purposeHelp" />
+              </div>
+              <div class="mb-3">
+                <label for="exampleInputMessage" class="form-label">Message</label>
+                <textarea name="" class="form-control" id="exampleInputMessage" cols="30" rows="10"></textarea>
+              </div>
+              <div class="input-group mb-3">
+                <input type="file" class="form-control" id="inputGroupFile02" />
+                <label class="input-group-text" for="inputGroupFile02">Upload</label>
+              </div>
+            </div>
+            <!--end::Body-->
+            <!--begin::Footer-->
+            <div class="card-footer">
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+            <!--end::Footer-->
+          </form>
+          <!--end::Form-->
+        </div>
+        <!--end::Quick Example-->
+      </div>
+      <!--end::Col-->
+    </div>
+    <!--end::Row-->
+  </div>
+  <!--end::Container-->
+</div>
+<!--end::App Content-->
+
+{% endblock content %}

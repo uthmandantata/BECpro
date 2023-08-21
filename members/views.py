@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.shortcuts import render, redirect
-from .forms import MemberRegistrationForm,MemberForm
+from .forms import MemberRegistrationForm, MemberForm, ridingMemberForm, familyRidingMemberForm
 
 
 
@@ -53,7 +53,7 @@ def password_reset_request(request):
                     email_from = settings.EMAIL_HOST_USER
                     parameters = {
                         'email':user.email,
-                        'domain':'https://6e3d-154-120-73-228.ngrok-free.app',
+                        'domain':'https://4ffe-197-157-218-200.ngrok-free.app',
                         'site_name': 'Focalleap',
                         'uid': urlsafe_base64_encode(force_bytes(user.pk)),
                         'token':default_token_generator.make_token(user),
@@ -67,10 +67,6 @@ def password_reset_request(request):
                     return redirect('password_reset_done')    
     context = {'password_form':password_form}
     return render(request, 'password_reset.html', context)
-
-
-
-
 
 
 # --------------    User Complaints       ------------------
@@ -88,21 +84,27 @@ def complaints(request):
 def notifications(request):
     notifications = Notification.objects.all()
     notification_count = Notification.objects.filter(is_read=False).count()
+    
     context ={"notifications":notifications,"notification_count":notification_count}
     return render(request, 'members/rest/notifications.html', context)
 
+@login_required(login_url='login')
+def viewNotifications(request,pk):
+    notifications = Notification.objects.get(pk=pk)
+    notification_count = Notification.objects.filter(is_read=False).count()  
+    context ={"notifications":notifications,"notification_count":notification_count}
+    return render(request, 'members/rest/view_notifications.html', context)
 # --------------   End of Notifications       ------------------
 
 # --------------   End of Payments      ------------------
+@login_required(login_url='login')
 def subscription(request):
-    try:
         form = Membership.objects.all()
         print(f"form: {form}")
         context = {"form":form}
         return render(request, 'members/rest/subscription.html', context)
-    except Exception as e:
-        print(e)
 
+@login_required(login_url='login')
 def subscribe(request):
     try:
         username = request.user
@@ -129,7 +131,6 @@ def subscribe(request):
             }
             x = requests.post(url, data=json.dumps(datum), headers=headers)
             print(datum)
-            # print(headers)
             if x.status_code != 200:
                 return str(x.status_code)
             
@@ -146,15 +147,18 @@ def subscribe(request):
         months  = 0
         expiry_date = current_date + relativedelta(months=int(duration))
         print(f'duration:{duration},months:{months}')
+        months  = 0
+        expiry_date = current_date + relativedelta(months=int(duration))
+        full_name = request.user.first_name +" "+ request.user.last_name
         
 
-        print(user.is_member)
+        print(f"full_name: {full_name}")
     
         if user.is_member == False:
             Member.objects.create(
                 user=username,
                 membership=membership,  
-                guardian_name=request.user.first_name, 
+                guardian_name=full_name, 
                 email=request.user.email, 
                 activity=activity,
                 date_paid=current_date,
@@ -166,12 +170,21 @@ def subscribe(request):
             )
 
         Member.objects.update(
-            membership=membership, 
-            activity=activity,
-            paid=True,
-            date_paid=current_date,
-            paid_until=expiry_date
-            )
+        guardian_name = full_name,
+        membership=membership,
+        activity=activity,
+        paid=True,
+        date_paid=current_date,
+        paid_until=expiry_date,
+        )
+
+    
+        CustomUser.objects.update(
+            is_member = True,
+            is_allowed = True
+
+        )
+        
 
 
 
@@ -186,9 +199,7 @@ def subscribe(request):
             is_verified=True,
             date_paid=current_date,
             )
-        CustomUser.objects.update(
-            is_member = True
-            )
+        
         
         
         link = initialized['data']['authorization_url']
@@ -198,37 +209,39 @@ def subscribe(request):
         print(e)
     return render(request, 'members/rest/subscribe.html')
 
+@login_required(login_url='login')
 def call_back_url(request):
     reference = request.GET.get('reference_code')
     check_pay = PayHistory.objects.filter(paystack_charge_id=reference).exists()
     if check_pay == False:
         print("Error")
-    else:
-        payment = PayHistory.objects.get(paystack_charge_id=reference)
-        member = payment.user
-
-        #fetch to make sure payment was successful
-        def verify_payment(request):
-            url = 'https://api.paystack.co/transaction/verify'
-            headers = {
-                'Authorization':'Bearer '+settings.PAYSTACK_SECRET_KEY,
-                'Content-Type':'application/json',
-                'Accept':'application/json',
-            }
-            datum = {
-                'reference': check_pay.paystack_charge_id
-            }
-            print('help')
-            x = requests.post(url, data=json.dumps(datum), headers=headers)
-            print(datum)
-            # print(headers)
-            if x.status_code != 200:
-                return str(x.status_code)
-            
-            results = x.json()
-            
-            return results
+        return HttpResponse("Fuck of")
+    
+    payment = PayHistory.objects.get(paystack_charge_id=reference)
+    member = Member.objects.get(user=payment.user)
+    membership_duration = Membership.objects.get(membership_type=payment.payment_for)
+    duration = membership_duration.duration_in_months
+    current_date = date.today()
+    
+    def verify_payment(request):
+        url = 'https://api.paystack.co/transaction/verify'
+        headers = {
+            'Authorization':'Bearer '+settings.PAYSTACK_SECRET_KEY,
+            'Content-Type':'application/json',
+            'Accept':'application/json',
+        }
+        datum = {
+            'reference': check_pay.paystack_charge_id
+        }
+        x = requests.post(url, data=json.dumps(datum), headers=headers)
+        print(datum)
+        if x.status_code != 200:
+            return str(x.status_code)
+        results = x.json()
+        return results
     initialized = verify_payment(request)
+    
+
     print(f"verified:{initialized['data']['authorization_url']}")
     return render(request, 'members/payment.html')
 # --------------   End of payments      ------------------  
@@ -237,26 +250,26 @@ def call_back_url(request):
 
 # --------------   End of Members      ------------------
 
-
+@login_required(login_url='login')
 def change_subscription(request):
     try:
         form = Membership.objects.all()
         member = Member.objects.get(user=request.user)
         my_membership = member.membership
-        
-      
+
         context = {"form":form,"member":member,"my_membership":my_membership}
         return render(request, 'members/billing/change_subscription.html', context)
     except Exception as e:
         print(e)
 
+@login_required(login_url='login')
 def billing_history(request):
     user = request.user
     if user.is_member == False:
         return redirect("subscription")
     payment_history = PayHistory.objects.filter(user=user).order_by('-date_created')
     if user.is_member:
-        member = Member.objects.get(guardian_name=user.first_name)
+        member = Member.objects.get(user=user)
         if member.paid:
             notifications = Notification.objects.all()
             notification_count = Notification.objects.filter(is_read=False).count()
@@ -264,21 +277,23 @@ def billing_history(request):
         # return render(request, 'members/dashboard.html', context)
     return render(request, 'members/billing/billing_history.html', context)
 
+@login_required(login_url='login')
 def subscription_guide(request):
     context = {}
     return render(request, 'members/rest/subscription_guide.html', context)
 
-def support_ticket(request):
-    context = {}
-    return render(request, 'members/rest/support_ticket.html', context)
 
+
+
+
+
+
+@login_required(login_url='login')
 def errors(request):
     context = {}
     return render(request, 'error_page.html', context)
-
-
-
 # --------------    Member Dashboard       ------------------
+
 @login_required(login_url='login')
 def member_dashboard(request):
     user = request.user
@@ -288,7 +303,7 @@ def member_dashboard(request):
     if user.is_member == False:
         return redirect("subscription")
     else:
-        form = Member.objects.get(guardian_name=user.first_name)
+        form = Member.objects.get(user=user)
         
         profile = Profile.objects.get(user=user)
         activity_status = form.activity
@@ -302,7 +317,7 @@ def member_dashboard(request):
             membership_status = "Suspended"
         user = request.user
         if user.is_member:
-            member = Member.objects.get(guardian_name=user.first_name)
+            member = Member.objects.get(user=user)
             days_remaining = member.paid_until - member.date_paid
             
             if days_remaining == 0:
@@ -332,8 +347,6 @@ def member_dashboard(request):
     return render(request, 'members/dashboard/dashboard.html', context)
    
 # --------------   End of Member Dashboard      ------------------
-
-
 @login_required(login_url='login')
 def members_details(request):
     user = request.user
@@ -379,8 +392,6 @@ def members_details(request):
               "payment_history":payment_history,"membership_status":membership_status,"profile":profile}
     return render(request, 'members/membership/membership_details.html', context)
 
-
-
 @login_required(login_url='login')
 def updateMembersDetails(request):
     user = request.user
@@ -406,6 +417,8 @@ def updateMembersDetails(request):
     
     form_one = MemberForm(instance=member)
     form_alot = MemberRegistrationForm(instance=member)
+    single_riding_form = ridingMemberForm(instance=member)
+    family_riding_form = familyRidingMemberForm(instance=member)
     days_selected = member.days.all()
     print(days_selected)
 
@@ -415,15 +428,29 @@ def updateMembersDetails(request):
     if request.method == "POST":
         if first == "Family":
             if activity == "Riding":
-                form_alot = MemberRegistrationForm(request.POST,instance=member)
-                if form_alot.is_valid():
-                    form_alot.save()
+                family_riding_form = familyRidingMemberForm(request.POST,instance=member)
+                if family_riding_form.is_valid():
+                    family_riding_form.save()
                     return redirect("members-details")
+                elif activity == "Polo":
+                    form_alot = MemberRegistrationForm(request.POST,instance=member)
+                    days_selected = member.days
+                    if form_alot.is_valid():
+                        chosen_days_ids = request.POST.getlist('days')
+                        chosen_days = Days.objects.filter(id__in=chosen_days_ids)
+                        
+                        update_member = form_alot.save(commit=False)
+                        print(f'''chosen_days_ids: {chosen_days_ids}
+    chosen_days: {chosen_days}''')
+                        update_member.days.clear()
+                        update_member.days.add(*chosen_days)
+                        update_member.save()
+                        return redirect("members-details")
         elif first == "Single":
             if activity == "Riding":
-                form_one = MemberForm(request.POST,instance=member)
-                if form_alot.is_valid():
-                    form_alot.save()
+                single_riding_form = ridingMemberForm(request.POST,instance=member)
+                if single_riding_form.is_valid():
+                    single_riding_form.save()
                     return redirect("members-details")
             elif activity == "Polo":
                 form_one = MemberForm(request.POST,instance=member)

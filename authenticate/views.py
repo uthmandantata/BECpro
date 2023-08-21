@@ -112,9 +112,7 @@ class VerificationView(View):
             if user.is_active:
                 return redirect('login')
             user.is_active = True
-            
             user.save()
-            
             messages.success(request, 'Account activated successfully')
             return redirect('login')
 
@@ -178,20 +176,15 @@ def updateProfile(request):
         form = ProfileForm(request.POST, instance=profile)
         if form.is_valid():
             profile = form.save(commit=False)
-            # CustomUser.objects.update(
-            #     first_name= profile.first_name,
-            #     last_name= profile.last_name,
-            #     email= profile.email,
-            # )
             user.first_name = profile.first_name
             user.last_name = profile.last_name
-            print(f"first name: {profile.first_name}")
+            full_name = user.first_name + ' ' + user.last_name
             
             if Member.objects.filter(user=user).exists():
                 member = Member.objects.get(user=user)
                 if member.paid:
                     member.email=profile.email
-                    member.guardian_name=profile.first_name
+                    member.guardian_name=full_name
                     member.phone = profile.phone
                     member.address = profile.address
                     print(f"guardian name: {member.guardian_name}")
