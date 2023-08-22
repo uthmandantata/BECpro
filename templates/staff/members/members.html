@@ -1,0 +1,64 @@
+{% extends 'staff/base.html' %}{% block content %} {% load static %}
+<!--begin::App Content Header-->
+<div class="app-content-header">
+  {% include 'messages.html' %}
+  <!--begin::Container-->
+  <div class="container-fluid">
+    <!--begin::Row-->
+    <div class="row">
+      <div class="col-sm-6">
+        <h3 class="mb-0">Members</h3>
+      </div>
+      <div class="col-sm-6">
+        <span class="breadcrumb float-sm-end">
+          <!-- <a href="{}" class="btn btn-primary btn-lg"></a> -->
+        </span>
+      </div>
+    </div>
+    <!--end::Row-->
+  </div>
+  <!--end::Container-->
+</div>
+<!--end::App Content Header-->
+<!--begin::App Content-->
+<div class="app-content">
+  <!--begin::Container-->
+  <div class="container-fluid">
+    <div class="row">
+      <div class="">
+        <div class="card mb-4">
+          <div class="card-body table-responsive p-0">
+            <table class="table table-striped align-middle">
+              <thead>
+                <tr>
+                  <th>Guardian Name</th>
+                  <th>Email</th>
+                  <th>Membership</th>
+                  <th>Is Suspended</th>
+                  <th>Has Paid</th>
+                  <th>Expiry Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for form in member %}
+                <tr>
+                  <td>{{form.guardian_name}}</td>
+                  <td>{{form.email}}</td>
+
+                  <td>{{form.membership}}</td>
+                  <td>{{form.suspend}}</td>
+                  <td>{{form.paid}}</td>
+                  <td>{{form.paid_until}}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /.row (main row) -->
+</div>
+<!--end::App Content-->
+{% endblock content %} ]]]

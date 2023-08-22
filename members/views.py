@@ -1,22 +1,13 @@
 from django.shortcuts import render
 from django.shortcuts import render, redirect
 from .forms import MemberRegistrationForm, MemberForm, ridingMemberForm, familyRidingMemberForm
-
-
-
-
 from django.contrib.auth.decorators import login_required
-from .models import Notification, PayHistory, Member, Membership, Days
-from accounts.models import Field
+from .models import  PayHistory, Member, Membership, Days
+from staff.models import Notification, Field
 from authenticate.models import CustomUser, Profile
 
 from django.contrib import messages
 import json, requests 
-
-
-
-
-
 
 from django.core.mail import send_mail, EmailMessage
 from django.conf import settings
@@ -72,6 +63,8 @@ def password_reset_request(request):
 # --------------    User Complaints       ------------------
 @login_required(login_url='login')
 def complaints(request):
+    if request.user.is_staff:
+        return redirect("staff")
     notifications = Notification.objects.all()
     notification_count = Notification.objects.filter(is_read=False).count()
     context ={"notifications":notifications,"notification_count":notification_count}
@@ -82,6 +75,8 @@ def complaints(request):
 # --------------    Notifications       ------------------
 @login_required(login_url='login')
 def notifications(request):
+    if request.user.is_staff:
+        return redirect("home")
     notifications = Notification.objects.all()
     notification_count = Notification.objects.filter(is_read=False).count()
     
@@ -90,6 +85,8 @@ def notifications(request):
 
 @login_required(login_url='login')
 def viewNotifications(request,pk):
+    if request.user.is_staff:
+        return redirect("home")
     notifications = Notification.objects.get(pk=pk)
     notification_count = Notification.objects.filter(is_read=False).count()  
     context ={"notifications":notifications,"notification_count":notification_count}
@@ -99,10 +96,12 @@ def viewNotifications(request,pk):
 # --------------   End of Payments      ------------------
 @login_required(login_url='login')
 def subscription(request):
-        form = Membership.objects.all()
-        print(f"form: {form}")
-        context = {"form":form}
-        return render(request, 'members/rest/subscription.html', context)
+    if request.user.is_staff:
+        return redirect("home")
+    form = Membership.objects.all()
+    print(f"form: {form}")
+    context = {"form":form}
+    return render(request, 'members/rest/subscription.html', context)
 
 @login_required(login_url='login')
 def subscribe(request):
@@ -253,6 +252,8 @@ def call_back_url(request):
 @login_required(login_url='login')
 def change_subscription(request):
     try:
+        if request.user.is_staff:
+            return redirect("home")
         form = Membership.objects.all()
         member = Member.objects.get(user=request.user)
         my_membership = member.membership
@@ -265,6 +266,8 @@ def change_subscription(request):
 @login_required(login_url='login')
 def billing_history(request):
     user = request.user
+    if request.user.is_staff:
+        return redirect("home")
     if user.is_member == False:
         return redirect("subscription")
     payment_history = PayHistory.objects.filter(user=user).order_by('-date_created')
@@ -279,6 +282,8 @@ def billing_history(request):
 
 @login_required(login_url='login')
 def subscription_guide(request):
+    if request.user.is_staff:
+        return redirect("home")
     context = {}
     return render(request, 'members/rest/subscription_guide.html', context)
 
@@ -297,6 +302,8 @@ def errors(request):
 @login_required(login_url='login')
 def member_dashboard(request):
     user = request.user
+    if request.user.is_staff:
+        return redirect("home")
     if request.user.is_admin == True:
         return redirect('home')
     status = Field.objects.all()
@@ -350,6 +357,8 @@ def member_dashboard(request):
 @login_required(login_url='login')
 def members_details(request):
     user = request.user
+    if request.user.is_staff:
+        return redirect("home")
     notifications = None
     notification_count = None
     if user.is_member == False:
@@ -394,6 +403,8 @@ def members_details(request):
 
 @login_required(login_url='login')
 def updateMembersDetails(request):
+    if request.user.is_staff:
+        return redirect("home")
     user = request.user
     if user.is_member == False:
         return redirect('subscribe')

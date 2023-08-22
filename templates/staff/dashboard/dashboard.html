@@ -1,0 +1,257 @@
+{% extends 'staff/base.html' %}{% block content %} {% load static %} {% include 'messages.html' %}{% load humanize %}
+<div class="app-content-header">
+  <!--begin::Container-->
+  <div class="container-fluid">
+    <!--begin::Row-->
+    <div class="row">
+      <div class="col-sm-6">
+        <h3 class="mb-0">Dashboard</h3>
+      </div>
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-end">
+          <li class="breadcrumb-item"><a href="#">Home</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+        </ol>
+      </div>
+    </div>
+    <!--end::Row-->
+  </div>
+  <!--end::Container-->
+</div>
+<div class="app-content">
+  <div class="container-fluid">
+    <!--begin::Row-->
+    <div class="row">
+      <!--begin::Col-->
+
+      <div class="col-lg-4 col-6">
+        <!--begin::Small Box Widget 1-->
+        <div class="small-box text-bg-warning">
+          <div class="inner">
+            <h3>{{no_members}}</h3>
+            <p>Number Of Members</p>
+          </div>
+        </div>
+        <!--end::Small Box Widget 1-->
+      </div>
+
+      <!--end::Col--
+      <!--begin::Col-->
+      <div class="col-lg-4 col-6">
+        <!--begin::Small Box Widget 1-->
+        <div class="small-box text-bg-primary">
+          <div class="inner">
+            <h3>₦{{polo_payment_sum|intcomma}}</h3>
+            <p>Earnings (Polo)</p>
+          </div>
+        </div>
+        <!--end::Small Box Widget 1-->
+      </div>
+      <!--end::Col-->
+      <div class="col-lg-4 col-6">
+        <!--begin::Small Box Widget 2-->
+        <div class="small-box text-bg-success">
+          <div class="inner">
+            <h3>₦ {{riding_payment_sum|intcomma}}</h3>
+            <p>Earnings (Riding)</p>
+          </div>
+        </div>
+        <!--end::Small Box Widget 2-->
+      </div>
+      <!--end::Col-->
+      <div class="col-lg-4 col-6">
+        <!--begin::Small Box Widget 3-->
+        <div class="small-box text-bg-danger">
+          <div class="inner">
+            <h3>₦{{member_revenue|intcomma}}</h3>
+            <p>Member Revenue</p>
+          </div>
+        </div>
+        <!--end::Small Box Widget 3-->
+      </div>
+      <!--end::Col-->
+    </div>
+    <!--end::Row-->
+
+    <div class="row">
+      <div class="col-lg-6">
+        <div class="card mb-4">
+          <div class="card-header border-0">
+            <h3 class="card-title">User Details</h3>
+          </div>
+          <div class="card-body table-responsive p-0">
+            <div class="">
+              <div class="card mb-4">
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <p class="mb-0">Full Name</p>
+                    </div>
+                    <div class="col-sm-9">
+                      <p class="text-muted mb-0">{{profile.first_name}} {{profile.last_name}}</p>
+                    </div>
+                  </div>
+                  <hr />
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <p class="mb-0">Email</p>
+                    </div>
+                    <div class="col-sm-9">
+                      <p class="text-muted mb-0">{{profile.email}}</p>
+                    </div>
+                  </div>
+                  <hr />
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <p class="mb-0">Phone</p>
+                    </div>
+                    <div class="col-sm-9">
+                      <p class="text-muted mb-0">{{profile.phone}}</p>
+                    </div>
+                  </div>
+                  <hr />
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <p class="mb-0">Address</p>
+                    </div>
+                    <div class="col-sm-9">
+                      <p class="text-muted mb-0">{{profile.address}}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /.card -->
+        <div class="card">
+          <div class="card-header border-0">
+            <h3 class="card-title">Horses</h3>
+            <div class="card-tools">
+              <a href="{% url 'members-details' %}" class="btn btn-tool btn-sm">
+                <i class="bi bi-list"></i>
+              </a>
+            </div>
+          </div>
+          <div class="card-body table-responsive p-0">
+            <table class="table table-striped align-middle">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Age</th>
+                  <th>Polo</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for horse in horses %}
+                <tr>
+                  <td>{{horse.name}}</td>
+                  <td>{{horse.age}}</td>
+                  <td>{{horse.for_polo}}</td>
+                </tr>
+
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <!-- /.card -->
+      </div>
+
+      <!-- /.col-md-6 -->
+      <div class="col-lg-6">
+        <div class="card mb-3">
+          <div class="card-header border-0">
+            <h3 class="card-title">Members</h3>
+            <div class="card-tools">
+              <a href="{% url 'billing_history' %}" class="btn btn-tool btn-sm">
+                <i class="bi bi-list"></i>
+              </a>
+            </div>
+          </div>
+          <div class="card-body table-responsive p-0">
+            <table class="table table-striped align-middle">
+              <thead>
+                <tr>
+                  <th>Full Name</th>
+                  <th>Membership</th>
+                  <th>Expiry Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for member in members %}
+                <tr>
+                  <td>{{member.guardian_name}}</td>
+                  <td>{{member.membership}}</td>
+                  <td>{{member.paid_until}}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card mb-3">
+          <div class="card-header border-0">
+            <h3 class="card-title">Payment History</h3>
+            <div class="card-tools">
+              <a href="{% url 'billing_history' %}" class="btn btn-tool btn-sm">
+                <i class="bi bi-list"></i>
+              </a>
+            </div>
+          </div>
+          <div class="card-body table-responsive p-0">
+            <table class="table table-striped align-middle">
+              <thead>
+                <tr>
+                  <th>Membership</th>
+                  <th>Amount</th>
+                  <th>Date Paid</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for pay in payment %}
+                <tr>
+                  <td>{{pay.payment_for}}</td>
+                  <td>{{pay.amount}}</td>
+                  <td>{{pay.date_paid.date}}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header border-0">
+            <h3 class="card-title">Equipment</h3>
+            <div class="card-tools">
+              <a href="{% url 'billing_history' %}" class="btn btn-tool btn-sm">
+                <i class="bi bi-list"></i>
+              </a>
+            </div>
+          </div>
+          <div class="card-body table-responsive p-0">
+            <table class="table table-striped align-middle">
+              <thead>
+                <tr>
+                  <th>Membership</th>
+                  <th>Amount</th>
+                  <th>Date Paid</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for pay in equipment %}
+                <tr>
+                  <td>{{pay.name}}</td>
+                  <td>{{pay.amount}}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <!-- /.col-md-6 -->
+    </div>
+  </div>
+</div>
+{% endblock content %}

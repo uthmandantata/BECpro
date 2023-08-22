@@ -1,0 +1,59 @@
+{% extends 'staff/base.html' %}{% block content %} {% load static %}
+<!--begin::App Content Header-->
+<div class="app-content-header">
+  {% include 'messages.html' %}
+  <!--begin::Container-->
+  <div class="container-fluid">
+    <!--begin::Row-->
+    <div class="row">
+      <div class="col-sm-6">
+        <h3 class="mb-0">Notification</h3>
+      </div>
+      <div class="col-sm-6">
+        <span class="breadcrumb float-sm-end">
+          <a href="{% url 'add_notifications' %}" class="btn btn-primary btn-lg">Add a Notification</a>
+        </span>
+      </div>
+    </div>
+    <!--end::Row-->
+  </div>
+  <!--end::Container-->
+</div>
+<!--end::App Content Header-->
+<!--begin::App Content-->
+<div class="app-content">
+  <!--begin::Container-->
+  <div class="container-fluid">
+    <div class="row">
+      <div>
+        <div class="card">
+          <div class="card-body table-responsive p-0">
+            <table class="table table-striped align-middle">
+              <thead>
+                <tr>
+                  <th>Messages</th>
+                  <th>User That Added Notification</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for notification in form %}
+                <tr>
+                  <td>{{notification.message}}</td>
+                  <td>{{notification.user}}</td>
+                  <td>
+                    <a href="{% url 'update_notifications' notification.pk %}" class="btn btn-info">Edit</a
+                    ><a href="{% url 'remove_notifications' notification.pk %}" class="btn btn-danger" style="margin-left: 10px">Delete</a>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /.row (main row) -->
+</div>
+<!--end::App Content-->
+{% endblock content %} ]]]

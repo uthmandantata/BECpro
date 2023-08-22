@@ -9,10 +9,13 @@ from .forms import ProfileForm, SignupForm
 
 from .models import Profile,CustomUser
  
-from members.models import Notification, Member
+from members.models import Member
+from staff.models import Notification
+
 
 
 from django.contrib import messages
+
 from validate_email import validate_email 
 from django.core.mail import EmailMessage
 from django.conf import settings
@@ -109,9 +112,9 @@ class VerificationView(View):
             user=CustomUser.objects.get(id=id)
             if not token_generator.check_token(user,token):
                 return redirect('login'+'?message='+'User already activated')
-            if user.is_active:
+            if user.is_allowed:
                 return redirect('login')
-            user.is_active = True
+            user.is_allowed = True
             user.save()
             messages.success(request, 'Account activated successfully')
             return redirect('login')
@@ -129,10 +132,13 @@ def Login(request):
         if username and password:
             user=auth.authenticate(username=username, password=password)
             if user:
-                if user.is_active:
+                if user.is_allowed:
                     auth.login(request, user)
                     messages.success(request, f'Welcome {user.username} you are now logged in')
-                    return redirect('member_dashboard')
+                    if user.is_member:
+                        return redirect('member_dashboard')
+                    elif user.is_staff:
+                        return redirect('home')
                 messages.error(request, f'Account is not active, please check your email')
                 return render(request, 'authentication/login.html')
         
@@ -154,6 +160,11 @@ def profile(request):
     print(f"first_name: {first_name}")
     notifications = None
     notification_count = 0
+
+    if user.is_allowed:
+        context ={"user":user,"form":form}
+        return render(request, 'staff/profile/profile.html', context)
+
     
 
     if Member.objects.filter(guardian_name=user.first_name).exists():
@@ -192,6 +203,9 @@ def updateProfile(request):
             user.save()
             profile.save()
             return redirect('profile')
+    if user.is_allowed:
+        context ={"user":user,"form":form,"notifications":notifications,"notification_count":notification_count}
+        return render(request, 'staff/profile/profile.html', context)
     if Member.objects.filter(user=user).exists():
         member = Member.objects.get(user=user)
         if member.paid:
@@ -202,3 +216,70 @@ def updateProfile(request):
 
 
 
+def registerStaff(request):
+    form = SignupForm()
+    if request.method == 'POST':
+        username=request.POST['username']
+        email_=request.POST['email']
+        password=request.POST['password']
+        if not CustomUser.objects.filter(username=username).exists():
+            if not CustomUser.objects.filter(email=email_).exists():
+                if len(password) < 6:
+                    messages.error(request,'Password too short')
+                    return render(request, 'authentication/register.html', context)
+                registered_user = CustomUser.objects.create(username=username, email=email_)
+                registered_user.set_password(password)
+                registered_user.is_avtive = False
+                registered_user.save()
+                Profile.objects.create(
+                    user=registered_user,
+                    email=registered_user.email,
+                    username=registered_user.username,
+                )
+                print(f'registered_user.username: {registered_user.username}')
+               
+            # path_to_view
+            # - getting the domain we are on
+            # - relative url to verification
+            # - encode uid
+            # - token
+            uidb64 = urlsafe_base64_encode(force_bytes(registered_user.pk))
+            
+            domain=get_current_site(request).domain
+            link=reverse('activate_staff', kwargs={"uidb64":uidb64,"token":token_generator.make_token(registered_user)},)
+            activate_url = f'http://{domain}{link}'
+            email_subject = 'Activate your account'
+            email_body = f'''Hi {registered_user.username}!
+            Please use this link to verify your account
+            {activate_url}'''
+            email = EmailMessage(
+                email_subject,
+                email_body,
+                settings.EMAIL_HOST_USER,
+                [email_],   
+            )
+            email.send(fail_silently=False)
+            messages.success(request,'Account succesfully created!')
+            return redirect('staff')
+    context = {'form':form,'fieldValues':request.POST}
+    
+    return render(request, 'authentication/register.html',context)
+
+class StaffVerificationView(View):
+    def get(self, request, uidb64, token):
+        try:
+            id=force_str(urlsafe_base64_decode(uidb64))
+            user=CustomUser.objects.get(id=id)
+            if not token_generator.check_token(user,token):
+                return redirect('login'+'?message='+'User already activated')
+            if user.is_allowed:
+                return redirect('login')
+            user.is_allowed = True
+            user.is_staff = True
+            user.save()
+            messages.success(request, 'Account activated successfully')
+            return redirect('login')
+        except Exception as e:
+            print(e)
+        return redirect('login')
+    

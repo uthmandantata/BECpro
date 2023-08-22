@@ -1,7 +1,6 @@
 from django.db import models
 from authenticate import models as md
-from accounts import models as amd
-
+from staff import models as amd
 
 class ForgetPassword(models.Model):
     user = models.OneToOneField(md.CustomUser, on_delete=models.CASCADE, null=True, blank=True)
@@ -42,66 +41,6 @@ class Days(models.Model):
     
     def __str__(self):
         return str(self.name)
-    
-# class Day2(models.Model):
-#     NAME = (
-#         ('Saturday Morning','Saturday Morning'),
-#         ('Saturday Evening','Saturday Evening'),
-#         ('Sunday Morning','Sunday Morning'),
-#         ('Sunday Evening','Sunday Evening'),
-#         ('Wednesday Morning','Wednesday Morning'),
-#         ('Wednesday Evening','Wednesday Evening'),
-#         ('Friday Morning','Friday Morning'),
-#         ('Friday Evening','Friday Evening'),
-      
-#     )
-#     DAYS = (
-#         ('Saturday','Saturday'),
-#         ('Sunday','Sunday'),
-#         ('Wednesday','Wednesday'),
-#         ('Friday','Friday'),
-#     )
-#     TIME_SLOT = (
-#         ('8-10 am', '8-10 am'),
-#         ('4-6 pm', '4-6 pm'),
-#     )
-#     name = models.CharField(max_length=200, null=True, choices=NAME)
-#     days = models.CharField(max_length=200, null=True, choices=DAYS)
-#     time_slot = models.CharField(max_length=200, null=True, choices=TIME_SLOT)
-#     amount = models.IntegerField(null=True)
-
-#     def __str__(self):
-#         return str(self.name)
-    
-# class Day3(models.Model):
-#     NAME = (
-#         ('Saturday Morning','Saturday Morning'),
-#         ('Saturday Evening','Saturday Evening'),
-#         ('Sunday Morning','Sunday Morning'),
-#         ('Sunday Evening','Sunday Evening'),
-#         ('Wednesday Morning','Wednesday Morning'),
-#         ('Wednesday Evening','Wednesday Evening'),
-#         ('Friday Morning','Friday Morning'),
-#         ('Friday Evening','Friday Evening'),
-      
-#     )
-#     DAYS = (
-#         ('Saturday','Saturday'),
-#         ('Sunday','Sunday'),
-#         ('Wednesday','Wednesday'),
-#         ('Friday','Friday'),
-#     )
-#     TIME_SLOT = (
-#         ('8-10 am', '8-10 am'),
-#         ('4-6 pm', '4-6 pm'),
-#     )
-#     name = models.CharField(max_length=200, null=True, choices=NAME)
-#     days = models.CharField(max_length=200, null=True, choices=DAYS)
-#     time_slot = models.CharField(max_length=200, null=True, choices=TIME_SLOT)
-#     amount = models.IntegerField(null=True)
-    
-#     def __str__(self):
-#         return str(self.name)
  
 class PayHistory(models.Model):
     user = models.ForeignKey(md.CustomUser, on_delete=models.CASCADE, default=None)
@@ -118,15 +57,6 @@ class PayHistory(models.Model):
     def __str__(self):
         return str(self.user)
 
-class Notification(models.Model):
-    is_read = models.BooleanField(default=False)
-    message = models.TextField()
-    timestamp = models.DateTimeField(auto_now_add=True)
-    user = models.ForeignKey(md.CustomUser, on_delete=models.CASCADE)
-    date_created = models.DateTimeField(auto_now_add=True,null=True)
-
-    def __str__(self):
-        return f"{self.user} --- {self.timestamp}"
 
 
 class Features(models.Model):
@@ -140,7 +70,6 @@ class Features(models.Model):
     date_created = models.DateTimeField(auto_now_add=True,null=True)
     def __str__(self):
         return self.features
-
 
 class Membership(models.Model):
     MEMBERSHIP = (
@@ -177,7 +106,6 @@ class Membership(models.Model):
 
     def __str__(self):
         return self.membership_type
-
 
 class Member(models.Model):
     user = models.OneToOneField(md.CustomUser, on_delete=models.CASCADE,null=True, blank=True)
@@ -220,5 +148,3 @@ class Member(models.Model):
 
     def __str__(self):
         return str(self.guardian_name)
-
-
