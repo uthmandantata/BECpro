@@ -135,10 +135,10 @@ def Login(request):
                 if user.is_allowed:
                     auth.login(request, user)
                     messages.success(request, f'Welcome {user.username} you are now logged in')
-                    if user.is_member:
-                        return redirect('member_dashboard')
-                    elif user.is_staff:
+                    if user.is_staff:
                         return redirect('home')
+                # elif user.is_member:
+                #     return redirect('member_dashboard')
                 messages.error(request, f'Account is not active, please check your email')
                 return render(request, 'authentication/login.html')
         
@@ -153,7 +153,7 @@ def logoutUser(request):
 
 
 @login_required(login_url='login')
-def profile(request):
+def member_profile(request):
     user = request.user
     first_name = user.first_name
     form = Profile.objects.get(user=user)
@@ -161,10 +161,7 @@ def profile(request):
     notifications = None
     notification_count = 0
 
-    if user.is_allowed:
-        context ={"user":user,"form":form}
-        return render(request, 'staff/profile/profile.html', context)
-
+  
     
 
     if Member.objects.filter(guardian_name=user.first_name).exists():
@@ -177,7 +174,7 @@ def profile(request):
     return render(request, 'members/profile/profile.html', context)
 
 @login_required(login_url='login')
-def updateProfile(request):
+def updateMemberProfile(request):
     user = CustomUser.objects.get(username = request.user)
     notifications = None
     notification_count  =None
@@ -202,10 +199,8 @@ def updateProfile(request):
                     member.save()
             user.save()
             profile.save()
-            return redirect('profile')
-    if user.is_allowed:
-        context ={"user":user,"form":form,"notifications":notifications,"notification_count":notification_count}
-        return render(request, 'staff/profile/profile.html', context)
+            return redirect('member_profile')
+    
     if Member.objects.filter(user=user).exists():
         member = Member.objects.get(user=user)
         if member.paid:

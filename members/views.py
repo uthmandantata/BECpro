@@ -1,13 +1,22 @@
 from django.shortcuts import render
 from django.shortcuts import render, redirect
 from .forms import MemberRegistrationForm, MemberForm, ridingMemberForm, familyRidingMemberForm
+
+
+
+
 from django.contrib.auth.decorators import login_required
-from .models import  PayHistory, Member, Membership, Days
-from staff.models import Notification, Field
+from .models import PayHistory, Member, Membership, Days
+from staff.models import Field,Notification
 from authenticate.models import CustomUser, Profile
 
 from django.contrib import messages
 import json, requests 
+
+
+
+
+
 
 from django.core.mail import send_mail, EmailMessage
 from django.conf import settings
@@ -44,7 +53,7 @@ def password_reset_request(request):
                     email_from = settings.EMAIL_HOST_USER
                     parameters = {
                         'email':user.email,
-                        'domain':'https://4ffe-197-157-218-200.ngrok-free.app',
+                        'domain':'https://c993-197-157-218-195.ngrok-free.app',
                         'site_name': 'Focalleap',
                         'uid': urlsafe_base64_encode(force_bytes(user.pk)),
                         'token':default_token_generator.make_token(user),

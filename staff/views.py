@@ -2,7 +2,8 @@ from django.shortcuts import render, redirect
 from .forms import EquipmentForm,HorsesForm, CustomUserForm, SlotsForm, ServicesForm, TicketsForm, NotificationForm
 from django.contrib.auth.decorators import login_required
 from .models import Horses, Equipment, Services, Tickets, Notification
-from members import models
+from members import models as mem_models
+from members import forms as mem_forms
 from authenticate import models as auth_models
 import random
 from django.contrib import messages
@@ -17,27 +18,27 @@ def home(request):
     try:
         if request.user.is_member==True:
             return redirect('member_dashboard')
-        members = models.Member.objects.all()
+        members = mem_models.Member.objects.all()
         member_revenue = 0 
-        payment = models.PayHistory.objects.all()[:5]
+        payment = mem_models.PayHistory.objects.all()[:5]
         equipment = Equipment.objects.all()[:5]
         horses = Horses.objects.all()[:5]
         tickets = Tickets.objects.all()[:5]
         profile = auth_models.Profile.objects.get(user=request.user)
         no_members = members.count()
-        membership = models.Membership.objects.all()
+        membership = mem_models.Membership.objects.all()
 
         try:
-            polo_payment_sum = models.PayHistory.objects.filter(activity="Polo").aggregate(Sum('amount'))['amount__sum']
-            riding_payment_sum = models.PayHistory.objects.filter(activity="Riding").aggregate(Sum('amount'))['amount__sum']
+            polo_payment_sum = mem_models.PayHistory.objects.filter(activity="Polo").aggregate(Sum('amount'))['amount__sum']
+            riding_payment_sum = mem_models.PayHistory.objects.filter(activity="Riding").aggregate(Sum('amount'))['amount__sum']
             member_revenue = polo_payment_sum + riding_payment_sum
-        except models.PayHistory.DoesNotExist:
+        except mem_models.PayHistory.DoesNotExist:
             polo_payment_sum = 0
             riding_payment_sum = 0
         try:
-            polo_count = models.Member.objects.filter(activity="Polo").count()
-            riding_count = models.Member.objects.filter(activity="Riding").count()
-        except models.Member.DoesNotExist:
+            polo_count = mem_models.Member.objects.filter(activity="Polo").count()
+            riding_count = mem_models.Member.objects.filter(activity="Riding").count()
+        except mem_models.Member.DoesNotExist:
             polo_payment_sum = 0
             riding_payment_sum = 0
     except Exception as e:
@@ -131,7 +132,7 @@ def staff_members(request):
         if request.user.is_member==True:
             return redirect('member_dashboard')
         
-        member = models.Member.objects.all()
+        member = mem_models.Member.objects.all()
     except Exception as e:
         print(e)
     context = {'member':member}
@@ -177,10 +178,10 @@ def updateMembers(request,pk):
 def suspendMembers(request,pk):
     if request.user.is_member:
         return redirect('member_dashboard')
-    members = models.Member.objects.get(id=pk)
+    members = mem_models.Member.objects.get(id=pk)
     # form = SuspendForm(instance=members)
     if request.method == "POST":
-        models.Member.objects.update(
+        mem_models.Member.objects.update(
             suspend=True
         )
         return redirect('members')
@@ -191,10 +192,10 @@ def suspendMembers(request,pk):
 def resumeMembers(request,pk):
     if request.user.is_member:
         return redirect('member_dashboard')
-    members = models.Member.objects.get(id=pk)
+    members = mem_models.Member.objects.get(id=pk)
     # form = SuspendForm(instance=members)
     if request.method == "POST":
-        models.Member.objects.update(
+        mem_models.Member.objects.update(
             suspend=False
         )
         return redirect('members')
@@ -549,10 +550,11 @@ def polo_schedule(request):
 
     members_by_day = {}
     for day in days_selected:
-        members_for_day = models.Member.objects.filter(days=day)
+        members_for_day = mem_models.Member.objects.filter(days=day)
         members_by_day[day] = members_for_day
 
     print(f'members_by_day:{members_by_day}')
 
     context = {"days_selected": days_selected, "members_by_day": members_by_day}
     return render(request, 'staff/members/polo_schedule.html', context)
+
