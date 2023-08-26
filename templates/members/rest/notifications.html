@@ -31,7 +31,7 @@
                 </tr>
               </tfoot>
               <tbody>
-                {% for notification in notifications %}
+                {% for notification in notifications %} {% if notification.is_read == False %}
                 <tr>
                   <td>{{notification.message}}</td>
                   <td>{{notification.is_read}}</td>
@@ -42,7 +42,7 @@
                     </a>
                   </td>
                 </tr>
-                {% endfor %}
+                {% endif %} {% endfor %}
               </tbody>
             </table>
           </div>

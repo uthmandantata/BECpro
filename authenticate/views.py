@@ -54,7 +54,8 @@ class EmailValidationView(View):
             return JsonResponse({'email_error':'Email already in use, Choose another one!'},status=409)
         return JsonResponse({'email_valid': True})
 
-
+def landing(request):
+    return render(request, 'authentication/landing.html')
 
 def Registration(request):
     form = SignupForm()
@@ -76,7 +77,7 @@ def Registration(request):
                     email=registered_user.email,
                     username=registered_user.username,
                 )
-                print(f'registered_user.username: {registered_user.username}')
+                
                
             # path_to_view
             # - getting the domain we are on
@@ -135,8 +136,10 @@ def Login(request):
                 if user.is_allowed:
                     auth.login(request, user)
                     messages.success(request, f'Welcome {user.username} you are now logged in')
+                    
                     if user.is_staff:
                         return redirect('home')
+                    return redirect('member_dashboard')
                 # elif user.is_member:
                 #     return redirect('member_dashboard')
                 messages.error(request, f'Account is not active, please check your email')
@@ -255,10 +258,10 @@ def registerStaff(request):
             )
             email.send(fail_silently=False)
             messages.success(request,'Account succesfully created!')
-            return redirect('staff')
+            return redirect('login')
     context = {'form':form,'fieldValues':request.POST}
     
-    return render(request, 'authentication/register.html',context)
+    return render(request, 'authentication/register_staff.html',context)
 
 class StaffVerificationView(View):
     def get(self, request, uidb64, token):

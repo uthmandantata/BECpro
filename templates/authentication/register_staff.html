@@ -5,7 +5,7 @@
     <div class="card mt-5">
       <div class="card-body">
         <div class="card-title pt-3 pb-3">
-          <h4>Register for a free account</h4>
+          <h4>Register As a Staff</h4>
         </div>
         <form action="" method="post">
           {% csrf_token %} {% include 'messages.html' %}
@@ -39,8 +39,8 @@
             <label class="form-check-label" for="exampleCheck1">Check me out</label>
           </div>
           <input type="submit" value="Register" class="submit-btn btn btn-primary" />
-          <a class="float-end" href="{% url 'login' %}">Have an account? Click Here</a>
         </form>
+        <a href="{% url 'login' %}">Already have an account? Click Here</a>
       </div>
     </div>
   </div>

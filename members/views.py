@@ -53,7 +53,7 @@ def password_reset_request(request):
                     email_from = settings.EMAIL_HOST_USER
                     parameters = {
                         'email':user.email,
-                        'domain':'https://c993-197-157-218-195.ngrok-free.app',
+                        'domain':'https://66d5-197-157-218-195.ngrok-free.app',
                         'site_name': 'Focalleap',
                         'uid': urlsafe_base64_encode(force_bytes(user.pk)),
                         'token':default_token_generator.make_token(user),
@@ -96,7 +96,10 @@ def notifications(request):
 def viewNotifications(request,pk):
     if request.user.is_staff:
         return redirect("home")
+    
     notifications = Notification.objects.get(pk=pk)
+    notifications.is_read = True
+    notifications.save()
     notification_count = Notification.objects.filter(is_read=False).count()  
     context ={"notifications":notifications,"notification_count":notification_count}
     return render(request, 'members/rest/view_notifications.html', context)
@@ -260,17 +263,18 @@ def call_back_url(request):
 
 @login_required(login_url='login')
 def change_subscription(request):
-    try:
-        if request.user.is_staff:
-            return redirect("home")
-        form = Membership.objects.all()
-        member = Member.objects.get(user=request.user)
-        my_membership = member.membership
+   
+    if request.user.is_staff:
+        return redirect("home")
+    if request.user.is_member == False:
+        return redirect("subscription")
+    form = Membership.objects.all()
+    member = Member.objects.get(user=request.user)
+    my_membership = member.membership
 
-        context = {"form":form,"member":member,"my_membership":my_membership}
-        return render(request, 'members/billing/change_subscription.html', context)
-    except Exception as e:
-        print(e)
+    context = {"form":form,"member":member,"my_membership":my_membership}
+    return render(request, 'members/billing/change_subscription.html', context)
+   
 
 @login_required(login_url='login')
 def billing_history(request):

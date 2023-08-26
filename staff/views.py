@@ -15,35 +15,37 @@ from django.db.models import Sum
 
 @login_required(login_url='login')
 def home(request):
-    try:
-        if request.user.is_member==True:
-            return redirect('member_dashboard')
-        members = mem_models.Member.objects.all()
-        member_revenue = 0 
-        payment = mem_models.PayHistory.objects.all()[:5]
-        equipment = Equipment.objects.all()[:5]
-        horses = Horses.objects.all()[:5]
-        tickets = Tickets.objects.all()[:5]
-        profile = auth_models.Profile.objects.get(user=request.user)
-        no_members = members.count()
-        membership = mem_models.Membership.objects.all()
+    
+    if request.user.is_member==True:
+        return redirect('member_dashboard')
+    members = mem_models.Member.objects.all()
+    member_revenue = 0 
+    payment = mem_models.PayHistory.objects.all()[:5]
+    equipment = Equipment.objects.all()[:5]
+    horses = Horses.objects.all()[:5]
+    tickets = Tickets.objects.all()[:5]
+    profile = auth_models.Profile.objects.get(user=request.user)
+    no_members = members.count()
+    membership = mem_models.Membership.objects.all()
+    polo_payment_sum = 0
+    riding_payment_sum = 0
 
-        try:
+    try:
+        if payment.count() > 0:
             polo_payment_sum = mem_models.PayHistory.objects.filter(activity="Polo").aggregate(Sum('amount'))['amount__sum']
             riding_payment_sum = mem_models.PayHistory.objects.filter(activity="Riding").aggregate(Sum('amount'))['amount__sum']
-            member_revenue = polo_payment_sum + riding_payment_sum
-        except mem_models.PayHistory.DoesNotExist:
-            polo_payment_sum = 0
-            riding_payment_sum = 0
-        try:
-            polo_count = mem_models.Member.objects.filter(activity="Polo").count()
-            riding_count = mem_models.Member.objects.filter(activity="Riding").count()
-        except mem_models.Member.DoesNotExist:
-            polo_payment_sum = 0
-            riding_payment_sum = 0
-    except Exception as e:
-        print(e)
-        return e
+        member_revenue = polo_payment_sum + riding_payment_sum
+    except mem_models.PayHistory.DoesNotExist:
+        polo_payment_sum = 0
+        riding_payment_sum = 0
+    try:
+        polo_count = mem_models.Member.objects.filter(activity="Polo").count()
+        riding_count = mem_models.Member.objects.filter(activity="Riding").count()
+    except mem_models.Member.DoesNotExist:
+        polo_payment_sum = 0
+        riding_payment_sum = 0
+   
+        
     context = {"member_revenue":member_revenue,"profile":profile,"tickets":tickets,"horses":horses,"payment":payment,"members":members,"riding_count":riding_count,"polo_count":polo_count,"membership":membership,"no_members":no_members,"polo_payment_sum":polo_payment_sum,"riding_payment_sum":riding_payment_sum}
     return render(request, 'staff/dashboard/dashboard.html', context)
 
@@ -482,8 +484,10 @@ def members_history(request):
     user = request.user
     if user.is_member == True:
         return redirect("member_dashboard")
-    payment_history = models.PayHistory.objects.all().order_by('-date_created')
-   
+    payment_history = mem_models.PayHistory.objects.all().order_by('-date_created')
+
+
+
     context ={"payment_history":payment_history}
         # return render(request, 'members/dashboard.html', context)
     return render(request, 'staff/billing/billing_history.html', context)
@@ -546,7 +550,7 @@ def polo_schedule(request):
     if request.user.is_member:
         return redirect('member_dashboard')
 
-    days_selected = models.Days.objects.all()
+    days_selected = mem_models.Days.objects.all()
 
     members_by_day = {}
     for day in days_selected:

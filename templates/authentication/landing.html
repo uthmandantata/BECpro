@@ -1,0 +1,42 @@
+{% extends 'authentication/partials/base_auth.html' %}{% load static %}{% block content %} {% load static %}
+<div class="row">
+  <div class="col-md-4"></div>
+  <div class="col-md-4">
+    <div class="card mt-5">
+      <div class="card-body">
+        <section style="background-color: #eee">
+          <div class="container py-5">
+            <div class="row">
+              <div class="col-lg-6">
+                <div class="card">
+                  <div class="card-body text-center">
+                    <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar" class="rounded-circle img-fluid" style="width: 150px" />
+
+                    <div class="d-flex justify-content-center mt-4" style="margin-bottom: 30px">
+                      <a href="{% url 'register' %}" class="btn btn-primary">Member</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-6">
+                <div class="card">
+                  <div class="card-body text-center">
+                    <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar" class="rounded-circle img-fluid" style="width: 150px" />
+
+                    <div class="d-flex justify-content-center mt-4" style="margin-bottom: 30px">
+                      <a href="{% url 'registerStaff' %}" class="btn btn-primary">Staff</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4"></div>
+</div>
+
+<script src="{% static 'new_folder/js/main.js' %}"></script>
+{% endblock content %}

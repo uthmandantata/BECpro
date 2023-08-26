@@ -3,8 +3,8 @@ from . import views
 from django.views.decorators.csrf import csrf_exempt
 
 urlpatterns = [
-    
-    path('', views.Registration, name='authenticate'),
+    path('', views.landing, name='authenticate'),
+    path('register', views.Registration, name='register'),
     path('registerStaff', views.registerStaff, name='registerStaff'),
     path('login/', views.Login, name='login'),
     path('logout/', views.logoutUser , name='logout'),
