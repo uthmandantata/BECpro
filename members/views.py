@@ -53,7 +53,7 @@ def password_reset_request(request):
                     email_from = settings.EMAIL_HOST_USER
                     parameters = {
                         'email':user.email,
-                        'domain':'https://66d5-197-157-218-195.ngrok-free.app',
+                        'domain':'https://17d3-197-157-218-195.ngrok-free.app',
                         'site_name': 'Focalleap',
                         'uid': urlsafe_base64_encode(force_bytes(user.pk)),
                         'token':default_token_generator.make_token(user),
@@ -115,7 +115,7 @@ def subscription(request):
     context = {"form":form}
     return render(request, 'members/rest/subscription.html', context)
 
-@login_required(login_url='login')
+
 def subscribe(request):
     try:
         username = request.user
@@ -220,7 +220,7 @@ def subscribe(request):
         print(e)
     return render(request, 'members/rest/subscribe.html')
 
-@login_required(login_url='login')
+
 def call_back_url(request):
     reference = request.GET.get('reference_code')
     check_pay = PayHistory.objects.filter(paystack_charge_id=reference).exists()
@@ -350,15 +350,19 @@ def member_dashboard(request):
 
         today = date.today().strftime('%A')
         permis = ""
-        if activity_status == "Riding" and today == "Wednesday" or today == "Saturday" or today == "Sunday":
-            permis = "No Riding Today"
-        elif activity_status == "Riding" and today != "Wednesday" and today != "Saturday" and today != "Sunday":
-            permis = "Riding open Today"
-        elif activity_status == "Polo" and today == "Wednesday" or today == "Saturday" or today == "Sunday":
-            permis = "Polo open Today"
-        elif activity_status == "Polo" and today == "Monday" or today == "Tuesday" or today == "Thursday" or today == "Friday":
-            permis = "No Polo Today"
-        
+        if today == "Wednesday" or today == "Saturday" or today == "Sunday":
+            if activity_status == "Riding":
+                permis = "No Riding Today"
+            elif activity_status == "Polo":
+                permis = "Polo open Today"
+        else:
+            if activity_status == "Riding":
+                permis = " Riding open Today"
+            elif activity_status == "Polo":
+                permis = "No Polo Today"
+       
+
+
        
         context ={"activity_status":activity_status,"permis":permis,"today":today,"notifications":notifications,"notification_count":notification_count,
                 "membership_status":membership_status,"days_remaining":days_remaining.days,

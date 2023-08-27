@@ -102,7 +102,7 @@
             <p>Notification</p>
           </a>
         </li>
-        {% else %}
+        {% elif request.user.is_staff %}
         <li class="nav-item">
           <a href="#" class="nav-link">
             <i class="nav-icon bi bi-box-seam-fill"></i>

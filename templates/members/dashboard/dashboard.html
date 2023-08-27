@@ -213,8 +213,75 @@
             </div>
           </div>
         </div>
+        {% if form.activity == "Riding" %}
         <!-- /.card -->
-        <div class="card">
+        <div class="card mb-5">
+          <div class="card-header border-0">
+            <h3 class="card-title">Days For Riding</h3>
+          </div>
+          <div class="card-body table-responsive p-0">
+            <table class="table table-striped align-middle">
+              <thead>
+                <tr>
+                  <th>Day</th>
+                  <th>Time</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Monday</td>
+                  <td>8am - 6pm</td>
+                </tr>
+                <tr>
+                  <td>Tuesday</td>
+                  <td>8am - 6pm</td>
+                </tr>
+                <tr>
+                  <td>Thursday</td>
+                  <td>8am - 6pm</td>
+                </tr>
+                <tr>
+                  <td>Friday</td>
+                  <td>8am - 6pm</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <!-- /.card -->
+        {% else %}
+
+        <!-- /.card -->
+        <div class="card mb-5">
+          <div class="card-header border-0">
+            <h3 class="card-title">Days Selected</h3>
+          </div>
+          <div class="card-body table-responsive p-0">
+            <table class="table table-striped align-middle">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Day</th>
+                  <th>Time</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for day in days %}
+                <tr>
+                  <td>{{day.name}}</td>
+                  <td>{{day.days}}</td>
+                  <td>{{day.time_slot}}</td>
+                </tr>
+
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <!-- /.card -->
+        {% endif %}
+        <!-- /.card -->
+        <!-- <div class="card">
           <div class="card-header border-0">
             <h3 class="card-title">Days Selected</h3>
             <div class="card-tools">
@@ -244,7 +311,7 @@
               </tbody>
             </table>
           </div>
-        </div>
+        </div> -->
         <!-- /.card -->
       </div>
 

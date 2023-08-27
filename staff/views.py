@@ -6,6 +6,9 @@ from members import models as mem_models
 from members import forms as mem_forms
 from authenticate import models as auth_models
 import random
+from authenticate import views as auth_views
+from django.http import HttpResponse
+from decimal import Decimal
 from django.contrib import messages
 from django.views import View
 from authenticate.models import CustomUser
@@ -16,8 +19,9 @@ from django.db.models import Sum
 @login_required(login_url='login')
 def home(request):
     
-    if request.user.is_member==True:
-        return redirect('member_dashboard')
+    if request.user.is_member == True:
+        auth_views.logoutUser(request)
+        return HttpResponse('You are not allowed here. You have been logged out.')
     members = mem_models.Member.objects.all()
     member_revenue = 0 
     payment = mem_models.PayHistory.objects.all()[:5]
@@ -29,11 +33,17 @@ def home(request):
     membership = mem_models.Membership.objects.all()
     polo_payment_sum = 0
     riding_payment_sum = 0
+    member_revenue = 0
 
     try:
         if payment.count() > 0:
             polo_payment_sum = mem_models.PayHistory.objects.filter(activity="Polo").aggregate(Sum('amount'))['amount__sum']
             riding_payment_sum = mem_models.PayHistory.objects.filter(activity="Riding").aggregate(Sum('amount'))['amount__sum']
+            polo_payment_sum = polo_payment_sum or Decimal('0')
+            riding_payment_sum = riding_payment_sum or Decimal('0')
+            member_revenue = polo_payment_sum + riding_payment_sum
+
+
         member_revenue = polo_payment_sum + riding_payment_sum
     except mem_models.PayHistory.DoesNotExist:
         polo_payment_sum = 0
@@ -427,6 +437,8 @@ def updateCostumUser(request,pk):
         return HttpResponse('You are not allowed here!!')
     elif request.user != costumUser.username:
         return HttpResponse('You are not allowed here!!')
+    
+
 
 
     if request.method == "POST":
