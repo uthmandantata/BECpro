@@ -4,11 +4,19 @@
   <div class="col-md-4">
     <div class="card mt-5">
       <div class="card-body">
+        {% if messages %}
+  <ul class="messages">
+    {% for message in messages %}
+      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+  </ul>
+{% endif %}
         <div class="card-title pt-3 pb-3">
           <h4>Login</h4>
         </div>
         <form action="" method="post">
-          {% csrf_token %} {% include 'messages.html' %}
+          {% csrf_token %} 
+          
           <div class="mb-3">
             <label for="usernameField" class="form-label">Username</label>
             <input type="text" name="username" class="form-control" value="{{fieldValues.username}}" class="username" id="usernameField" aria-describedby="usernameHelp" />

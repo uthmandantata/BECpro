@@ -27,7 +27,7 @@ from django.contrib.sites.shortcuts import get_current_site
 
 from .utils import token_generator
 
-from django.contrib import auth
+from django.contrib.auth import authenticate, login
 
 
 
@@ -125,28 +125,34 @@ class VerificationView(View):
         return redirect('login')
     
 
-def Login(request):
-    if request.method == "POST":
-        username=request.POST['username']
-        password=request.POST['password']
-
-        if username and password:
-            user=auth.authenticate(username=username, password=password)
-            if user:
-                if user.is_allowed:
-                    auth.login(request, user)
-                    messages.success(request, f'Welcome {user.username} you are now logged in')
-                    
-                    if user.is_staff:
-                        return redirect('home')
-                    return redirect('member_dashboard')
-                # elif user.is_member:
-                #     return redirect('member_dashboard')
-                messages.error(request, f'Account is not active, please check your email')
-                return render(request, 'authentication/login.html')
-        
-    return render(request, 'authentication/login.html')
+# def Login(request):
+#     if request.method == "POST":
+#         username=request.POST['username']
+#         password=request.POST['password']
+#         l = ""
+#         if username and password:
+#             user=authenticate(username=username, password=password)
+#             if user is None:
+#                 messages.error(request, 'Invalid username or password')    
+#                 print("-----------------------------------------------------------------------")
+#             else:
+#                 if user.is_allowed:
+#                     login(request, user)
+#                     messages.success(request, f'Welcome {user.username} you are now logged in')
+#                     if user.is_staff:
+#                         return redirect('home')
+#                     return redirect('member_dashboard')
+#                 messages.success(request, 'Account is not active, please check your email')
+                   
+#     return render(request, 'authentication/login.html',{"messages":messages})
     
+
+
+
+
+
+
+
 
 
 def logoutUser(request):
