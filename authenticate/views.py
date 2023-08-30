@@ -115,11 +115,7 @@ class VerificationView(View):
                 return redirect('login'+'?message='+'User already activated')
             if user.is_allowed:
                 return redirect('login')
-<<<<<<< HEAD
             user.is_active = True
-=======
-            user.is_allowed = True
->>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2
             user.save()
             messages.success(request, 'Account activated successfully')
             return redirect('login')
