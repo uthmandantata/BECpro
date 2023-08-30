@@ -1,9 +1,12 @@
 from django.db import models
 from authenticate import models as md
 
+<<<<<<< HEAD
 
 
 
+=======
+>>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2
 class Services(models.Model):
     name = models.CharField(max_length=150, null=True)
     duration = models.CharField(max_length=150, null=True)
@@ -13,8 +16,11 @@ class Services(models.Model):
     def __str__(self):
         return str(self.name)
     
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2
 class Tickets(models.Model):
     ticket_number = models.CharField(max_length=150, null=True)
     attendant = models.CharField(max_length=150, null=True)
@@ -22,6 +28,10 @@ class Tickets(models.Model):
     customer_email = models.CharField(max_length=150, null=True)
     customer_number = models.CharField(max_length=150, null=True)
     service = models.ForeignKey(Services, on_delete=models.CASCADE)
+<<<<<<< HEAD
+=======
+    used = models.BooleanField(default=False, null=True)
+>>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2
     quantity = models.IntegerField(default=0)
     total_price = models.CharField(max_length=150, null=True)
     date = models.DateTimeField(auto_now_add=True, null=True)
@@ -48,9 +58,12 @@ class Slots(models.Model):
     def __str__(self):
         return str(self.name)
 
+<<<<<<< HEAD
 
 
 
+=======
+>>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2
 class Field(models.Model):
     STATUS = (
         ('Closed', 'Closed'),
@@ -65,7 +78,10 @@ class Field(models.Model):
     def __str__(self):
         return str(self.name)
     
+<<<<<<< HEAD
 
+=======
+>>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2
 class Horses(models.Model):
     name = models.CharField(max_length=150, null=True)
     age = models.IntegerField(null=True)
@@ -77,20 +93,45 @@ class Horses(models.Model):
     def __str__(self):
         return str(self.name)
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2
 class Equipment(models.Model):
     name = models.CharField(max_length=150, null=True)
     amount = models.IntegerField(null=True)
     price_bought = models.IntegerField(null=True)
+<<<<<<< HEAD
     needs_repair = models.BooleanField(null=True, default=False)
     def __str__(self):
         return self.name
 
 
+=======
+    number_that_needs_repair = models.IntegerField(null=True)
+    for_polo = models.BooleanField(default=True, null=True)
+    date_bought = models.DateField(null=True)
+    
+    def __str__(self):
+        return self.name
+
+>>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2
 class Admin(models.Model):
     user = models.OneToOneField(md.CustomUser, on_delete=models.CASCADE, null=True, blank=True)
     # Add your admin fields here
 
 
+<<<<<<< HEAD
+=======
+class Notification(models.Model):
+    is_read = models.BooleanField(default=False)
+    message = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(md.CustomUser, on_delete=models.CASCADE)
+    date_created = models.DateTimeField(auto_now_add=True,null=True)
+
+    def __str__(self):
+        return f"{self.user} --- {self.timestamp}"
+>>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2
 

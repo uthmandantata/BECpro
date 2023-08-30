@@ -7,7 +7,7 @@ For more information on this file, see
 https://docs.djangoproject.com/en/4.1/topics/settings/
 
 For the full list of settings and their values, see
-https://docs.djangoproject.com/en/4.1/ref/settings/
+https://docs.djb angoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
@@ -26,8 +26,13 @@ SECRET_KEY = 'django-insecure-9xybf%w7nhcc#6t9mu3zb!p#-ee3rt_zfi06vw5()n(3c5vjcd
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+<<<<<<< HEAD
 ALLOWED_HOSTS = ['127.0.0.1','4ffe-197-157-218-200.ngrok-free.app']
 CSRF_TRUSTED_ORIGINS = ['https://4ffe-197-157-218-200.ngrok-free.app','https://*.127.0.0.1']
+=======
+ALLOWED_HOSTS = ['127.0.0.1','17d3-197-157-218-195.ngrok-free.app']
+CSRF_TRUSTED_ORIGINS = ['https://17d3-197-157-218-195.ngrok-free.app','https://*.127.0.0.1']
+>>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2
 
 
 # Application definition
@@ -41,7 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'accounts',
+
     "crispy_forms",
     "crispy_bootstrap5",
     'authenticate',

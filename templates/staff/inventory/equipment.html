@@ -1,0 +1,68 @@
+{% extends 'staff/base.html' %}{% block content %} {% load static %}
+<!--begin::App Content Header-->
+<div class="app-content-header">
+  {% include 'messages.html' %}
+  <!--begin::Container-->
+  <div class="container-fluid">
+    <!--begin::Row-->
+    <div class="row">
+      <div class="col-sm-6">
+        <h3 class="mb-0">Equipment</h3>
+      </div>
+      <div class="col-sm-6">
+        <span class="breadcrumb float-sm-end">
+          <a href="{% url 'addEquipment' %}" class="btn btn-primary btn-lg">Add Equipment</a>
+        </span>
+      </div>
+    </div>
+    <!--end::Row-->
+  </div>
+  <!--end::Container-->
+</div>
+<!--end::App Content Header-->
+<!--begin::App Content-->
+<div class="app-content">
+  <!--begin::Container-->
+  <div class="container-fluid">
+    <div class="row">
+      <div>
+        <div class="card">
+          <div class="card-body table-responsive p-0">
+            <table class="table table-striped align-middle">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Amount</th>
+                  <th>Date Bought</th>
+                  <th>Price</th>
+                  <th>Needs Repair</th>
+                  <th>For Polo</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for form in equipment %}
+                <tr>
+                  <td>{{form.name}}</td>
+                  <td>{{form.amount}}</td>
+                  <td>{{form.date_bought}}</td>
+                  <td>{{form.price_bought}}</td>
+                  <td>{{form.number_that_needs_repair}}</td>
+                  <td>{{form.for_polo}}</td>
+                  <td>
+                    <a href="{% url 'updateEquipment' form.pk %}" class="btn btn-info">Edit</a
+                    ><a href="{% url 'removeEquipment' form.pk %}" class="btn btn-danger" style="margin-left: 10px">Delete</a>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /.row (main row) -->
+</div>
+<!--end::App Content-->
+{% endblock content %} ]]]

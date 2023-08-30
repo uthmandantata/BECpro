@@ -1,0 +1,68 @@
+{% extends 'staff/base.html' %}{% block content %} {% load static %}
+<!--begin::App Content Header-->
+<div class="app-content-header">
+  {% include 'messages.html' %}
+  <!--begin::Container-->
+  <div class="container-fluid">
+    <!--begin::Row-->
+    <div class="row">
+      <div class="col-sm-6">
+        <h3 class="mb-0">Members</h3>
+      </div>
+      <div class="col-sm-6">
+        <span class="breadcrumb float-sm-end">
+          <a href="{% url 'addHorses' %}" class="btn btn-primary btn-lg">Add A Horse</a>
+        </span>
+      </div>
+    </div>
+    <!--end::Row-->
+  </div>
+  <!--end::Container-->
+</div>
+<!--end::App Content Header-->
+<!--begin::App Content-->
+<div class="app-content">
+  <!--begin::Container-->
+  <div class="container-fluid">
+    <div class="row">
+      <div>
+        <div class="card">
+          <div class="card-body table-responsive p-0">
+            <table class="table table-striped align-middle">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Age</th>
+                  <th>Date Bought</th>
+                  <th>Weight</th>
+                  <th>Height</th>
+                  <th>For Polo</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for form in horses %}
+                <tr>
+                  <td>{{form.name}}</td>
+                  <td>{{form.age}}</td>
+                  <td>{{form.date_bought}}</td>
+                  <td>{{form.weight}}</td>
+                  <td>{{form.height}}</td>
+                  <td>{{form.for_polo}}</td>
+                  <td>
+                    <a href="{% url 'updateHorses' form.pk %}" class="btn btn-info">Edit</a
+                    ><a href="{% url 'removeHorses' form.pk %}" class="btn btn-danger" style="margin-left: 10px">Delete</a>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /.row (main row) -->
+</div>
+<!--end::App Content-->
+{% endblock content %} ]]]

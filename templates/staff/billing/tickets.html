@@ -1,0 +1,98 @@
+{% extends 'staff/base.html' %}{% block content %} {% load static %}
+<!--begin::App Content Header-->
+<div class="app-content-header">
+  <!--begin::Container-->
+  <div class="container-fluid">
+    <!--begin::Row-->
+    <div class="row">
+      <div class="col-sm-6">
+        <h3 class="mb-0">Tickets</h3>
+      </div>
+      <div class="col-sm-6">
+        <span class="breadcrumb float-sm-end">
+          <a href="{% url 'addTickets' %}" class="btn btn-primary">Add A Ticket</a>
+        </span>
+      </div>
+    </div>
+    <!--end::Row-->
+  </div>
+  <!--end::Container-->
+</div>
+{% include 'messages.html' %}
+<!--end::App Content Header-->
+<!--begin::App Content-->
+<div class="app-content">
+  <!--begin::Container-->
+  <div class="container-fluid">
+    <!-- Page Heading -->
+
+    <div class="row">
+      <!-- Area Chart -->
+      <div class="col-xl-12">
+        <!-- DataTales Example -->
+        <div class="card shadow mb-4">
+          <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary"></h6>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                  <tr>
+                    <th>Ticket Number</th>
+                    <th>Attendant</th>
+                    <th>Customer Fullname</th>
+                    <th>Service</th>
+                    <th>Quantity</th>
+                    <th>Total Price</th>
+                    <th>Used</th>
+                    <th>Date Created</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tfoot>
+                  <tr>
+                    <th>Ticket Number</th>
+                    <th>Attendant</th>
+                    <th>Customer Fullname</th>
+                    <th>Service</th>
+                    <th>Quantity</th>
+                    <th>Total Price</th>
+                    <th>Used</th>
+                    <th>Date Created</th>
+                    <th>Actions</th>
+                  </tr>
+                </tfoot>
+                <tbody>
+                  {% for tickets in form %}
+                  <tr>
+                    <td>{{tickets.ticket_number}}</td>
+                    <td>{{tickets.attendant}}</td>
+                    <td>{{tickets.customer_fullname}}</td>
+
+                    <td>{{tickets.service}}</td>
+
+                    <td>{{tickets.quantity}}</td>
+                    <td>{{tickets.total_price}}</td>
+                    <td>{{tickets.used}}</td>
+                    <td>{{tickets.date}}</td>
+
+                    <td>
+                      <a href="{% url 'printTickets' tickets.pk %}" class="btn btn-success btn-icon-split">
+                        <span class="text">Print</span>
+                      </a>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /.row (main row) -->
+</div>
+<!--end::App Content-->
+{% endblock content %}

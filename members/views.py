@@ -6,8 +6,8 @@ from .forms import MemberRegistrationForm, MemberForm, ridingMemberForm, familyR
 
 
 from django.contrib.auth.decorators import login_required
-from .models import Notification, PayHistory, Member, Membership, Days
-from accounts.models import Field
+from .models import PayHistory, Member, Membership, Days
+from staff.models import Field,Notification
 from authenticate.models import CustomUser, Profile
 
 from django.contrib import messages
@@ -53,7 +53,11 @@ def password_reset_request(request):
                     email_from = settings.EMAIL_HOST_USER
                     parameters = {
                         'email':user.email,
+<<<<<<< HEAD
                         'domain':'https://4ffe-197-157-218-200.ngrok-free.app',
+=======
+                        'domain':'https://17d3-197-157-218-195.ngrok-free.app',
+>>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2
                         'site_name': 'Focalleap',
                         'uid': urlsafe_base64_encode(force_bytes(user.pk)),
                         'token':default_token_generator.make_token(user),
@@ -72,6 +76,8 @@ def password_reset_request(request):
 # --------------    User Complaints       ------------------
 @login_required(login_url='login')
 def complaints(request):
+    if request.user.is_staff:
+        return redirect("staff")
     notifications = Notification.objects.all()
     notification_count = Notification.objects.filter(is_read=False).count()
     context ={"notifications":notifications,"notification_count":notification_count}
@@ -82,6 +88,8 @@ def complaints(request):
 # --------------    Notifications       ------------------
 @login_required(login_url='login')
 def notifications(request):
+    if request.user.is_staff:
+        return redirect("home")
     notifications = Notification.objects.all()
     notification_count = Notification.objects.filter(is_read=False).count()
     
@@ -90,7 +98,16 @@ def notifications(request):
 
 @login_required(login_url='login')
 def viewNotifications(request,pk):
+<<<<<<< HEAD
     notifications = Notification.objects.get(pk=pk)
+=======
+    if request.user.is_staff:
+        return redirect("home")
+    
+    notifications = Notification.objects.get(pk=pk)
+    notifications.is_read = True
+    notifications.save()
+>>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2
     notification_count = Notification.objects.filter(is_read=False).count()  
     context ={"notifications":notifications,"notification_count":notification_count}
     return render(request, 'members/rest/view_notifications.html', context)
@@ -99,10 +116,20 @@ def viewNotifications(request,pk):
 # --------------   End of Payments      ------------------
 @login_required(login_url='login')
 def subscription(request):
+<<<<<<< HEAD
         form = Membership.objects.all()
         print(f"form: {form}")
         context = {"form":form}
         return render(request, 'members/rest/subscription.html', context)
+=======
+    if request.user.is_staff:
+        return redirect("home")
+    form = Membership.objects.all()
+    print(f"form: {form}")
+    context = {"form":form}
+    return render(request, 'members/rest/subscription.html', context)
+
+>>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2
 
 @login_required(login_url='login')
 def subscribe(request):
@@ -209,7 +236,11 @@ def subscribe(request):
         print(e)
     return render(request, 'members/rest/subscribe.html')
 
+<<<<<<< HEAD
 @login_required(login_url='login')
+=======
+
+>>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2
 def call_back_url(request):
     reference = request.GET.get('reference_code')
     check_pay = PayHistory.objects.filter(paystack_charge_id=reference).exists()
@@ -252,6 +283,7 @@ def call_back_url(request):
 
 @login_required(login_url='login')
 def change_subscription(request):
+<<<<<<< HEAD
     try:
         form = Membership.objects.all()
         member = Member.objects.get(user=request.user)
@@ -262,9 +294,26 @@ def change_subscription(request):
     except Exception as e:
         print(e)
 
+=======
+   
+    if request.user.is_staff:
+        return redirect("home")
+    if request.user.is_member == False:
+        return redirect("subscription")
+    form = Membership.objects.all()
+    member = Member.objects.get(user=request.user)
+    my_membership = member.membership
+
+    context = {"form":form,"member":member,"my_membership":my_membership}
+    return render(request, 'members/billing/change_subscription.html', context)
+   
+
+>>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2
 @login_required(login_url='login')
 def billing_history(request):
     user = request.user
+    if request.user.is_staff:
+        return redirect("home")
     if user.is_member == False:
         return redirect("subscription")
     payment_history = PayHistory.objects.filter(user=user).order_by('-date_created')
@@ -279,6 +328,8 @@ def billing_history(request):
 
 @login_required(login_url='login')
 def subscription_guide(request):
+    if request.user.is_staff:
+        return redirect("home")
     context = {}
     return render(request, 'members/rest/subscription_guide.html', context)
 
@@ -297,6 +348,8 @@ def errors(request):
 @login_required(login_url='login')
 def member_dashboard(request):
     user = request.user
+    if request.user.is_staff:
+        return redirect("home")
     if request.user.is_admin == True:
         return redirect('home')
     status = Field.objects.all()
@@ -330,15 +383,19 @@ def member_dashboard(request):
 
         today = date.today().strftime('%A')
         permis = ""
-        if activity_status == "Riding" and today == "Wednesday" or today == "Saturday" or today == "Sunday":
-            permis = "No Riding Today"
-        elif activity_status == "Riding" and today != "Wednesday" and today != "Saturday" and today != "Sunday":
-            permis = "Riding open Today"
-        elif activity_status == "Polo" and today == "Wednesday" or today == "Saturday" or today == "Sunday":
-            permis = "Polo open Today"
-        elif activity_status == "Polo" and today == "Monday" or today == "Tuesday" or today == "Thursday" or today == "Friday":
-            permis = "No Polo Today"
-        
+        if today == "Wednesday" or today == "Saturday" or today == "Sunday":
+            if activity_status == "Riding":
+                permis = "No Riding Today"
+            elif activity_status == "Polo":
+                permis = "Polo open Today"
+        else:
+            if activity_status == "Riding":
+                permis = " Riding open Today"
+            elif activity_status == "Polo":
+                permis = "No Polo Today"
+       
+
+
        
         context ={"activity_status":activity_status,"permis":permis,"today":today,"notifications":notifications,"notification_count":notification_count,
                 "membership_status":membership_status,"days_remaining":days_remaining.days,
@@ -350,6 +407,8 @@ def member_dashboard(request):
 @login_required(login_url='login')
 def members_details(request):
     user = request.user
+    if request.user.is_staff:
+        return redirect("home")
     notifications = None
     notification_count = None
     if user.is_member == False:
@@ -394,6 +453,8 @@ def members_details(request):
 
 @login_required(login_url='login')
 def updateMembersDetails(request):
+    if request.user.is_staff:
+        return redirect("home")
     user = request.user
     if user.is_member == False:
         return redirect('subscribe')

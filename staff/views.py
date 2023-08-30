@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+<<<<<<< HEAD
 from .forms import EquipmentForm,HorsesForm, CustomUserForm, SlotsForm, ServicesForm, TicketsForm
 from django.contrib.auth.decorators import login_required
 from .models import Horses, Equipment, Slots, Services, Tickets
@@ -9,12 +10,28 @@ from authenticate.models import CustomUser
 
 
 
+=======
+from .forms import EquipmentForm,HorsesForm, CustomUserForm, SlotsForm, ServicesForm, TicketsForm, NotificationForm
+from django.contrib.auth.decorators import login_required
+from .models import Horses, Equipment, Services, Tickets, Notification
+from members import models as mem_models
+from members import forms as mem_forms
+from authenticate import models as auth_models
+import random
+from authenticate import views as auth_views
+from django.http import HttpResponse
+from decimal import Decimal
+from django.contrib import messages
+from django.views import View
+from authenticate.models import CustomUser
+>>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2
 from datetime import date
 from django.db.models import Sum
 
 
 @login_required(login_url='login')
 def home(request):
+<<<<<<< HEAD
     try:
         if request.user.is_admin==False:
             return redirect('member_dashboard')
@@ -37,6 +54,48 @@ def home(request):
         return e
     context = {"riding_count":riding_count,"polo_count":polo_count,"membership":membership,"no_members":no_members,"polo_payment_sum":polo_payment_sum,"riding_payment_sum":riding_payment_sum}
     return render(request, 'accounts/admin2/index.html', context)
+=======
+    
+    if request.user.is_member == True:
+        auth_views.logoutUser(request)
+        return HttpResponse('You are not allowed here. You have been logged out.')
+    members = mem_models.Member.objects.all()
+    member_revenue = 0 
+    payment = mem_models.PayHistory.objects.all()[:5]
+    equipment = Equipment.objects.all()[:5]
+    horses = Horses.objects.all()[:5]
+    tickets = Tickets.objects.all()[:5]
+    profile = auth_models.Profile.objects.get(user=request.user)
+    no_members = members.count()
+    membership = mem_models.Membership.objects.all()
+    polo_payment_sum = 0
+    riding_payment_sum = 0
+    member_revenue = 0
+
+    try:
+        if payment.count() > 0:
+            polo_payment_sum = mem_models.PayHistory.objects.filter(activity="Polo").aggregate(Sum('amount'))['amount__sum']
+            riding_payment_sum = mem_models.PayHistory.objects.filter(activity="Riding").aggregate(Sum('amount'))['amount__sum']
+            polo_payment_sum = polo_payment_sum or Decimal('0')
+            riding_payment_sum = riding_payment_sum or Decimal('0')
+            member_revenue = polo_payment_sum + riding_payment_sum
+
+
+        member_revenue = polo_payment_sum + riding_payment_sum
+    except mem_models.PayHistory.DoesNotExist:
+        polo_payment_sum = 0
+        riding_payment_sum = 0
+    try:
+        polo_count = mem_models.Member.objects.filter(activity="Polo").count()
+        riding_count = mem_models.Member.objects.filter(activity="Riding").count()
+    except mem_models.Member.DoesNotExist:
+        polo_payment_sum = 0
+        riding_payment_sum = 0
+   
+        
+    context = {"member_revenue":member_revenue,"profile":profile,"tickets":tickets,"horses":horses,"payment":payment,"members":members,"riding_count":riding_count,"polo_count":polo_count,"membership":membership,"no_members":no_members,"polo_payment_sum":polo_payment_sum,"riding_payment_sum":riding_payment_sum}
+    return render(request, 'staff/dashboard/dashboard.html', context)
+>>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2
 
 @login_required(login_url='login')
 def staff(request):
@@ -49,13 +108,18 @@ def staff(request):
         print(e)
         return e
     context = {}
+<<<<<<< HEAD
     return render(request, 'accounts/admin2/staff.html', context)
+=======
+    return render(request, 'staff/dashboard/dashboard.html', context)
+>>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2
 
 # --------------    Horses      ------------------
 
 @login_required(login_url='login')
 def horses(request):
     try:
+<<<<<<< HEAD
         if request.user.is_admin==False:
             return redirect('member_dashboard')
         elif request.user.is_admin != True:
@@ -66,13 +130,27 @@ def horses(request):
         return e
     context = {'form':form}
     return render(request, 'accounts/admin2/horses.html', context)
+=======
+        if request.user.is_member:
+            return redirect('member_dashboard')
+        horses = Horses.objects.all()
+    except Exception as e:
+        print(e)
+        return e
+    context = {'horses':horses}
+    return render(request, 'staff/inventory/horses.html', context)
+>>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2
 
 @login_required(login_url='login')
 def addHorses(request):
     try:
+<<<<<<< HEAD
         if request.user.is_admin==False:
             return redirect('member_dashboard')
         elif request.user.is_admin != True:
+=======
+        if request.user.is_member:
+>>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2
             return redirect('member_dashboard')
         form = HorsesForm()
         if request.method == 'POST':
@@ -84,14 +162,22 @@ def addHorses(request):
         print(e)
         return e
     context = {"form":form}
+<<<<<<< HEAD
     return render(request, 'accounts/admin2/horses_form.html', context)
+=======
+    return render(request, 'staff/inventory/horses_form.html', context)
+>>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2
 
 @login_required(login_url='login')
 def updateHorses(request,pk):
     try:
+<<<<<<< HEAD
         if request.user.is_admin==False:
             return redirect('member_dashboard')
         elif request.user.is_admin != True:
+=======
+        if request.user.is_member:
+>>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2
             return redirect('member_dashboard')
         horses = Horses.objects.get(id=pk)
         form = HorsesForm(instance=horses)
@@ -102,16 +188,25 @@ def updateHorses(request,pk):
                 return redirect('horses')
     except Exception as e:
         print(e)
+<<<<<<< HEAD
         return e
     context = {"form":form}
     return render(request, 'accounts/admin2/horses_form.html', context)
+=======
+    context = {"form":form}
+    return render(request, 'staff/inventory/horses_form.html', context)
+>>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2
 
 @login_required(login_url='login')
 def removeHorses(request,pk):
     try:
+<<<<<<< HEAD
         if request.user.is_admin==False:
             return redirect('member_dashboard')
         elif request.user.is_admin != True:
+=======
+        if request.user.is_member:
+>>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2
             return redirect('member_dashboard')
         horses = Horses.objects.get(id=pk)
         if request.method == "POST":
@@ -119,7 +214,11 @@ def removeHorses(request,pk):
             return redirect('horses')
     except Exception as e:
         print(e)
+<<<<<<< HEAD
     return render(request, 'accounts/admin2/delete.html', {'obj':horses})
+=======
+    return render(request, 'staff/delete.html', {'obj':horses})
+>>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2
 
 # --------------   End of Horses      ------------------
 
@@ -127,6 +226,7 @@ def removeHorses(request,pk):
 # --------------    Admin members      ------------------
 
 @login_required(login_url='login')
+<<<<<<< HEAD
 def members(request):
     try:
         if request.user.is_admin==False:
@@ -138,6 +238,18 @@ def members(request):
         print(e)
     context = {'form':form}
     return render(request, 'accounts/admin2/members.html', context)
+=======
+def staff_members(request):
+    try:
+        if request.user.is_member==True:
+            return redirect('member_dashboard')
+        
+        member = mem_models.Member.objects.all()
+    except Exception as e:
+        print(e)
+    context = {'member':member}
+    return render(request, 'staff/members/members.html', context)
+>>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2
 
 @login_required(login_url='login')
 def addMembers(request):
@@ -179,10 +291,17 @@ def updateMembers(request,pk):
 def suspendMembers(request,pk):
     if request.user.is_member:
         return redirect('member_dashboard')
+<<<<<<< HEAD
     members = models.Member.objects.get(id=pk)
     # form = SuspendForm(instance=members)
     if request.method == "POST":
         models.Member.objects.update(
+=======
+    members = mem_models.Member.objects.get(id=pk)
+    # form = SuspendForm(instance=members)
+    if request.method == "POST":
+        mem_models.Member.objects.update(
+>>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2
             suspend=True
         )
         return redirect('members')
@@ -193,20 +312,30 @@ def suspendMembers(request,pk):
 def resumeMembers(request,pk):
     if request.user.is_member:
         return redirect('member_dashboard')
+<<<<<<< HEAD
     members = models.Member.objects.get(id=pk)
     # form = SuspendForm(instance=members)
     if request.method == "POST":
         models.Member.objects.update(
+=======
+    members = mem_models.Member.objects.get(id=pk)
+    # form = SuspendForm(instance=members)
+    if request.method == "POST":
+        mem_models.Member.objects.update(
+>>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2
             suspend=False
         )
         return redirect('members')
     context = {"form":members,"members":members}
     return render(request, 'accounts/admin2/suspend.html', context)
+<<<<<<< HEAD
     
     
 
 
 
+=======
+>>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2
 # --------------   End of Admin members      ------------------
 
 # --------------    Services      ------------------
@@ -283,6 +412,7 @@ def removeServices(request,pk):
 @login_required(login_url='login')
 def tickets(request):
     try:
+<<<<<<< HEAD
         if request.user.is_admin==False:
             return redirect('member_dashboard')
         elif request.user.is_admin != True:
@@ -301,16 +431,62 @@ def test(request):
     today = date.today()
     print("Today's date:", today)
     return render(request, 'accounts/admin2/test.html',{'today':today})
+=======
+        if request.user.is_member:
+            return redirect('member_dashboard')
+        form = Tickets.objects.all()
+    except Exception as e:
+        print(e)
+    context = {'form':form}
+    return render(request, 'staff/billing/tickets.html', context)
+
+@login_required(login_url='login')
+def printTickets(request,pk):
+    if request.user.is_member:
+        return redirect('member_dashboard')
+    tickets = Tickets.objects.get(id=pk)
+    if tickets.used:
+        messages.error(request, 'Ticket Already used')
+        return redirect('tickets')
+    
+    form = TicketsForm(instance=tickets)
+    today = date.today()
+    print("Today's date:", today)
+    context = {"today":today,"tickets":tickets,"form":form}
+    return render(request, 'staff/billing/printed_tickets.html',context)
+
+class printed(View):
+    def get(self, request, pk):
+        try:
+            tickets = Tickets.objects.get(id=pk)
+            tickets.used = True
+            tickets.save()
+            # messages.success(request, 'Ticket Printed Sucessfully')
+            return redirect('tickets')
+
+        except Exception as e:
+            print(e)
+        return redirect('login')
+>>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2
 
 @login_required(login_url='login')
 def addTickets(request):
     try:
+<<<<<<< HEAD
         if request.user.is_admin==False:
             return redirect('member_dashboard')
         elif request.user.is_admin != True:
             return redirect('member_dashboard')
         form = TicketsForm()
         if request.method == 'POST':
+=======
+        if request.user.is_member:
+            return redirect('member_dashboard')
+        form = TicketsForm()
+        if request.method == 'POST':
+            random_integer = random.randint(1, 1000)
+            ticket_number = f"belham{random_integer}"
+>>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2
             form = TicketsForm(request.POST)
             user = request.user.username
             service = request.POST.get('service')
@@ -318,13 +494,24 @@ def addTickets(request):
             print(services,user)
             quantity = request.POST.get('quantity')
             price = services.price
+<<<<<<< HEAD
             total = quantity * price
             if form.is_valid():
                 form.save()
+=======
+            total = int(quantity) * int(price)
+            if form.is_valid():
+                tickets = form.save(commit=False)
+                tickets.ticket_number = ticket_number
+                tickets.attendant = user
+                tickets.total_price = total
+                tickets.save()
+>>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2
                 return redirect('tickets')
     except Exception as e:
         print(e)
     context = {"form":form}
+<<<<<<< HEAD
     return render(request, 'accounts/admin2/tickets_form.html', context)
 
 @login_required(login_url='login')
@@ -345,6 +532,9 @@ def updateTickets(request,pk):
         print(e)
     context = {"form":form}
     return render(request, 'accounts/admin2/tickets_form.html', context)
+=======
+    return render(request, 'staff/billing/tickets_form.html', context)
+>>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2
 
 @login_required(login_url='login')
 def removeTickets(request,pk):
@@ -367,6 +557,7 @@ def removeTickets(request,pk):
 @login_required(login_url='login')
 def equipment(request):
     try:
+<<<<<<< HEAD
         if request.user.is_admin==False:
             return redirect('member_dashboard')
         elif request.user.is_admin != True:
@@ -376,6 +567,15 @@ def equipment(request):
         print(e)
     context = {"forms":forms}
     return render(request, 'accounts/admin2/equipment.html', context)
+=======
+        if request.user.is_member:
+            return redirect('member_dashboard')
+        equipment = Equipment.objects.all()
+    except Exception as e:
+        print(e)
+    context = {"equipment":equipment}
+    return render(request, 'staff/inventory/equipment.html', context)
+>>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2
 
 @login_required(login_url='login')
 def addEquipment(request):
@@ -388,7 +588,11 @@ def addEquipment(request):
             form.save()
             return redirect('equipment')
     context = {"form":form}
+<<<<<<< HEAD
     return render(request, 'accounts/admin2/equipment_form.html', context)
+=======
+    return render(request, 'staff/inventory/equipment_form.html', context)
+>>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2
 
 @login_required(login_url='login')
 def updateEquipment(request,pk):
@@ -400,7 +604,11 @@ def updateEquipment(request,pk):
             form.save()
             return redirect('equipment')
     context = {"form":form}
+<<<<<<< HEAD
     return render(request, 'accounts/admin2/equipment_form.html', context)
+=======
+    return render(request, 'staff/inventory/equipment_form.html', context)
+>>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2
 
 @login_required(login_url='login')
 def removeEquipment(request,pk):
@@ -410,7 +618,11 @@ def removeEquipment(request,pk):
         equipment.delete()
         return redirect('equipment')
     
+<<<<<<< HEAD
     return render(request, 'accounts/admin2/delete.html', {'obj':equipment})
+=======
+    return render(request, 'staff/delete.html', {'obj':equipment})
+>>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2
 
 # --------------   End of Equipment      ------------------
 
@@ -431,6 +643,11 @@ def updateCostumUser(request,pk):
         return HttpResponse('You are not allowed here!!')
     elif request.user != costumUser.username:
         return HttpResponse('You are not allowed here!!')
+<<<<<<< HEAD
+=======
+    
+
+>>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2
 
 
     if request.method == "POST":
@@ -443,7 +660,10 @@ def updateCostumUser(request,pk):
 # --------------   End of Users      ------------------
 
 # --------------    Slots      ------------------
+<<<<<<< HEAD
 
+=======
+>>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2
 @login_required(login_url='login')
 def slots(request):
     form = Slots.objects.all()
@@ -484,3 +704,89 @@ def removeSlots(request,pk):
     return render(request, 'accounts/admin2/delete.html', {'obj':slots})
 
 # --------------   End of Slots      ------------------
+<<<<<<< HEAD
+=======
+@login_required(login_url='login')
+def members_history(request):
+    user = request.user
+    if user.is_member == True:
+        return redirect("member_dashboard")
+    payment_history = mem_models.PayHistory.objects.all().order_by('-date_created')
+
+
+
+    context ={"payment_history":payment_history}
+        # return render(request, 'members/dashboard.html', context)
+    return render(request, 'staff/billing/billing_history.html', context)
+
+
+@login_required(login_url='login')
+def staff_notification(request):
+    if request.user.is_member:
+        return redirect('member_dashboard')
+    form = Notification.objects.all()
+    context = {"form":form}
+    return render(request,'staff/rest/notification.html', context)
+
+
+@login_required(login_url='login')
+def add_notifications(request):
+    if request.user.is_member:
+        return redirect('member_dashboard')
+    form = NotificationForm()
+    if request.method == 'POST':
+        form = NotificationForm(request.POST)
+        if form.is_valid():
+            notification = form.save(commit=False)
+            notification.user = request.user
+            notification.save()
+            return redirect('staff_notification')
+    context = {"form":form}
+    return render(request,'staff/rest/notification_form.html', context)
+
+@login_required(login_url='login')
+def update_notifications(request,pk):
+    if request.user.is_member:
+        return redirect('member_dashboard')
+    notifications = Notification.objects.get(id=pk)
+    form = NotificationForm(instance=notifications)
+    if request.method == 'POST':
+        form = NotificationForm(request.POST, instance=notifications)
+        if form.is_valid():
+            notification = form.save(commit=False)
+            notification.user = request.user
+            notification.save()
+            return redirect('staff_notification')
+    context = {"form":form}
+    return render(request,'staff/rest/notification_form.html', context)
+
+@login_required(login_url='login')
+def remove_notifications(request,pk):
+    notification = Notification.objects.get(id=pk)
+
+    if request.method == "POST":
+        notification.delete()
+        return redirect('staff_notification')
+    
+    return render(request, 'staff/delete.html', {'obj':notification.message})
+
+
+
+@login_required(login_url='login')
+def polo_schedule(request):
+    if request.user.is_member:
+        return redirect('member_dashboard')
+
+    days_selected = mem_models.Days.objects.all()
+
+    members_by_day = {}
+    for day in days_selected:
+        members_for_day = mem_models.Member.objects.filter(days=day)
+        members_by_day[day] = members_for_day
+
+    print(f'members_by_day:{members_by_day}')
+
+    context = {"days_selected": days_selected, "members_by_day": members_by_day}
+    return render(request, 'staff/members/polo_schedule.html', context)
+
+>>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2

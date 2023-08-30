@@ -5,6 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 
 urlpatterns = [
+<<<<<<< HEAD
     path('', views.landing, name='landing'),
     path('', views.home, name='home'),
     path('login', views.loginUser, name='login'),
@@ -50,6 +51,15 @@ urlpatterns = [
 
     # ---------------  Members  -----------------------------
     path('members', views.members, name='members'),
+=======
+    
+    path('', views.home, name='home'),
+    path('costumUser/', views.costumUser, name='costumUser'),
+    path('updateCostumUser/<int:pk>/', views.updateCostumUser, name='updateCostumUser'),
+
+    # ---------------  Members  -----------------------------
+    path('staff_members/', views.staff_members, name='staff_members'),
+>>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2
     path('updateMembers/<int:pk>', views.updateMembers, name='updateMembers'),
     path('addMembers', views.addMembers, name='addMembers'),
     path('suspendMembers/<int:pk>', views.suspendMembers, name='suspendMembers'),
@@ -63,7 +73,10 @@ urlpatterns = [
     path('removeSlots/<str:pk>/', views.removeSlots, name="removeSlots"),
     # -------------  End of Slots--------------------------
     
+<<<<<<< HEAD
 
+=======
+>>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2
     # ---------------  Horses  -----------------------------
     path('horses/', views.horses, name='horses'),
     path('addHorses/', views.addHorses, name='addHorses'),
@@ -71,8 +84,12 @@ urlpatterns = [
     path('removeHorses/<str:pk>/', views.removeHorses, name="removeHorses"),
     # -------------  End of Horses--------------------------
 
+<<<<<<< HEAD
 
      # ---------------  Services  -----------------------------
+=======
+    # ---------------  Services  -----------------------------
+>>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2
     path('services/', views.services, name='services'),
     path('addServices/', views.addServices, name='addServices'),
     path('updateServices/<int:pk>/', views.updateServices, name='updateServices'),
@@ -81,14 +98,23 @@ urlpatterns = [
 
     # ---------------  Tickets  -----------------------------
     path('tickets/', views.tickets, name='tickets'),
+<<<<<<< HEAD
     path('addTickets/', views.addTickets, name='addTickets'),
     path('updateTickets/<int:pk>/', views.updateTickets, name='updateTickets'),
     path('removeTickets/<str:pk>/', views.removeTickets, name="removeTickets"),
+=======
+    path('printTickets/<int:pk>/', views.printTickets, name='printTickets'),
+     path('printed/<int:pk>/', views.printed.as_view(), name='printed'),
+    
+    path('addTickets/', views.addTickets, name='addTickets'),
+    path('members_history/', views.members_history, name='members_history'),
+>>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2
     # -------------  End of Tickets--------------------------
 
     # ---------------  Equipment  -----------------------------
     path('equipment/', views.equipment, name='equipment'),
     path('addEquipment/', views.addEquipment, name='addEquipment'),
+<<<<<<< HEAD
     path('updateEquipment/<int:pk>', views.updateEquipment, name='updateEquipment'),
     path('removeEquipment/<str:pk>', views.removeEquipment, name="removeEquipment"),
     # -------------  End of Equipment--------------------------
@@ -105,6 +131,23 @@ urlpatterns = [
 
 
     
+=======
+    path('updateEquipment/<int:pk>/', views.updateEquipment, name='updateEquipment'),
+    path('removeEquipment/<str:pk>/', views.removeEquipment, name="removeEquipment"),
+    # -------------  End of Equipment--------------------------
+    
+
+    path('staff_notification/', views.staff_notification, name='staff_notification'),
+    path('add_notifications/', views.add_notifications, name='add_notifications'),
+    path('update_notifications/<str:pk>/', views.update_notifications, name='update_notifications'),
+    path('remove_notifications/<str:pk>/', views.remove_notifications, name='remove_notifications'),
+
+
+    path('polo_schedule/', views.polo_schedule, name='polo_schedule'),
+
+    
+    
+>>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2
 
     
 ]   

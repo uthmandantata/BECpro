@@ -11,6 +11,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 
 urlpatterns = [
+    
 
     path('change_subscription', views.change_subscription, name='change_subscription'),
     path('billing_history', views.billing_history, name='billing_history'),

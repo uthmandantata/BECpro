@@ -1,0 +1,69 @@
+{% extends 'staff/base.html' %}{% block content %}{% load crispy_forms_tags %} {% csrf_token %}
+<div id="mn">
+  <div class="container">
+    <div class="card col-sm-6">
+      <div class="card-header">
+        Invoice
+        <strong>{{today}}</strong>
+      </div>
+      <div class="card-body">
+        <div class="row mb-4">
+          <div class="col-sm-6">
+            <h6 class="mb-3">From:</h6>
+            <div>
+              <strong>Belham Equestrian Centre</strong>
+            </div>
+            <div>Email: info@belhamequestriancentre.com</div>
+            <div>Phone: +234 090 588 345 32</div>
+          </div>
+
+          <div class="table-responsive-sm">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Item</th>
+                  <th>Ticket Number</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="left">{{tickets.service}}</td>
+                  <td class="left">{{tickets.ticket_number}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="row">
+            <div class="col-lg-4 col-sm-5"></div>
+
+            <div class="col-lg-4 col-sm-5 ml-auto">
+              <table class="table table-clear">
+                <tbody>
+                  <tr>
+                    <td class="left">
+                      <strong>Total</strong>
+                    </td>
+                    <td class="right">
+                      <strong>{{tickets.total_price}}</strong>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<a onclick="myfun('mn')" href="{% url 'printed' tickets.id %}" class="btn btn-primary">Printed</a>
+
+<script type="text/javascript">
+  function myfun(pa) {
+    var d = document.getElementById(pa).innerHTML;
+    document.body.innerHTML = d;
+    window.print();
+  }
+</script>
+
+{% endblock content %}

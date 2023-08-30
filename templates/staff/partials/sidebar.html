@@ -1,0 +1,123 @@
+<!--begin::Sidebar-->
+{% load static %}
+<aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
+  <!--begin::Sidebar Brand-->
+  <div class="sidebar-brand">
+    <!--begin::Brand Link-->
+    <a href="./index.html" class="brand-link">
+      <!--begin::Brand Image-->
+      <img src="{% static 'dist_folder/assets/img/AdminLTELogo.png'%}" alt="AdminLTE Logo" class="brand-image opacity-75 shadow" />
+      <!--end::Brand Image-->
+      <!--begin::Brand Text-->
+      <span class="brand-text fw-light">BECpro 4</span>
+      <!--end::Brand Text-->
+    </a>
+    <!--end::Brand Link-->
+  </div>
+  <!--end::Sidebar Brand-->
+  <!--begin::Sidebar Wrapper-->
+  <div class="sidebar-wrapper">
+    <nav class="mt-2">
+      <!--begin::Sidebar Menu-->
+      <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu" data-accordion="false">
+        <li class="nav-item">
+          <a href="{% url 'home' %}" class="nav-link">
+            <i class="nav-icon bi bi-speedometer"></i>
+            <p>Dashboard</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="{% url 'member_profile' %}" class="nav-link">
+            <i class="nav-icon bi bi-download"></i>
+            <p>My Profile</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link">
+            <i class="nav-icon bi bi-box-seam-fill"></i>
+            <p>
+              Membership
+              <i class="nav-arrow bi bi-chevron-right"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="{% url 'polo_schedule' %}" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Polo Schedule</p>
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a href="{% url 'staff_members' %}" class="nav-link">
+                <i class="nav-icon bi bi-download"></i>
+                <p>Members</p>
+              </a>
+            </li>
+          </ul>
+        </li>
+
+        <li class="nav-item">
+          <a href="#" class="nav-link">
+            <i class="nav-icon bi bi-box-seam-fill"></i>
+            <p>
+              Billing
+              <i class="nav-arrow bi bi-chevron-right"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="{% url 'members_history' %}" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Billing History</p>
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a href="{% url 'tickets' %}" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Tickets</p>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link">
+            <i class="nav-icon bi bi-box-seam-fill"></i>
+            <p>
+              Inventory
+              <i class="nav-arrow bi bi-chevron-right"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="{% url 'horses' %}" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Horses</p>
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a href="{% url 'equipment' %}" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Equipment</p>
+              </a>
+            </li>
+          </ul>
+        </li>
+
+        <li class="nav-item">
+          <a href="{% url 'staff_notification' %}" class="nav-link">
+            <i class="nav-icon bi bi-download"></i>
+            <p>Notification</p>
+          </a>
+        </li>
+      </ul>
+
+      <!--end::Sidebar Menu-->
+    </nav>
+  </div>
+
+  <!--end::Sidebar Wrapper-->
+</aside>
+<!--end::Sidebar-->
