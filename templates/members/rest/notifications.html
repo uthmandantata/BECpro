@@ -1,4 +1,4 @@
-{% extends 'base.html' %}{% block content %}
+{% extends 'members/base.html' %}{% block content %}
 <div class="container-fluid">
   <!-- Page Heading -->
   <div class="d-sm-flex align-items-center justify-content-between mb-4">
@@ -35,8 +35,9 @@
                 <tr>
                   <td>{{notification.message}}</td>
                   <td>{{notification.is_read}}</td>
+                  {{notification.pk}}
                   <td>
-                    <a href="" class="btn btn-success btn-icon-split">
+                    <a href="{% url 'view_notifications' notification.pk %}" class="btn btn-success btn-icon-split">
                       <span class="text">View Notification</span>
                     </a>
                   </td>

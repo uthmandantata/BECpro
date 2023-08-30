@@ -1,0 +1,50 @@
+{% extends 'members/base.html' %}{% block content %} {% load static %}
+<div class="app-content-header">
+  <!--begin::Container-->
+  <div class="container-fluid">
+    <!--begin::Row-->
+    <div class="row">
+      <div class="col-sm-6">
+        <h3 class="mb-0">Notification</h3>
+      </div>
+    </div>
+    <!--end::Row-->
+  </div>
+  <!--end::Container-->
+</div>
+<!--end::App Content Header-->
+<!--begin::App Content-->
+<div class="app-content">
+  <!--begin::Container-->
+  <div class="container-fluid">
+    <div class="row">
+      <section style="background-color: #eee">
+        <div class="container py-5">
+          <div class="row">
+            <div class="col-lg-2"></div>
+            <div class="col-lg-8">
+              <div class="card mb-4">
+                <div class="card-body">
+                  <div class="row">
+                    <hr />
+                    <div class="col-sm-3">
+                      <p class="mb-0">Message</p>
+                    </div>
+                    <div class="col-sm-9">
+                      <p class="text-muted mb-0">{{notifications.message}}</p>
+                    </div>
+                  </div>
+                  <hr />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+  <!-- /.row (main row) -->
+</div>
+<!--end::Container-->
+
+{% endblock content %}

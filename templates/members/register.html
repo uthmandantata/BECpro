@@ -1,0 +1,49 @@
+{% extends 'members/base.html' %}{% load static %}{% block content %} {% load static %}
+<div class="row">
+  <div class="col-md-4"></div>
+  <div class="col-md-4">
+    <div class="card mt-5">
+      <div class="card-body">
+        <div class="card-title pt-3 pb-3">
+          <h4>Register for a free account</h4>
+        </div>
+        <form action="" method="post">
+          {% csrf_token %} {% include 'messages.html' %}
+          <div class="mb-3">
+            <label for="usernameField" class="form-label">Username</label>
+            <input type="text" name="username" class="form-control" value="{{fieldValues.username}}" class="username" id="usernameField" aria-describedby="usernameHelp" />
+            <div class="invalid_feedback invalid-feedback" style="display: none">
+              <!-- <p></p> -->
+            </div>
+            <p class="text-sm text-success userameSuccessOutput"></p>
+          </div>
+
+          <div class="mb-3">
+            <label for="emailField" class="form-label">Email address</label>
+            <input type="email" name="email" class="form-control" value="{{fieldValues.email}}" id="emailField" aria-describedby="emailHelp" />
+            <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+            <div class="invalid_email invalid-feedback" style="display: none"></div>
+            <p class="text-sm text-success emailSuccessOutput"></p>
+          </div>
+          <div class="mb-3">
+            <label for="passwordField" class="form-label">Password</label>
+            <input type="password" name="password" class="form-control" id="passwordField" />
+          </div>
+          <div class="mb-3 form-check">
+            <!-- <input type="checkbox" class="form-check-input" id="exampleCheck1" />
+            <label class="form-check-label" for="exampleCheck1">Check me out</label> -->
+            <small class="float-end showPasswordToggle">SHOW</small>
+          </div>
+          <div class="mb-3 form-check">
+            <input type="checkbox" class="form-check-input" id="exampleCheck1" />
+            <label class="form-check-label" for="exampleCheck1">Check me out</label>
+          </div>
+          <input type="submit" value="Register" class="submit-btn btn btn-primary" />
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4"></div>
+</div>
+<script src="{% static 'js/main.js' %}"></script>
+{% endblock content %}
