@@ -147,10 +147,4 @@ class Member(models.Model):
     # room = models.ForeignKey(Room, on_delete=models.CASCADE)
 
     def __str__(self):
-<<<<<<< HEAD
-        return str(self.guardian_name)
-
-
-=======
         return str(self.user)
->>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2

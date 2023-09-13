@@ -1,8 +1,4 @@
 from django.contrib import admin
-<<<<<<< HEAD
-
-# Register your models here.
-=======
 from . import models
 # Register your models here.
 
@@ -22,4 +18,3 @@ admin.site.register(models.Horses)
 
 
 
->>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2

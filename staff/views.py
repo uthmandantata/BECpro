@@ -1,17 +1,13 @@
 from django.shortcuts import render, redirect
-<<<<<<< HEAD
-from .forms import EquipmentForm,HorsesForm, CustomUserForm, SlotsForm, ServicesForm, TicketsForm
-from django.contrib.auth.decorators import login_required
-from .models import Horses, Equipment, Slots, Services, Tickets
-from members import models
-
-from authenticate.models import CustomUser
-
-
-
-
-=======
-from .forms import EquipmentForm,HorsesForm, CustomUserForm, SlotsForm, ServicesForm, TicketsForm, NotificationForm
+from .forms import (
+    EquipmentForm,
+    HorsesForm,
+    CustomUserForm,
+    SlotsForm,
+    ServicesForm,
+    TicketsForm,
+    NotificationForm,
+)
 from django.contrib.auth.decorators import login_required
 from .models import Horses, Equipment, Services, Tickets, Notification
 from members import models as mem_models
@@ -24,43 +20,17 @@ from decimal import Decimal
 from django.contrib import messages
 from django.views import View
 from authenticate.models import CustomUser
->>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2
 from datetime import date
 from django.db.models import Sum
 
 
-@login_required(login_url='login')
+@login_required(login_url="login")
 def home(request):
-<<<<<<< HEAD
-    try:
-        if request.user.is_admin==False:
-            return redirect('member_dashboard')
-        no_members = models.Member.objects.all().count()
-        membership = models.Membership.objects.all()
-        try:
-            polo_payment_sum = models.PayHistory.objects.filter(activity="Polo").aggregate(Sum('amount'))['amount__sum']
-            riding_payment_sum = models.PayHistory.objects.filter(activity="Riding").aggregate(Sum('amount'))['amount__sum']
-        except models.PayHistory.DoesNotExist:
-            polo_payment_sum = 0
-            riding_payment_sum = 0
-        try:
-            polo_count = models.Member.objects.filter(activity="Polo").count()
-            riding_count = models.Member.objects.filter(activity="Riding").count()
-        except Member.DoesNotExist:
-            polo_payment_sum = 0
-            riding_payment_sum = 0
-    except Exception as e:
-        print(e)
-        return e
-    context = {"riding_count":riding_count,"polo_count":polo_count,"membership":membership,"no_members":no_members,"polo_payment_sum":polo_payment_sum,"riding_payment_sum":riding_payment_sum}
-    return render(request, 'accounts/admin2/index.html', context)
-=======
-    
     if request.user.is_member == True:
         auth_views.logoutUser(request)
-        return HttpResponse('You are not allowed here. You have been logged out.')
+        return HttpResponse("You are not allowed here. You have been logged out.")
     members = mem_models.Member.objects.all()
-    member_revenue = 0 
+    member_revenue = 0
     payment = mem_models.PayHistory.objects.all()[:5]
     equipment = Equipment.objects.all()[:5]
     horses = Horses.objects.all()[:5]
@@ -74,12 +44,15 @@ def home(request):
 
     try:
         if payment.count() > 0:
-            polo_payment_sum = mem_models.PayHistory.objects.filter(activity="Polo").aggregate(Sum('amount'))['amount__sum']
-            riding_payment_sum = mem_models.PayHistory.objects.filter(activity="Riding").aggregate(Sum('amount'))['amount__sum']
-            polo_payment_sum = polo_payment_sum or Decimal('0')
-            riding_payment_sum = riding_payment_sum or Decimal('0')
+            polo_payment_sum = mem_models.PayHistory.objects.filter(
+                activity="Polo"
+            ).aggregate(Sum("amount"))["amount__sum"]
+            riding_payment_sum = mem_models.PayHistory.objects.filter(
+                activity="Riding"
+            ).aggregate(Sum("amount"))["amount__sum"]
+            polo_payment_sum = polo_payment_sum or Decimal("0")
+            riding_payment_sum = riding_payment_sum or Decimal("0")
             member_revenue = polo_payment_sum + riding_payment_sum
-
 
         member_revenue = polo_payment_sum + riding_payment_sum
     except mem_models.PayHistory.DoesNotExist:
@@ -91,369 +64,292 @@ def home(request):
     except mem_models.Member.DoesNotExist:
         polo_payment_sum = 0
         riding_payment_sum = 0
-   
-        
-    context = {"member_revenue":member_revenue,"profile":profile,"tickets":tickets,"horses":horses,"payment":payment,"members":members,"riding_count":riding_count,"polo_count":polo_count,"membership":membership,"no_members":no_members,"polo_payment_sum":polo_payment_sum,"riding_payment_sum":riding_payment_sum}
-    return render(request, 'staff/dashboard/dashboard.html', context)
->>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2
 
-@login_required(login_url='login')
+    context = {
+        "member_revenue": member_revenue,
+        "profile": profile,
+        "tickets": tickets,
+        "horses": horses,
+        "payment": payment,
+        "members": members,
+        "riding_count": riding_count,
+        "polo_count": polo_count,
+        "membership": membership,
+        "no_members": no_members,
+        "polo_payment_sum": polo_payment_sum,
+        "riding_payment_sum": riding_payment_sum,
+    }
+    return render(request, "staff/dashboard/dashboard.html", context)
+
+
+@login_required(login_url="login")
 def staff(request):
     try:
-        if request.user.is_admin==False:
-            return redirect('member_dashboard')
+        if request.user.is_admin == False:
+            return redirect("member_dashboard")
         elif request.user.is_admin != True:
-            return redirect('member_dashboard')
+            return redirect("member_dashboard")
     except Exception as e:
         print(e)
         return e
     context = {}
-<<<<<<< HEAD
-    return render(request, 'accounts/admin2/staff.html', context)
-=======
-    return render(request, 'staff/dashboard/dashboard.html', context)
->>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2
+    return render(request, "staff/dashboard/dashboard.html", context)
+
 
 # --------------    Horses      ------------------
 
-@login_required(login_url='login')
+
+@login_required(login_url="login")
 def horses(request):
     try:
-<<<<<<< HEAD
-        if request.user.is_admin==False:
-            return redirect('member_dashboard')
-        elif request.user.is_admin != True:
-            return redirect('member_dashboard')
-        form = Horses.objects.all()
-    except Exception as e:
-        print(e)
-        return e
-    context = {'form':form}
-    return render(request, 'accounts/admin2/horses.html', context)
-=======
         if request.user.is_member:
-            return redirect('member_dashboard')
+            return redirect("member_dashboard")
         horses = Horses.objects.all()
     except Exception as e:
         print(e)
         return e
-    context = {'horses':horses}
-    return render(request, 'staff/inventory/horses.html', context)
->>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2
+    context = {"horses": horses}
+    return render(request, "staff/inventory/horses.html", context)
 
-@login_required(login_url='login')
+
+@login_required(login_url="login")
 def addHorses(request):
     try:
-<<<<<<< HEAD
-        if request.user.is_admin==False:
-            return redirect('member_dashboard')
-        elif request.user.is_admin != True:
-=======
         if request.user.is_member:
->>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2
-            return redirect('member_dashboard')
+            return redirect("member_dashboard")
         form = HorsesForm()
-        if request.method == 'POST':
+        if request.method == "POST":
             form = HorsesForm(request.POST)
             if form.is_valid():
                 form.save()
-                return redirect('horses')
+                return redirect("horses")
     except Exception as e:
         print(e)
         return e
-    context = {"form":form}
-<<<<<<< HEAD
-    return render(request, 'accounts/admin2/horses_form.html', context)
-=======
-    return render(request, 'staff/inventory/horses_form.html', context)
->>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2
+    context = {"form": form}
+    return render(request, "staff/inventory/horses_form.html", context)
 
-@login_required(login_url='login')
-def updateHorses(request,pk):
+
+@login_required(login_url="login")
+def updateHorses(request, pk):
     try:
-<<<<<<< HEAD
-        if request.user.is_admin==False:
-            return redirect('member_dashboard')
-        elif request.user.is_admin != True:
-=======
         if request.user.is_member:
->>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2
-            return redirect('member_dashboard')
+            return redirect("member_dashboard")
         horses = Horses.objects.get(id=pk)
         form = HorsesForm(instance=horses)
         if request.method == "POST":
             form = HorsesForm(request.POST, instance=horses)
             if form.is_valid():
                 form.save()
-                return redirect('horses')
+                return redirect("horses")
     except Exception as e:
         print(e)
-<<<<<<< HEAD
-        return e
-    context = {"form":form}
-    return render(request, 'accounts/admin2/horses_form.html', context)
-=======
-    context = {"form":form}
-    return render(request, 'staff/inventory/horses_form.html', context)
->>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2
+    context = {"form": form}
+    return render(request, "staff/inventory/horses_form.html", context)
 
-@login_required(login_url='login')
-def removeHorses(request,pk):
+
+@login_required(login_url="login")
+def removeHorses(request, pk):
     try:
-<<<<<<< HEAD
-        if request.user.is_admin==False:
-            return redirect('member_dashboard')
-        elif request.user.is_admin != True:
-=======
         if request.user.is_member:
->>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2
-            return redirect('member_dashboard')
+            return redirect("member_dashboard")
         horses = Horses.objects.get(id=pk)
         if request.method == "POST":
             horses.delete()
-            return redirect('horses')
+            return redirect("horses")
     except Exception as e:
         print(e)
-<<<<<<< HEAD
-    return render(request, 'accounts/admin2/delete.html', {'obj':horses})
-=======
-    return render(request, 'staff/delete.html', {'obj':horses})
->>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2
+    return render(request, "staff/delete.html", {"obj": horses})
+
 
 # --------------   End of Horses      ------------------
 
 
 # --------------    Admin members      ------------------
 
-@login_required(login_url='login')
-<<<<<<< HEAD
-def members(request):
-    try:
-        if request.user.is_admin==False:
-            return redirect('member_dashboard')
-        elif request.user.is_admin != True:
-            return redirect('member_dashboard')
-        form = models.Member.objects.all()
-    except Exception as e:
-        print(e)
-    context = {'form':form}
-    return render(request, 'accounts/admin2/members.html', context)
-=======
+
+@login_required(login_url="login")
 def staff_members(request):
     try:
-        if request.user.is_member==True:
-            return redirect('member_dashboard')
-        
+        if request.user.is_member == True:
+            return redirect("member_dashboard")
+
         member = mem_models.Member.objects.all()
     except Exception as e:
         print(e)
-    context = {'member':member}
-    return render(request, 'staff/members/members.html', context)
->>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2
+    context = {"member": member}
+    return render(request, "staff/members/members.html", context)
 
-@login_required(login_url='login')
+
+@login_required(login_url="login")
 def addMembers(request):
     try:
-        if request.user.is_admin==False:
-            return redirect('member_dashboard')
+        if request.user.is_admin == False:
+            return redirect("member_dashboard")
         form = HorsesForm()
-        if request.method == 'POST':
+        if request.method == "POST":
             form = HorsesForm(request.POST)
             if form.is_valid():
                 form.save()
-                return redirect('horses')
+                return redirect("horses")
     except Exception as e:
         print(e)
-    context = {"form":form}
-    return render(request, 'accounts/admin2/horses_form.html', context)
+    context = {"form": form}
+    return render(request, "accounts/admin2/horses_form.html", context)
 
-@login_required(login_url='login')
-def updateMembers(request,pk):
+
+@login_required(login_url="login")
+def updateMembers(request, pk):
     try:
-        if request.user.is_admin==False:
-            return redirect('member_dashboard')
+        if request.user.is_admin == False:
+            return redirect("member_dashboard")
         elif request.user.is_admin != True:
-            return redirect('member_dashboard')
+            return redirect("member_dashboard")
         horses = Horses.objects.get(id=pk)
         form = HorsesForm(instance=horses)
         if request.method == "POST":
             form = HorsesForm(request.POST, instance=horses)
             if form.is_valid():
                 form.save()
-                return redirect('horses')
+                return redirect("horses")
     except Exception as e:
         print(e)
-    context = {"form":form}
-    return render(request, 'accounts/admin2/horses_form.html', context)
+    context = {"form": form}
+    return render(request, "accounts/admin2/horses_form.html", context)
 
 
-@login_required(login_url='login')
-def suspendMembers(request,pk):
+@login_required(login_url="login")
+def suspendMembers(request, pk):
     if request.user.is_member:
-        return redirect('member_dashboard')
-<<<<<<< HEAD
-    members = models.Member.objects.get(id=pk)
-    # form = SuspendForm(instance=members)
-    if request.method == "POST":
-        models.Member.objects.update(
-=======
+        return redirect("member_dashboard")
     members = mem_models.Member.objects.get(id=pk)
     # form = SuspendForm(instance=members)
     if request.method == "POST":
-        mem_models.Member.objects.update(
->>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2
-            suspend=True
-        )
-        return redirect('members')
-    context = {"form":members,"members":members}
-    return render(request, 'accounts/admin2/suspend.html', context)
+        mem_models.Member.objects.update(suspend=True)
+        return redirect("members")
+    context = {"form": members, "members": members}
+    return render(request, "accounts/admin2/suspend.html", context)
 
-@login_required(login_url='login')
-def resumeMembers(request,pk):
+
+@login_required(login_url="login")
+def resumeMembers(request, pk):
     if request.user.is_member:
-        return redirect('member_dashboard')
-<<<<<<< HEAD
-    members = models.Member.objects.get(id=pk)
-    # form = SuspendForm(instance=members)
-    if request.method == "POST":
-        models.Member.objects.update(
-=======
+        return redirect("member_dashboard")
     members = mem_models.Member.objects.get(id=pk)
     # form = SuspendForm(instance=members)
     if request.method == "POST":
-        mem_models.Member.objects.update(
->>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2
-            suspend=False
-        )
-        return redirect('members')
-    context = {"form":members,"members":members}
-    return render(request, 'accounts/admin2/suspend.html', context)
-<<<<<<< HEAD
-    
-    
+        mem_models.Member.objects.update(suspend=False)
+        return redirect("members")
+    context = {"form": members, "members": members}
+    return render(request, "accounts/admin2/suspend.html", context)
 
 
-
-=======
->>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2
 # --------------   End of Admin members      ------------------
 
 # --------------    Services      ------------------
 
-@login_required(login_url='login')
+
+@login_required(login_url="login")
 def services(request):
     try:
-        if request.user.is_admin==False:
-            return redirect('member_dashboard')
+        if request.user.is_admin == False:
+            return redirect("member_dashboard")
         elif request.user.is_admin != True:
-            return redirect('member_dashboard')
+            return redirect("member_dashboard")
         form = Services.objects.all()
     except Exception as e:
         print(e)
-    context = {'form':form}
-    return render(request, 'accounts/admin2/services.html', context)
+    context = {"form": form}
+    return render(request, "accounts/admin2/services.html", context)
 
-@login_required(login_url='login')
+
+@login_required(login_url="login")
 def addServices(request):
     try:
-        if request.user.is_admin==False:
-            return redirect('member_dashboard')
+        if request.user.is_admin == False:
+            return redirect("member_dashboard")
         elif request.user.is_admin != True:
-            return redirect('member_dashboard')
+            return redirect("member_dashboard")
         form = ServicesForm()
-        if request.method == 'POST':
+        if request.method == "POST":
             form = ServicesForm(request.POST)
             if form.is_valid():
                 form.save()
-                return redirect('services')
+                return redirect("services")
     except Exception as e:
         print(e)
-    context = {"form":form}
-    return render(request, 'accounts/admin2/service_form.html', context)
+    context = {"form": form}
+    return render(request, "accounts/admin2/service_form.html", context)
 
-@login_required(login_url='login')
-def updateServices(request,pk):
+
+@login_required(login_url="login")
+def updateServices(request, pk):
     try:
-        if request.user.is_admin==False:
-            return redirect('member_dashboard')
+        if request.user.is_admin == False:
+            return redirect("member_dashboard")
         elif request.user.is_admin != True:
-            return redirect('member_dashboard')
+            return redirect("member_dashboard")
         services = Services.objects.get(id=pk)
         form = ServicesForm(instance=services)
         if request.method == "POST":
             form = ServicesForm(request.POST, instance=services)
             if form.is_valid():
                 form.save()
-                return redirect('services')
+                return redirect("services")
     except Exception as e:
         print(e)
-    context = {"form":form}
-    return render(request, 'accounts/admin2/service_form.html', context)
+    context = {"form": form}
+    return render(request, "accounts/admin2/service_form.html", context)
 
-@login_required(login_url='login')
-def removeServices(request,pk):
+
+@login_required(login_url="login")
+def removeServices(request, pk):
     try:
-        if request.user.is_admin==False:
-            return redirect('member_dashboard')
+        if request.user.is_admin == False:
+            return redirect("member_dashboard")
         elif request.user.is_admin != True:
-            return redirect('member_dashboard')
+            return redirect("member_dashboard")
         services = Services.objects.get(id=pk)
         if request.method == "POST":
             services.delete()
-            return redirect('services')
+            return redirect("services")
     except Exception as e:
         print(e)
-    return render(request, 'accounts/admin2/delete.html', {'obj':services})
+    return render(request, "accounts/admin2/delete.html", {"obj": services})
+
 
 # --------------   End of Services      ------------------
 
 # --------------    Tickets      ------------------
 
-@login_required(login_url='login')
+
+@login_required(login_url="login")
 def tickets(request):
     try:
-<<<<<<< HEAD
-        if request.user.is_admin==False:
-            return redirect('member_dashboard')
-        elif request.user.is_admin != True:
-            return redirect('member_dashboard')
-        form = Tickets.objects.all()
-        # price = Tickets.objects.all()
-    except Exception as e:
-        print(e)
-    context = {'form':form}
-    return render(request, 'accounts/admin2/tickets.html', context)
-
-@login_required(login_url='login')
-def test(request):
-    if request.user.is_member:
-        return redirect('member_dashboard')
-    today = date.today()
-    print("Today's date:", today)
-    return render(request, 'accounts/admin2/test.html',{'today':today})
-=======
         if request.user.is_member:
-            return redirect('member_dashboard')
+            return redirect("member_dashboard")
         form = Tickets.objects.all()
     except Exception as e:
         print(e)
-    context = {'form':form}
-    return render(request, 'staff/billing/tickets.html', context)
+    context = {"form": form}
+    return render(request, "staff/billing/tickets.html", context)
 
-@login_required(login_url='login')
-def printTickets(request,pk):
+
+@login_required(login_url="login")
+def printTickets(request, pk):
     if request.user.is_member:
-        return redirect('member_dashboard')
+        return redirect("member_dashboard")
     tickets = Tickets.objects.get(id=pk)
     if tickets.used:
-        messages.error(request, 'Ticket Already used')
-        return redirect('tickets')
-    
+        messages.error(request, "Ticket Already used")
+        return redirect("tickets")
+
     form = TicketsForm(instance=tickets)
     today = date.today()
     print("Today's date:", today)
-    context = {"today":today,"tickets":tickets,"form":form}
-    return render(request, 'staff/billing/printed_tickets.html',context)
+    context = {"today": today, "tickets": tickets, "form": form}
+    return render(request, "staff/billing/printed_tickets.html", context)
+
 
 class printed(View):
     def get(self, request, pk):
@@ -462,43 +358,29 @@ class printed(View):
             tickets.used = True
             tickets.save()
             # messages.success(request, 'Ticket Printed Sucessfully')
-            return redirect('tickets')
+            return redirect("tickets")
 
         except Exception as e:
             print(e)
-        return redirect('login')
->>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2
+        return redirect("login")
 
-@login_required(login_url='login')
+
+@login_required(login_url="login")
 def addTickets(request):
     try:
-<<<<<<< HEAD
-        if request.user.is_admin==False:
-            return redirect('member_dashboard')
-        elif request.user.is_admin != True:
-            return redirect('member_dashboard')
-        form = TicketsForm()
-        if request.method == 'POST':
-=======
         if request.user.is_member:
-            return redirect('member_dashboard')
+            return redirect("member_dashboard")
         form = TicketsForm()
-        if request.method == 'POST':
+        if request.method == "POST":
             random_integer = random.randint(1, 1000)
             ticket_number = f"belham{random_integer}"
->>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2
             form = TicketsForm(request.POST)
             user = request.user.username
-            service = request.POST.get('service')
+            service = request.POST.get("service")
             services = Services.objects.get(id=service)
-            print(services,user)
-            quantity = request.POST.get('quantity')
+            print(services, user)
+            quantity = request.POST.get("quantity")
             price = services.price
-<<<<<<< HEAD
-            total = quantity * price
-            if form.is_valid():
-                form.save()
-=======
             total = int(quantity) * int(price)
             if form.is_valid():
                 tickets = form.save(commit=False)
@@ -506,276 +388,230 @@ def addTickets(request):
                 tickets.attendant = user
                 tickets.total_price = total
                 tickets.save()
->>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2
-                return redirect('tickets')
+                return redirect("tickets")
     except Exception as e:
         print(e)
-    context = {"form":form}
-<<<<<<< HEAD
-    return render(request, 'accounts/admin2/tickets_form.html', context)
+    context = {"form": form}
+    return render(request, "staff/billing/tickets_form.html", context)
 
-@login_required(login_url='login')
-def updateTickets(request,pk):
-    try:
-        if request.user.is_admin==False:
-            return redirect('member_dashboard')
-        elif request.user.is_admin != True:
-            return redirect('member_dashboard')
-        tickets = Tickets.objects.get(id=pk)
-        form = TicketsForm(instance=tickets)
-        if request.method == "POST":
-            form = TicketsForm(request.POST, instance=tickets)
-            if form.is_valid():
-                form.save()
-                return redirect('tickets')
-    except Exception as e:
-        print(e)
-    context = {"form":form}
-    return render(request, 'accounts/admin2/tickets_form.html', context)
-=======
-    return render(request, 'staff/billing/tickets_form.html', context)
->>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2
 
-@login_required(login_url='login')
-def removeTickets(request,pk):
+@login_required(login_url="login")
+def removeTickets(request, pk):
     try:
-        if request.user.is_admin==False:
-            return redirect('member_dashboard')
+        if request.user.is_admin == False:
+            return redirect("member_dashboard")
         elif request.user.is_admin != True:
-            return redirect('member_dashboard')
+            return redirect("member_dashboard")
         tickets = Tickets.objects.get(id=pk)
         if request.method == "POST":
             tickets.delete()
-            return redirect('tickets')
+            return redirect("tickets")
     except Exception as e:
         print(e)
-    return render(request, 'accounts/admin2/delete.html', {'obj':tickets})
+    return render(request, "accounts/admin2/delete.html", {"obj": tickets})
+
 
 # --------------   End of Tickets      ------------------
 
+
 # --------------    Equipment      ------------------
-@login_required(login_url='login')
+@login_required(login_url="login")
 def equipment(request):
     try:
-<<<<<<< HEAD
-        if request.user.is_admin==False:
-            return redirect('member_dashboard')
-        elif request.user.is_admin != True:
-            return redirect('member_dashboard')
-        forms = Equipment.objects.all()
-    except Exception as e:
-        print(e)
-    context = {"forms":forms}
-    return render(request, 'accounts/admin2/equipment.html', context)
-=======
         if request.user.is_member:
-            return redirect('member_dashboard')
+            return redirect("member_dashboard")
         equipment = Equipment.objects.all()
     except Exception as e:
         print(e)
-    context = {"equipment":equipment}
-    return render(request, 'staff/inventory/equipment.html', context)
->>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2
+    context = {"equipment": equipment}
+    return render(request, "staff/inventory/equipment.html", context)
 
-@login_required(login_url='login')
+
+@login_required(login_url="login")
 def addEquipment(request):
     if request.user.is_member:
-        return redirect('member_dashboard')
+        return redirect("member_dashboard")
     form = EquipmentForm()
-    if request.method == 'POST':
+    if request.method == "POST":
         form = EquipmentForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('equipment')
-    context = {"form":form}
-<<<<<<< HEAD
-    return render(request, 'accounts/admin2/equipment_form.html', context)
-=======
-    return render(request, 'staff/inventory/equipment_form.html', context)
->>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2
+            return redirect("equipment")
+    context = {"form": form}
+    return render(request, "staff/inventory/equipment_form.html", context)
 
-@login_required(login_url='login')
-def updateEquipment(request,pk):
+
+@login_required(login_url="login")
+def updateEquipment(request, pk):
     equipment = Equipment.objects.get(id=pk)
     form = EquipmentForm(instance=equipment)
     if request.method == "POST":
         form = EquipmentForm(request.POST, instance=equipment)
         if form.is_valid():
             form.save()
-            return redirect('equipment')
-    context = {"form":form}
-<<<<<<< HEAD
-    return render(request, 'accounts/admin2/equipment_form.html', context)
-=======
-    return render(request, 'staff/inventory/equipment_form.html', context)
->>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2
+            return redirect("equipment")
+    context = {"form": form}
+    return render(request, "staff/inventory/equipment_form.html", context)
 
-@login_required(login_url='login')
-def removeEquipment(request,pk):
+
+@login_required(login_url="login")
+def removeEquipment(request, pk):
     equipment = Equipment.objects.get(id=pk)
 
     if request.method == "POST":
         equipment.delete()
-        return redirect('equipment')
-    
-<<<<<<< HEAD
-    return render(request, 'accounts/admin2/delete.html', {'obj':equipment})
-=======
-    return render(request, 'staff/delete.html', {'obj':equipment})
->>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2
+        return redirect("equipment")
+
+    return render(request, "staff/delete.html", {"obj": equipment})
+
 
 # --------------   End of Equipment      ------------------
 
+
 # --------------    Users      ------------------
-@login_required(login_url='login')
+@login_required(login_url="login")
 def costumUser(request):
     form = CustomUser.objects.all()
-    context = {'form':form}
-    return render(request, 'accounts/admin2/costumUser.html', context)
+    context = {"form": form}
+    return render(request, "accounts/admin2/costumUser.html", context)
 
-@login_required(login_url='login')
-def updateCostumUser(request,pk):
 
+@login_required(login_url="login")
+def updateCostumUser(request, pk):
     costumUser = CustomUser.objects.get(id=pk)
     form = CustomUserForm(instance=costumUser)
 
     if request.user.is_member == True:
-        return HttpResponse('You are not allowed here!!')
+        return HttpResponse("You are not allowed here!!")
     elif request.user != costumUser.username:
-        return HttpResponse('You are not allowed here!!')
-<<<<<<< HEAD
-=======
-    
-
->>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2
-
+        return HttpResponse("You are not allowed here!!")
 
     if request.method == "POST":
         form = CustomUserForm(request.POST, instance=costumUser)
         if form.is_valid():
             form.save()
-            return redirect('costumUser')
-    context = {"form":form}
-    return render(request, 'accounts/admin2/costumUser_form.html', context)
+            return redirect("costumUser")
+    context = {"form": form}
+    return render(request, "accounts/admin2/costumUser_form.html", context)
+
+
 # --------------   End of Users      ------------------
 
-# --------------    Slots      ------------------
-<<<<<<< HEAD
 
-=======
->>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2
-@login_required(login_url='login')
+# --------------    Slots      ------------------
+@login_required(login_url="login")
 def slots(request):
     form = Slots.objects.all()
-    context = {'form':form}
-    return render(request, 'accounts/admin2/slots.html', context)
+    context = {"form": form}
+    return render(request, "accounts/admin2/slots.html", context)
 
-@login_required(login_url='login')
+
+@login_required(login_url="login")
 def addSlots(request):
     form = SlotsForm()
-    if request.method == 'POST':
+    if request.method == "POST":
         form = SlotsForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('slots')
-    context = {"form":form}
-    return render(request, 'accounts/admin2/slots_form.html', context)
+            return redirect("slots")
+    context = {"form": form}
+    return render(request, "accounts/admin2/slots_form.html", context)
 
-@login_required(login_url='login')
-def updateSlots(request,pk):
+
+@login_required(login_url="login")
+def updateSlots(request, pk):
     slots = Slots.objects.get(id=pk)
     form = SlotsForm(instance=slots)
     if request.method == "POST":
         form = SlotsForm(request.POST, instance=slots)
         if form.is_valid():
             form.save()
-            return redirect('slots')
-    context = {"form":form}
-    return render(request, 'accounts/admin2/slots_form.html', context)
+            return redirect("slots")
+    context = {"form": form}
+    return render(request, "accounts/admin2/slots_form.html", context)
 
-@login_required(login_url='login')
-def removeSlots(request,pk):
+
+@login_required(login_url="login")
+def removeSlots(request, pk):
     slots = Slots.objects.get(id=pk)
 
     if request.method == "POST":
         slots.delete()
-        return redirect('slots')
-    
-    return render(request, 'accounts/admin2/delete.html', {'obj':slots})
+        return redirect("slots")
+
+    return render(request, "accounts/admin2/delete.html", {"obj": slots})
+
 
 # --------------   End of Slots      ------------------
-<<<<<<< HEAD
-=======
-@login_required(login_url='login')
+@login_required(login_url="login")
 def members_history(request):
     user = request.user
     if user.is_member == True:
         return redirect("member_dashboard")
-    payment_history = mem_models.PayHistory.objects.all().order_by('-date_created')
+    payment_history = mem_models.PayHistory.objects.all().order_by("-date_created")
+
+    context = {"payment_history": payment_history}
+    # return render(request, 'members/dashboard.html', context)
+    return render(request, "staff/billing/billing_history.html", context)
 
 
-
-    context ={"payment_history":payment_history}
-        # return render(request, 'members/dashboard.html', context)
-    return render(request, 'staff/billing/billing_history.html', context)
-
-
-@login_required(login_url='login')
+@login_required(login_url="login")
 def staff_notification(request):
     if request.user.is_member:
-        return redirect('member_dashboard')
+        return redirect("member_dashboard")
     form = Notification.objects.all()
-    context = {"form":form}
-    return render(request,'staff/rest/notification.html', context)
+    context = {"form": form}
+    return render(request, "staff/rest/notification.html", context)
 
 
-@login_required(login_url='login')
+@login_required(login_url="login")
 def add_notifications(request):
     if request.user.is_member:
-        return redirect('member_dashboard')
+        return redirect("member_dashboard")
     form = NotificationForm()
-    if request.method == 'POST':
+    if request.method == "POST":
         form = NotificationForm(request.POST)
         if form.is_valid():
             notification = form.save(commit=False)
             notification.user = request.user
             notification.save()
-            return redirect('staff_notification')
-    context = {"form":form}
-    return render(request,'staff/rest/notification_form.html', context)
+            return redirect("staff_notification")
+    context = {"form": form}
+    return render(request, "staff/rest/notification_form.html", context)
 
-@login_required(login_url='login')
-def update_notifications(request,pk):
+
+@login_required(login_url="login")
+def update_notifications(request, pk):
     if request.user.is_member:
-        return redirect('member_dashboard')
+        return redirect("member_dashboard")
     notifications = Notification.objects.get(id=pk)
     form = NotificationForm(instance=notifications)
-    if request.method == 'POST':
+    if request.method == "POST":
         form = NotificationForm(request.POST, instance=notifications)
         if form.is_valid():
             notification = form.save(commit=False)
             notification.user = request.user
             notification.save()
-            return redirect('staff_notification')
-    context = {"form":form}
-    return render(request,'staff/rest/notification_form.html', context)
+            return redirect("staff_notification")
+    context = {"form": form}
+    return render(request, "staff/rest/notification_form.html", context)
 
-@login_required(login_url='login')
-def remove_notifications(request,pk):
+
+@login_required(login_url="login")
+def remove_notifications(request, pk):
     notification = Notification.objects.get(id=pk)
 
     if request.method == "POST":
         notification.delete()
-        return redirect('staff_notification')
-    
-    return render(request, 'staff/delete.html', {'obj':notification.message})
+        return redirect("staff_notification")
+
+    return render(request, "staff/delete.html", {"obj": notification.message})
 
 
-
-@login_required(login_url='login')
+@login_required(login_url="login")
 def polo_schedule(request):
     if request.user.is_member:
-        return redirect('member_dashboard')
+        return redirect("member_dashboard")
 
     days_selected = mem_models.Days.objects.all()
 
@@ -784,9 +620,7 @@ def polo_schedule(request):
         members_for_day = mem_models.Member.objects.filter(days=day)
         members_by_day[day] = members_for_day
 
-    print(f'members_by_day:{members_by_day}')
+    print(f"members_by_day:{members_by_day}")
 
     context = {"days_selected": days_selected, "members_by_day": members_by_day}
-    return render(request, 'staff/members/polo_schedule.html', context)
-
->>>>>>> 3d40901ea8dc265b5366c0af6bbc19d7433d0ce2
+    return render(request, "staff/members/polo_schedule.html", context)

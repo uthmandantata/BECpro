@@ -58,12 +58,26 @@
 </div>
 <a onclick="myfun('mn')" href="{% url 'printed' tickets.id %}" class="btn btn-primary">Printed</a>
 
-<script type="text/javascript">
+<!-- <script type="text/javascript">
   function myfun(pa) {
     var d = document.getElementById(pa).innerHTML;
     document.body.innerHTML = d;
     window.print();
   }
+</script> -->
+
+<script type="text/javascript">
+  function myfun(pa) {
+    var d = document.getElementById(pa).innerHTML;
+    document.body.innerHTML = d;
+    window.print();
+    // Restore the original content of document.body
+    document.body.innerHTML = originalContent;
+    window.print();
+  }
+
+  // Store the original content of document.body when the page loads
+  var originalContent = document.body.innerHTML;
 </script>
 
 {% endblock content %}
