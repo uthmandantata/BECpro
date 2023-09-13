@@ -28,26 +28,6 @@ class Tickets(models.Model):
         return str(self.customer_fullname)
 
 
-class Slots(models.Model):
-    DAYS = (
-        ("Sunday", "Sunday"),
-        ("Friday", "Friday"),
-        ("Wednesday", "Wednesday"),
-        ("Saturday", "Saturday"),
-    )
-    TIME_SLOT = (
-        ("8-10 am", "8-10 am"),
-        ("4-6 pm", "4-6 pm"),
-    )
-    name = models.CharField(max_length=200, null=True)
-    days = models.CharField(max_length=200, null=True, choices=DAYS)
-    time_slot = models.CharField(max_length=200, null=True, choices=TIME_SLOT)
-    amount = models.IntegerField(null=True)
-
-    def __str__(self):
-        return str(self.name)
-
-
 class Field(models.Model):
     STATUS = (
         ("Closed", "Closed"),

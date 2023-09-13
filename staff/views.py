@@ -3,7 +3,7 @@ from .forms import (
     EquipmentForm,
     HorsesForm,
     CustomUserForm,
-    SlotsForm,
+  
     ServicesForm,
     TicketsForm,
     NotificationForm,
@@ -496,50 +496,6 @@ def updateCostumUser(request, pk):
 
 
 # --------------   End of Users      ------------------
-
-
-# --------------    Slots      ------------------
-@login_required(login_url="login")
-def slots(request):
-    form = Slots.objects.all()
-    context = {"form": form}
-    return render(request, "accounts/admin2/slots.html", context)
-
-
-@login_required(login_url="login")
-def addSlots(request):
-    form = SlotsForm()
-    if request.method == "POST":
-        form = SlotsForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect("slots")
-    context = {"form": form}
-    return render(request, "accounts/admin2/slots_form.html", context)
-
-
-@login_required(login_url="login")
-def updateSlots(request, pk):
-    slots = Slots.objects.get(id=pk)
-    form = SlotsForm(instance=slots)
-    if request.method == "POST":
-        form = SlotsForm(request.POST, instance=slots)
-        if form.is_valid():
-            form.save()
-            return redirect("slots")
-    context = {"form": form}
-    return render(request, "accounts/admin2/slots_form.html", context)
-
-
-@login_required(login_url="login")
-def removeSlots(request, pk):
-    slots = Slots.objects.get(id=pk)
-
-    if request.method == "POST":
-        slots.delete()
-        return redirect("slots")
-
-    return render(request, "accounts/admin2/delete.html", {"obj": slots})
 
 
 # --------------   End of Slots      ------------------
