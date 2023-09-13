@@ -18,12 +18,7 @@ urlpatterns = [
     path('resumeMembers/<int:pk>', views.resumeMembers, name='resumeMembers'),
     # -------------  End of Members--------------------------
 
-    # ---------------  Slots  -----------------------------
-    path('slots/', views.slots, name='slots'),
-    path('addSlots/', views.addSlots, name='addSlots'),
-    path('updateSlots/<int:pk>/', views.updateSlots, name='updateSlots'),
-    path('removeSlots/<str:pk>/', views.removeSlots, name="removeSlots"),
-    # -------------  End of Slots--------------------------
+    
     
     # ---------------  Horses  -----------------------------
     path('horses/', views.horses, name='horses'),

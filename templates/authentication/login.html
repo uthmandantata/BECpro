@@ -5,12 +5,12 @@
     <div class="card mt-5">
       <div class="card-body">
         {% if messages %}
-  <ul class="messages">
-    {% for message in messages %}
-      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-    {% endfor %}
-  </ul>
-{% endif %}
+        <ul class="messages">
+          {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+          {% endfor %}
+        </ul>
+        {% endif %}
         <div class="card-title pt-3 pb-3">
           <h4>Login</h4>
         </div>
