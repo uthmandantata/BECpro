@@ -1,10 +1,11 @@
 {% extends 'staff/base.html' %}{% block content %}{% load crispy_forms_tags %} {% csrf_token %}
-<div id="mn">
+<div>
   <div class="container">
-    <div class="card col-sm-6">
+    <div class="card col-sm-6" id="mn">
       <div class="card-header">
-        Invoice
+        Date
         <strong>{{today}}</strong>
+        .float-end
       </div>
       <div class="card-body">
         <div class="row mb-4">
@@ -23,12 +24,14 @@
                 <tr>
                   <th>Item</th>
                   <th>Ticket Number</th>
+                  <th>Quantity</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <td class="left">{{tickets.service}}</td>
                   <td class="left">{{tickets.ticket_number}}</td>
+                  <td class="left">{{tickets.quantity}}</td>
                 </tr>
               </tbody>
             </table>
@@ -52,11 +55,11 @@
             </div>
           </div>
         </div>
+        <a onclick="myfun('mn')" href="{% url 'printed' tickets.id %}" class="btn btn-primary float-end">Print</a>
       </div>
     </div>
   </div>
 </div>
-<a onclick="myfun('mn')" href="{% url 'printed' tickets.id %}" class="btn btn-primary">Printed</a>
 
 <!-- <script type="text/javascript">
   function myfun(pa) {
@@ -66,18 +69,67 @@
   }
 </script> -->
 
-<script type="text/javascript">
+<!-- <script type="text/javascript">
   function myfun(pa) {
     var d = document.getElementById(pa).innerHTML;
     document.body.innerHTML = d;
     window.print();
+    setTimeout(function () {
+      document.body.innerHTML = d; // Restore the original content
+      window.print(); // Print again
+    }, 1000);
+
     // Restore the original content of document.body
     document.body.innerHTML = originalContent;
-    window.print();
   }
 
   // Store the original content of document.body when the page loads
   var originalContent = document.body.innerHTML;
+</script> -->
+
+<script type="text/javascript">
+  var originalContent; // Store the original content of document.body
+
+  function myfun(pa) {
+    // On the first call, store the original content of document.body
+    if (!originalContent) {
+      originalContent = document.getElementById(pa).innerHTML;
+    }
+
+    // Print the page
+    window.print();
+
+    // After a short delay, print the page again
+    setTimeout(function () {
+      document.body.innerHTML = originalContent; // Restore the original content
+      window.print(); // Print again
+    }, 1000); // Adjust the delay (in milliseconds) as needed
+  }
 </script>
+<!-- 
+<script type="text/javascript">
+  var originalContent; // Store the original content of document.body
+
+  function myfun(pa) {
+    // On the first call, store the original content of document.body
+    if (!originalContent) {
+      originalContent = document.body.innerHTML;
+    }
+
+    // Replace the content of the body with the content of the target div
+    document.body.innerHTML = document.getElementById(pa).innerHTML;
+
+    // Print the page
+    window.print();
+
+    // After the first print is complete, restore the original content
+    setTimeout(function () {
+      document.body.innerHTML = originalContent; // Restore the original content
+
+      // Print the page again
+      window.print();
+    }, 1000); // Adjust the delay (in milliseconds) as needed
+  }
+</script> -->
 
 {% endblock content %}

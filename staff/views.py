@@ -3,7 +3,6 @@ from .forms import (
     EquipmentForm,
     HorsesForm,
     CustomUserForm,
-  
     ServicesForm,
     TicketsForm,
     NotificationForm,
@@ -340,14 +339,30 @@ def printTickets(request, pk):
     if request.user.is_member:
         return redirect("member_dashboard")
     tickets = Tickets.objects.get(id=pk)
-    if tickets.used:
-        messages.error(request, "Ticket Already used")
-        return redirect("tickets")
+    # if tickets.used:
+    #     messages.error(request, "Ticket Already used")
+    #     return redirect("tickets")
 
     form = TicketsForm(instance=tickets)
     today = date.today()
-    print("Today's date:", today)
-    context = {"today": today, "tickets": tickets, "form": form}
+    import datetime
+
+    # Get the current date and time
+    current_datetime = datetime.datetime.now()
+
+    # Extract the hour and second
+    current_hour = current_datetime.hour
+    current_second = current_datetime.minute
+
+    
+    # print("Today's date:", current_time)
+    context = {
+        "today": today,
+        "tickets": tickets,
+        "form": form,
+        "current_hour": current_hour,
+        "current_second": current_second,
+    }
     return render(request, "staff/billing/printed_tickets.html", context)
 
 
